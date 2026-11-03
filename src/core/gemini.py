@@ -27,24 +27,37 @@ logger = logging.getLogger(__name__)
 # ──────────────────────────────────────────────
 SYSTEM_PROMPTS = {
     "mystery": (
-        "Eres un novelista y guionista maestro del suspense psicológico y misterio realista para YouTube Shorts y TikTok. "
-        "REGLA DE ORO: COHERENCIA LÓGICA TOTAL. Cero fantasmas abstractos, cero magia absurda y cero frases inconexas. "
-        "Tus historias son perturbadoras precisamente porque son VEROSÍMILES: se basan en detalles cotidianos que revelan "
-        "algo siniestro (cámaras de seguridad, llamadas extrañas, reformas en una casa, vecinos sospechosos, carreteras solitarias). "
-        "Cada acción de los personajes tiene causa y efecto lógico. "
-        "PROHIBIDO USAR EMOJIS: Cero emojis o emoticonos en cualquier circunstancia. "
-        "Solo texto corrido con comas y puntos, sin listas, asteriscos ni markdown."
+        "Eres un novelista y guionista maestro del suspense psicológico y misterio oscuro para YouTube Shorts y TikTok. "
+        "FÓRMULA DE RETENCIÓN 2026:\n"
+        "1. GANCHO (0 a 3s): Empieza directamente en medio de una situación perturbadora o un descubrimiento aterrador. "
+        "Cero saludos ni explicaciones lentas.\n"
+        "2. MICRO-HOOK (a los 15s): Introduce un reenganche ('Pero lo que vi después...', 'En ese instante me di cuenta de mi error...').\n"
+        "3. COHERENCIA TOTAL: Verosimilitud absoluta, causa y efecto realista (cámaras de seguridad, llamadas grabadas, vecinos, casas antiguas).\n"
+        "4. BUCLE INFINITO (Infinite Loop): La frase final debe conectar con la frase inicial sin que se note el corte.\n"
+        "PROHIBIDO USAR EMOJIS ni formato markdown. Solo prosa fluida continua con comas y puntos."
     ),
     "reddit": (
         "Eres un narrador maestro de historias virales de Reddit de máximo impacto emocional y morbo social (estilo r/confessions, r/tifu, r/BestofRedditorUpdates, r/pettyrevenge). "
-        "REGLA DE ORO 1: ADICCIÓN Y ENTRETENIMIENTO PURO. CERO TEMAS ABURRIDOS. Prohibido hablar de economía, finanzas, hojas de cálculo, contabilidad, contratos corporativos o burocracia de oficina. Las historias deben tratar sobre dramas humanos intensos: infidelidades descubiertas en flagrancia, secretos familiares turbios, venganzas personales deliciosas contra personas arrogantes, vecinos insoportables desenmascarados, o anécdotas increíbles. "
-        "REGLA DE ORO 2: COHERENCIA LÓGICA Y HUMANA TOTAL. Nada de inventos forzados ni reacciones que una persona real nunca tendría. Todo debe sentirse 100% auténtico y justificado. "
-        "PROHIBIDO USAR EMOJIS ni formato markdown. Lenguaje directo, apasionado y coloquial, como contándole una bomba a tu mejor amigo."
+        "FÓRMULA DE RETENCIÓN 2026:\n"
+        "1. GANCHO (0 a 3s): Suelta una bomba humana de inmediato que impida deslizar el video.\n"
+        "2. CERO TEMAS ABURRIDOS: Estrictamente prohibido hablar de economía, hojas de cálculo, contabilidad, contratos corporativos o burocracia de oficina. Las historias deben tratar sobre dramas humanos: infidelidades, secretos familiares, venganzas personales deliciosas contra arrogantes o vecinos insoportables.\n"
+        "3. MICRO-HOOK (a los 15s): Renueva la tensión antes de que el espectador se distraiga.\n"
+        "4. BUCLE INFINITO: Cierra con una frase que enlace fluidamente de vuelta al inicio.\n"
+        "PROHIBIDO USAR EMOJIS ni formato markdown. Lenguaje directo y coloquial."
+    ),
+    "bizarre": (
+        "Eres el narrador definitivo de historias insólitas, desastres sociales, situaciones caóticas y gente sinvergüenza (estilo r/trashy, r/tifu, momentos virales de 'cosas mierdas / ridículas'). "
+        "FÓRMULA DE RETENCIÓN 2026:\n"
+        "1. GANCHO (0 a 3s): Arranca con la estupidez o insolencia más grande que alguien haya hecho jamás.\n"
+        "2. TONO IRÓNICO Y ADICTIVO: Mezcla de asombro y sátira, narrando cómo el karma aplastó a alguien que se creía intocable (un estafador torpe, una boda boicoteada, un vecino sinvergüenza humillado en público).\n"
+        "3. MICRO-HOOK (a los 15s): Escalada de la vergüenza ajena o el desastre.\n"
+        "4. BUCLE INFINITO: Final épico y satisfactorio que conecta con la apertura.\n"
+        "PROHIBIDO USAR EMOJIS ni formato markdown. Cero temas aburridos."
     ),
     "news": (
         "Eres un periodista de divulgación científica y sucesos insólitos para YouTube Shorts y TikTok. "
-        "REGLA DE ORO: RIGOR Y COHERENCIA TOTAL. Explicas hechos reales, descubrimientos arqueológicos, misterios resueltos "
-        "o fenómenos científicos fascinantes con causa y efecto claros, datos contundentes y lenguaje accesible que deje al espectador maravillado. "
+        "REGLA DE ORO: RIGOR Y COHERENCIA TOTAL. Explicas misterios resueltos, descubrimientos arqueológicos "
+        "o fenómenos fascinantes con causa y efecto claros. CERO TEMAS POLÍTICOS O ECONÓMICOS ABURRIDOS. "
         "PROHIBIDO USAR EMOJIS ni formato markdown."
     ),
 }
@@ -66,11 +79,10 @@ AUDITOR_CRITERIA_PROMPT = {
     "mystery": (
         "Audita este borrador de misterio/suspenso:\n\"\"\"{draft_script}\"\"\"\nTítulo propuesto: {draft_title}\n\n"
         "Evalúa con lupa:\n"
-        "1. ¿Es verdaderamente intrigante y atrapante? Cero clichés aburridos.\n"
+        "1. ¿El gancho (0 a 3s) atrapa como un imán sin preámbulos?\n"
         "2. ¿Tiene coherencia lógica interna? ¿Las acciones y pistas tienen causa y efecto real?\n"
-        "3. ¿El gancho (primeros 3 segundos) atrapa de inmediato?\n"
-        "4. ¿El giro final encaja de forma lógica y deja escalofríos?\n"
-        "5. Longitud: entre 135 y 160 palabras exactas.\n\n"
+        "3. ¿El giro final encaja de forma lógica y deja escalofríos?\n"
+        "4. ¿Tiene entre 120 y 140 palabras exactas (38-45 segundos)?\n\n"
         "Si la historia carece de lógica o no atrapa, responde estrictamente:\n"
         "ESTADO: RECHAZADO\n"
         "CRITICA: [Explica exactamente el fallo lógico o de entretenimiento]\n"
@@ -78,7 +90,7 @@ AUDITOR_CRITERIA_PROMPT = {
         "Si la historia es coherente, intrigante y sólida, responde:\n"
         "ESTADO: APROBADO\n"
         "GUION: [Guión final perfeccionado en prosa continua]\n"
-        "TITULO: [Título viral sin emojis, máximo 55 caracteres]"
+        "TITULO: [Título viral sin emojis, máximo 50 caracteres]"
     ),
     "reddit": (
         "Audita esta historia de Reddit:\n\"\"\"{draft_script}\"\"\"\nTítulo propuesto: {draft_title}\n\n"
@@ -87,7 +99,7 @@ AUDITOR_CRITERIA_PROMPT = {
         "2. ¿El gancho (primeras 2 líneas) suelta una bomba que obliga a quedarse hasta el final?\n"
         "3. ¿Tiene coherencia lógica y humana? ¿Las motivaciones y reacciones son verosímiles?\n"
         "4. ¿El conflicto y desenlace son claros, emocionantes o de dulce revancha?\n"
-        "5. Longitud: entre 130 y 155 palabras exactas.\n\n"
+        "5. ¿Tiene entre 120 y 140 palabras exactas?\n\n"
         "Si es aburrida, sosa, o carece de coherencia, responde:\n"
         "ESTADO: RECHAZADO\n"
         "CRITICA: [Por qué es aburrida o dónde falla la lógica]\n"
@@ -95,60 +107,84 @@ AUDITOR_CRITERIA_PROMPT = {
         "Si es súper entretenida, coherente y lista para viralizarse, responde:\n"
         "ESTADO: APROBADO\n"
         "GUION: [Guión final perfeccionado en prosa continua]\n"
-        "TITULO: [Título viral sin emojis, máximo 60 caracteres]"
+        "TITULO: [Título viral sin emojis, máximo 50 caracteres]"
+    ),
+    "bizarre": (
+        "Audita esta historia de situaciones bizarras / gente loca / desastres épicos:\n\"\"\"{draft_script}\"\"\"\nTítulo propuesto: {draft_title}\n\n"
+        "Filtro de retención y adicción:\n"
+        "1. ¿Provoca asombro o risa incrédula de inmediato? Cero tecnicismos ni aburrimiento.\n"
+        "2. ¿El gancho (0 a 3s) describe una situación tan descarada que nadie puede dejar de escuchar?\n"
+        "3. ¿La resolución de karma o desastre es clara y satisfactoria?\n"
+        "4. ¿Tiene entre 120 y 140 palabras exactas?\n\n"
+        "Si es tibia, aburrida o incoherente, responde:\n"
+        "ESTADO: RECHAZADO\n"
+        "CRITICA: [Por qué no atrapa o qué le falta]\n"
+        "INSTRUCCIONES: [Cómo subirle la intensidad y el karma]\n\n"
+        "Si es atrapante y sensacional, responde:\n"
+        "ESTADO: APROBADO\n"
+        "GUION: [Guión final perfeccionado en prosa continua]\n"
+        "TITULO: [Título viral sin emojis, máximo 50 caracteres]"
     ),
     "news": (
         "Audita este resumen informativo:\n\"\"\"{draft_script}\"\"\"\nTítulo propuesto: {draft_title}\n\n"
         "Evalúa con lupa:\n"
-        "1. ¿Es riguroso, coherente y fácil de entender?\n"
-        "2. ¿El gancho es un dato impactante y verídico?\n"
+        "1. ¿Es riguroso, insólito y entretenido? Cero política ni economía.\n"
+        "2. ¿El gancho es un dato desconcertante?\n"
         "3. Longitud: entre 120 y 140 palabras.\n\n"
-        "Si tiene datos vagos o incoherencias, responde:\n"
+        "Si tiene datos vagos o aburridos, responde:\n"
         "ESTADO: RECHAZADO\n"
         "CRITICA: [Detalle del fallo]\n"
         "INSTRUCCIONES: [Qué corregir]\n\n"
         "Si es excelente, responde:\n"
         "ESTADO: APROBADO\n"
         "GUION: [Guión final en prosa continua]\n"
-        "TITULO: [Título viral sin emojis, máximo 60 caracteres]"
+        "TITULO: [Título viral sin emojis, máximo 50 caracteres]"
     ),
 }
 
 USER_PROMPTS = {
     "mystery": (
-        "Escribe una historia de misterio y suspenso con COHERENCIA LÓGICA TOTAL para YouTube Shorts y TikTok.\n\n"
+        "Escribe una historia de terror y suspenso con COHERENCIA LÓGICA TOTAL para YouTube Shorts y TikTok.\n\n"
         "REGLAS OBLIGATORIAS:\n"
-        "1. SITUACIÓN REALISTA: Basada en un hecho concreto (ej: una cámara de seguridad en casa, un detalle extraño en el coche, "
-        "una llamada grabada, una habitación alquilada con un detalle siniestro). Cero magia, cero monstruos amorfos.\n"
-        "2. GANCHO (Segundos 0 a 3): Plantea un enigma o situación imposible de inmediato.\n"
-        "3. ESCALADA LÓGICA: Cada pista debe ser coherente con la anterior.\n"
-        "4. GIRO FINAL COHERENTE: El final debe revelar la verdad oculta de forma lógica e inquietante.\n"
-        "5. EXTENSIÓN: Entre 135 y 155 palabras exactas.\n"
-        "6. CERO EMOJIS ni formato markdown. Solo prosa fluida.\n\n"
-        "Al final escribe:\n"
-        "TITULO: [Título viral sin emojis, máximo 55 caracteres]"
-    ),
-    "news": (
-        "Escribe un guión de noticia o hecho insólito real para YouTube Shorts.\n\n"
-        "REGLAS:\n"
-        "- Causa y efecto 100% claros y verídicos.\n"
-        "- Entre 120 y 140 palabras.\n"
-        "- Comienza con un dato desconcertante.\n"
-        "- Lenguaje simple y directo.\n"
-        "- CERO EMOJIS ni formato markdown.\n\n"
-        "TITULO: [Título impactante sin emojis, máximo 60 caracteres]"
+        "1. GANCHO BRUTAL (0 a 3s): Comienza con un hecho aterrador y concreto sin preámbulos.\n"
+        "2. ESCALADA LÓGICA: Cada pista debe ser coherente con la anterior.\n"
+        "3. MICRO-HOOK (segundo 15): Reengancha la curiosidad con una frase de quiebre.\n"
+        "4. GIRO FINAL COHERENTE E INFINITE LOOP: El desenlace revela la verdad y conecta sutilmente con la primera frase.\n"
+        "5. EXTENSIÓN: Entre 120 y 140 palabras exactas.\n"
+        "6. CERO EMOJIS ni markdown. Solo prosa fluida.\n\n"
+        "TITULO: [Título viral sin emojis, máximo 50 caracteres]"
     ),
     "reddit": (
         "Escribe una historia viral de Reddit adictiva, entretenida y con gancho brutal (drama familiar, secretos inconfesables, venganza épica contra alguien tóxico, o situación social incómoda llevada al límite).\n\n"
         "REGLAS OBLIGATORIAS:\n"
         "- CERO TEMAS ABURRIDOS: Prohibido hablar de economía, finanzas, hojas de cálculo, contabilidad, contratos o burocracia laboral.\n"
-        "- GANCHO BRUTAL (Segundos 0 a 3): La primera frase debe soltar una bomba que impida deslizar el video.\n"
+        "- GANCHO BRUTAL (0 a 3s): La primera frase debe soltar una bomba que impida deslizar el video.\n"
+        "- MICRO-HOOK (segundo 15): Reengancha la tensión con un giro o revelación.\n"
         "- Narrada en primera persona con tono conversacional de chisme real y apasionado.\n"
-        "- Coherencia lógica total en los motivos y acciones humanas.\n"
-        "- Desenlace emocionante o de venganza satisfactoria.\n"
-        "- Entre 130 y 150 palabras exactas.\n"
+        "- Desenlace satisfactorio y frase final que cierre en Infinite Loop.\n"
+        "- Entre 120 y 140 palabras exactas.\n"
         "- CERO EMOJIS ni formato markdown. Solo prosa fluida.\n\n"
-        "TITULO: [Título irresistible sin emojis, máximo 60 caracteres]"
+        "TITULO: [Título irresistible sin emojis, máximo 50 caracteres]"
+    ),
+    "bizarre": (
+        "Escribe una historia bizarra o desastre social de la vida real (estilo r/trashy, r/tifu, desastres épicos, karma instantáneo a gente sinvergüenza).\n\n"
+        "REGLAS OBLIGATORIAS:\n"
+        "- GANCHO FEROZ (0 a 3s): Empieza describiendo el acto más descarado o vergonzoso posible.\n"
+        "- TONO: Irónico, adictivo, como contándole la mayor locura de tu barrio a un amigo.\n"
+        "- MICRO-HOOK (segundo 15): La situación empeora o se destapa la verdad en público.\n"
+        "- DESENLACE: Karma dulce, humillación justa o final surrealista con Infinite Loop.\n"
+        "- Entre 120 y 140 palabras exactas.\n"
+        "- CERO EMOJIS ni formato markdown. Solo prosa fluida.\n\n"
+        "TITULO: [Título impactante sin emojis, máximo 50 caracteres]"
+    ),
+    "news": (
+        "Escribe un guión de curiosidad insólita real para YouTube Shorts.\n\n"
+        "REGLAS:\n"
+        "- CERO TEMAS POLÍTICOS O ECONÓMICOS. Solo misterios reales o ciencia asombrosa.\n"
+        "- Entre 120 y 135 palabras.\n"
+        "- Comienza con un dato desconcertante.\n"
+        "- CERO EMOJIS ni formato markdown.\n\n"
+        "TITULO: [Título impactante sin emojis, máximo 50 caracteres]"
     ),
 }
 
@@ -268,8 +304,10 @@ def _parse_auditor_response(raw: str, default_title: str) -> Dict[str, Any]:
 
 
 def _call_llm(client: Groq, system_msg: str, user_msg: str, temperature: float = 0.8, max_tokens: int = 350) -> str:
-    """Invoca LLM probando modelos rápidos en cascada con fallback a Gemini."""
-    for model_name in ["qwen/qwen3.8-27b", "openai/gpt-oss-20b"]:
+    """Invoca LLM probando modelos rápidos en cascada con fallback robusto a Gemini."""
+    # 1. Intentar con modelos en Groq
+    groq_models = ["qwen/qwen3.8-27b", "openai/gpt-oss-20b", "llama-3.1-8b-instant"]
+    for model_name in groq_models:
         try:
             r = client.chat.completions.create(
                 model=model_name,
@@ -284,19 +322,22 @@ def _call_llm(client: Groq, system_msg: str, user_msg: str, temperature: float =
             if content and len(content.strip()) > 30:
                 return _clean(content)
         except Exception as e:
-            logger.warning("Aviso en modelo %s: %s. Probando alternativa...", model_name, str(e)[:120])
+            logger.warning("Aviso en modelo Groq %s: %s. Probando alternativa...", model_name, str(e)[:120])
 
-    # Fallback a Gemini
-    try:
-        gemini_c = _get_gemini_client()
-        res = gemini_c.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=f"{system_msg}\n\n{user_msg}",
-        )
-        if res.text:
-            return _clean(res.text)
-    except Exception as eg:
-        logger.error("Fallback Gemini también falló: %s", eg)
+    # 2. Fallback resiliente a Gemini (probando 2.5-flash, 2.0-flash y 2.0-flash-lite)
+    gemini_models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite"]
+    for g_model in gemini_models:
+        try:
+            gemini_c = _get_gemini_client()
+            res = gemini_c.models.generate_content(
+                model=g_model,
+                contents=f"{system_msg}\n\n{user_msg}",
+            )
+            if res.text and len(res.text.strip()) > 30:
+                logger.info("Respuesta obtenida con éxito usando fallback Gemini (%s)", g_model)
+                return _clean(res.text)
+        except Exception as eg:
+            logger.warning("Aviso en modelo Gemini %s: %s. Probando siguiente...", g_model, str(eg)[:120])
 
     raise RuntimeError("Todos los motores de IA fallaron al generar respuesta.")
 
@@ -384,6 +425,8 @@ def generate_script(
         user_prompt += f"\n\nContexto de la noticia: {extra_context}"
     elif module_type == "reddit" and extra_context:
         user_prompt += f"\n\nHistoria base de Reddit: {extra_context}"
+    elif module_type == "bizarre" and extra_context:
+        user_prompt += f"\n\nHistoria base insólita/bizarra: {extra_context}"
 
     # ── RONDA 1: Generación inicial ──────────────────────────────────────────
     logger.info("=== [DUAL-AI LOOP] Iniciando generación y filtro de coherencia — Categoría: %s ===", module_type.upper())

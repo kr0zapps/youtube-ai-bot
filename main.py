@@ -71,12 +71,13 @@ def load_global_config(config_path: str = "config.yaml") -> Dict[str, Any]:
 
 def run_pipeline(module_name: str, config: Dict[str, Any], dry_run: bool, no_upload: bool) -> bool:
     """Ejecuta un módulo específico y retorna True si tuvo éxito."""
-    from src.modules import mystery, news, reddit
+    from src.modules import mystery, news, reddit, bizarre
 
     modules_map = {
         "mystery": mystery.run,
-        "news": news.run,
         "reddit": reddit.run,
+        "bizarre": bizarre.run,
+        "news": news.run,
     }
 
     if module_name not in modules_map:
@@ -108,7 +109,7 @@ def main() -> None:
 
     parser.add_argument(
         "--module",
-        choices=["mystery", "news", "reddit", "all"],
+        choices=["mystery", "reddit", "bizarre", "news", "all"],
         default="mystery",
         help="Módulo temático a ejecutar.",
     )

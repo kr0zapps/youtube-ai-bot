@@ -7,10 +7,11 @@ video:
 
 voice:
   language: es-MX
-  rate: "-4%"                            # Velocidad pausada con respiración natural (elimina efecto robótico)
-  voice_mystery: es-MX-JorgeNeural     # Voz masculina profunda y cinematográfica para historias
-  voice_news: es-MX-DaliaNeural         # Voz femenina conversacional y humana
+  rate: "+0%"                            # Velocidad natural y dinámica (38-45s: zona dorada de retención del algoritmo)
+  voice_mystery: es-MX-JorgeNeural     # Voz masculina profunda y cinematográfica para misterio
   voice_reddit: es-MX-JorgeNeural        # Voz masculina casual para anécdotas de Reddit
+  voice_bizarre: es-MX-JorgeNeural       # Voz irónica y entretenida para desastres y gente loca
+  voice_news: es-MX-JorgeNeural
 
 subtitles:
   font: BebasNeue-Regular
