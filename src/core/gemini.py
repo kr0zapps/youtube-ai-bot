@@ -8,7 +8,7 @@ Gemini se reserva para generar prompts de imágenes.
 import os
 import re
 import logging
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 from groq import Groq
 try:
@@ -25,114 +25,128 @@ logger = logging.getLogger(__name__)
 # ──────────────────────────────────────────────
 # PROMPTS — GENERADOR (Paso 1)
 # ──────────────────────────────────────────────
-SYSTEM_PROMPT = (
-    "Eres un guionista de élite de historias de terror, misterio y creepypastas virales para YouTube Shorts y TikTok. "
-    "Tus historias tienen millones de reproducciones porque atrapan en los primeros 2 segundos con un gancho brutal "
-    "y mantienen una tensión asfixiante hasta un giro final que deja a la gente con escalofríos. "
-    "Narras en primera persona o hablándole directamente al espectador, de forma cercana y realista. "
-    "PROHIBIDO USAR EMOJIS: Nunca uses ningún emoji ni emoticono bajo ninguna circunstancia. "
-    "Nunca usas asteriscos, guiones, listas ni formato markdown. Solo texto corrido fluido con comas y puntos."
-)
-
-# ──────────────────────────────────────────────
-# PROMPTS — AUDITOR (Paso 2: Filtro de calidad)
-# ──────────────────────────────────────────────
-AUDITOR_SYSTEM_PROMPT = (
-    "Eres un editor jefe de contenido viral con 10 anos de experiencia en YouTube Shorts y TikTok de habla hispana. "
-    "Tu especialidad es tomar guiones buenos y convertirlos en guiones EXCEPCIONALES que generan millones de vistas. "
-    "Eres implacable, exigente y solo aceptas lo mejor. "
-    "REGLAS ABSOLUTAS: "
-    "1. CERO emojis ni emoticons en ningun lugar. "
-    "2. CERO asteriscos, guiones, listas ni formato markdown. "
-    "3. Solo texto corrido con comas y puntos, como habla real de persona. "
-    "4. NUNCA uses la palabra 'relatos' en el titulo ni en el guion."
-)
-
-AUDITOR_USER_PROMPT = {
+SYSTEM_PROMPTS = {
     "mystery": (
-        "Tienes este borrador de guion de terror/misterio para YouTube Shorts:\n\n"
-        "GUION BORRADOR:\n{draft_script}\n\n"
-        "TITULO BORRADOR: {draft_title}\n\n"
-        "Tu mision como editor jefe es auditarlo y reescribirlo para maximizar su potencial viral. Evalua y mejora:\n"
-        "1. GANCHO (primeros 2 segundos): debe ser tan perturbador que sea imposible no seguir viendo. "
-        "Si el gancho es debil o predecible, reescribelo con algo que genere miedo o curiosidad inmediata.\n"
-        "2. TENSION SOSTENIDA: cada oracion debe escalar la tension. Agrega detalles sensoriales muy especificos "
-        "(el olor a humedo, el crujido exacto, la sensacion de que algo te mira desde atras).\n"
-        "3. GIRO FINAL: el final debe ser un golpe que deje al espectador con piel de gallina y ganas de comentar. "
-        "Si el giro es predecible o flojo, cambialo por algo que nadie espera.\n"
-        "4. FLUIDEZ: debe sonar como alguien contandote algo aterrador que le paso, no como texto escrito.\n"
-        "5. LONGITUD: entre 135 y 160 palabras exactas. Cuenta las palabras y ajusta.\n"
-        "6. TITULO: debe generar click inevitable. Maximo 55 caracteres. Sin emojis. Sin la palabra 'relatos'.\n\n"
-        "Devuelve UNICAMENTE el guion mejorado sin encabezados ni explicaciones, y al final escribe:\n"
-        "TITULO: [titulo mejorado]"
-    ),
-    "news": (
-        "Tienes este borrador de guion de noticias para YouTube Shorts:\n\n"
-        "GUION BORRADOR:\n{draft_script}\n\n"
-        "TITULO BORRADOR: {draft_title}\n\n"
-        "Mejoralo para maxima viralidad:\n"
-        "1. El primer dato debe ser tan impactante que sea imposible no seguir viendo.\n"
-        "2. Lenguaje claro, directo, como periodista de calle hablando a camara.\n"
-        "3. Termina con una pregunta que invite a comentar.\n"
-        "4. Entre 120 y 140 palabras. Cero emojis. Cero formato.\n"
-        "5. Titulo impactante, maximo 60 caracteres, sin emojis.\n\n"
-        "Devuelve UNICAMENTE el guion mejorado y al final:\n"
-        "TITULO: [titulo mejorado]"
+        "Eres un novelista y guionista maestro del suspense psicológico y misterio realista para YouTube Shorts y TikTok. "
+        "REGLA DE ORO: COHERENCIA LÓGICA TOTAL. Cero fantasmas abstractos, cero magia absurda y cero frases inconexas. "
+        "Tus historias son perturbadoras precisamente porque son VEROSÍMILES: se basan en detalles cotidianos que revelan "
+        "algo siniestro (cámaras de seguridad, llamadas extrañas, reformas en una casa, vecinos sospechosos, carreteras solitarias). "
+        "Cada acción de los personajes tiene causa y efecto lógico. "
+        "PROHIBIDO USAR EMOJIS: Cero emojis o emoticonos en cualquier circunstancia. "
+        "Solo texto corrido con comas y puntos, sin listas, asteriscos ni markdown."
     ),
     "reddit": (
-        "Tienes este borrador de historia de Reddit para YouTube Shorts:\n\n"
-        "GUION BORRADOR:\n{draft_script}\n\n"
-        "TITULO BORRADOR: {draft_title}\n\n"
-        "Mejoralo para maxima viralidad:\n"
-        "1. Voz muy coloquial, como contandoselo a un amigo con emocion real.\n"
-        "2. Agrega reacciones y pensamientos internos autenticos.\n"
-        "3. El momento de revelacion debe ser electrico.\n"
-        "4. Entre 120 y 140 palabras. Cero emojis. Cero formato.\n"
-        "5. Titulo enganoso en el buen sentido, maximo 60 caracteres, sin emojis.\n\n"
-        "Devuelve UNICAMENTE el guion mejorado y al final:\n"
-        "TITULO: [titulo mejorado]"
+        "Eres un narrador de élite de historias virales de Reddit (estilo r/tifu, r/confessions, r/maliciouscompliance). "
+        "REGLA DE ORO: COHERENCIA Y DRAMA HUMANO REAL. Nada de historias inventadas que suenen falsas o inverosímiles. "
+        "Narras en primera persona una anécdota personal con personajes reales, motivaciones comprensibles, un conflicto "
+        "creíble (laboral, familiar, pareja o venganza limpia) y un desenlace épico o satisfactorio que encaje todas las piezas. "
+        "Lenguaje muy coloquial y natural, como contándole un chisme tremendo a un amigo. "
+        "PROHIBIDO USAR EMOJIS ni formato markdown."
+    ),
+    "news": (
+        "Eres un periodista de divulgación científica y sucesos insólitos para YouTube Shorts y TikTok. "
+        "REGLA DE ORO: RIGOR Y COHERENCIA TOTAL. Explicas hechos reales, descubrimientos arqueológicos, misterios resueltos "
+        "o fenómenos científicos fascinantes con causa y efecto claros, datos contundentes y lenguaje accesible que deje al espectador maravillado. "
+        "PROHIBIDO USAR EMOJIS ni formato markdown."
+    ),
+}
+
+# ──────────────────────────────────────────────
+# PROMPTS — AUDITOR EDITORIAL (Paso 2: Filtro de Calidad y Coherencia)
+# ──────────────────────────────────────────────
+AUDITOR_SYSTEM_PROMPT = (
+    "Eres el Director Editorial más exigente y veterano de contenido viral para YouTube Shorts y TikTok. "
+    "Tu lema sagrado es: 'SIN COHERENCIA LÓGICA, LA HISTORIA FRACASA'. "
+    "Tu trabajo es auditar despiadadamente los borradores de los guionistas. "
+    "Si una historia tiene contradicciones lógicas, frases inconexas, explicaciones falsas o finales absurdos, "
+    "la RECHAZAS de inmediato y señalas exactamente dónde se rompió la lógica. "
+    "Solo APRUEBAS cuando la historia es 100% lógica, verosímil para su categoría, atrapa en 2 segundos "
+    "y tiene una conclusión que encaja a la perfección. "
+    "REGLAS CRÍTICAS: Cero emojis. Cero markdown. Solo texto corrido. Prohibida la palabra 'relatos'."
+)
+
+AUDITOR_CRITERIA_PROMPT = {
+    "mystery": (
+        "Audita este borrador de misterio/suspenso:\n\"\"\"{draft_script}\"\"\"\nTítulo propuesto: {draft_title}\n\n"
+        "Evalúa con lupa:\n"
+        "1. ¿Tiene coherencia lógica interna? ¿Las acciones y pistas tienen causa y efecto real, o hay absurdos mágicos?\n"
+        "2. ¿El gancho (primeras 2 líneas) atrapa de verdad sin sonar a cliché de IA?\n"
+        "3. ¿El giro final encaja de forma lógica y deja escalofríos?\n"
+        "4. Longitud: entre 135 y 160 palabras exactas.\n\n"
+        "Si la historia carece de lógica o tiene incoherencias, responde estrictamente:\n"
+        "ESTADO: RECHAZADO\n"
+        "CRITICA: [Explica exactamente la contradicción o fallo lógico]\n"
+        "INSTRUCCIONES: [Qué debe cambiar el autor para que tenga sentido real]\n\n"
+        "Si la historia es coherente y sólida (o si la pules para que quede perfecta), responde:\n"
+        "ESTADO: APROBADO\n"
+        "GUION: [Guión final perfeccionado en prosa continua]\n"
+        "TITULO: [Título viral sin emojis, máximo 55 caracteres]"
+    ),
+    "reddit": (
+        "Audita esta historia de Reddit:\n\"\"\"{draft_script}\"\"\"\nTítulo propuesto: {draft_title}\n\n"
+        "Evalúa con lupa:\n"
+        "1. ¿Tiene coherencia lógica y humana? ¿Las motivaciones y reacciones son creíbles?\n"
+        "2. ¿La narración en primera persona suena natural y auténtica, como un humano real en Reddit?\n"
+        "3. ¿El conflicto y desenlace son claros y satisfactorios?\n"
+        "4. Longitud: entre 120 y 150 palabras exactas.\n\n"
+        "Si carece de sentido o suena falso/robótico, responde:\n"
+        "ESTADO: RECHAZADO\n"
+        "CRITICA: [Fallo de coherencia o falta de naturalidad]\n"
+        "INSTRUCCIONES: [Cómo corregir la historia]\n\n"
+        "Si es coherente y atractiva, responde:\n"
+        "ESTADO: APROBADO\n"
+        "GUION: [Guión final perfeccionado en prosa continua]\n"
+        "TITULO: [Título viral sin emojis, máximo 60 caracteres]"
+    ),
+    "news": (
+        "Audita este resumen informativo:\n\"\"\"{draft_script}\"\"\"\nTítulo propuesto: {draft_title}\n\n"
+        "Evalúa con lupa:\n"
+        "1. ¿Es riguroso, coherente y fácil de entender?\n"
+        "2. ¿El gancho es un dato impactante y verídico?\n"
+        "3. Longitud: entre 120 y 140 palabras.\n\n"
+        "Si tiene datos vagos o incoherencias, responde:\n"
+        "ESTADO: RECHAZADO\n"
+        "CRITICA: [Detalle del fallo]\n"
+        "INSTRUCCIONES: [Qué corregir]\n\n"
+        "Si es excelente, responde:\n"
+        "ESTADO: APROBADO\n"
+        "GUION: [Guión final en prosa continua]\n"
+        "TITULO: [Título viral sin emojis, máximo 60 caracteres]"
     ),
 }
 
 USER_PROMPTS = {
     "mystery": (
-        "Escribe una historia de terror o misterio perturbadora para narrar en un YouTube Short viral.\n\n"
-        "ESTRUCTURA OBLIGATORIA:\n"
-        "1. GANCHO INMEDIATO (Segundos 0 a 3): Una advertencia escalofriante o una situación imposible directa al espectador. "
-        "Ejemplo: 'Si vives solo y encuentras la puerta del armario ligeramente abierta esta noche, no la cierres...' o "
-        "'Ayer mi teléfono recibió una llamada desde mi propio número mientras estaba en la cocina...'\n"
-        "2. DESARROLLO DE TENSIÓN: Añade detalles muy reales y sensoriales (el frío repentino, un susurro familiar, una sombra que no coincide).\n"
-        "3. GIRO FINAL PERTURBADOR: Una revelación inesperada que cambie todo y deje al espectador con la piel de gallina.\n\n"
-        "REQUISITOS TÉCNICOS:\n"
-        "- Longitud: entre 135 y 160 palabras exactas (para durar entre 50 y 55 segundos al hablar).\n"
-        "- Tono: conversacional, realista, como si le contaras a un amigo algo aterrador que acaba de pasar.\n"
-        "- Solo texto continuo en prosa, con comas y puntos. Sin signos raros ni formato.\n"
-        "- CERO EMOJIS: Prohibido incluir cualquier emoji en el texto o en el título.\n\n"
+        "Escribe una historia de misterio y suspenso con COHERENCIA LÓGICA TOTAL para YouTube Shorts y TikTok.\n\n"
+        "REGLAS OBLIGATORIAS:\n"
+        "1. SITUACIÓN REALISTA: Basada en un hecho concreto (ej: una cámara de seguridad en casa, un detalle extraño en el coche, "
+        "una llamada grabada, una habitación alquilada con un detalle siniestro). Cero magia, cero monstruos amorfos.\n"
+        "2. GANCHO (Segundos 0 a 3): Plantea un enigma o situación imposible de inmediato.\n"
+        "3. ESCALADA LÓGICA: Cada pista debe ser coherente con la anterior.\n"
+        "4. GIRO FINAL COHERENTE: El final debe revelar la verdad oculta de forma lógica e inquietante.\n"
+        "5. EXTENSIÓN: Entre 135 y 155 palabras exactas.\n"
+        "6. CERO EMOJIS ni formato markdown. Solo prosa fluida.\n\n"
         "Al final escribe:\n"
-        "TITULO: [Título ultra viral y misterioso sin emojis, máximo 55 caracteres]\n\n"
-        "Escribe la historia ahora:"
+        "TITULO: [Título viral sin emojis, máximo 55 caracteres]"
     ),
     "news": (
-        "Escribe un resumen viral de esta noticia para YouTube Shorts:\n{noticia}\n\n"
-        "REQUISITOS:\n"
-        "- Entre 120 y 140 palabras\n"
-        "- Empieza con un dato impactante o pregunta\n"
-        "- Lenguaje simple y directo\n"
-        "- Termina con una pregunta al espectador\n"
-        "- Solo texto corrido, sin formato ni emojis\n"
-        "- CERO EMOJIS: No uses emojis en ninguna parte\n\n"
-        "TITULO: [título impactante sin emojis, máximo 60 caracteres]"
+        "Escribe un guión de noticia o hecho insólito real para YouTube Shorts.\n\n"
+        "REGLAS:\n"
+        "- Causa y efecto 100% claros y verídicos.\n"
+        "- Entre 120 y 140 palabras.\n"
+        "- Comienza con un dato desconcertante.\n"
+        "- Lenguaje simple y directo.\n"
+        "- CERO EMOJIS ni formato markdown.\n\n"
+        "TITULO: [Título impactante sin emojis, máximo 60 caracteres]"
     ),
     "reddit": (
-        "Adapta esta historia de Reddit para YouTube Shorts:\n{historia_reddit}\n\n"
-        "REQUISITOS:\n"
-        "- Entre 120 y 140 palabras\n"
-        "- Narra en primera persona\n"
-        "- Lenguaje muy coloquial, como hablando con amigos\n"
-        "- Añade reacciones naturales\n"
-        "- Solo texto corrido, sin formato ni emojis\n"
-        "- CERO EMOJIS: No uses emojis en ninguna parte\n\n"
-        "TITULO: [título impactante sin emojis, máximo 60 caracteres]"
+        "Escribe una historia viral basada en Reddit (drama cotidiano, venganza profesional, dilema o secreto descubierto).\n\n"
+        "REGLAS:\n"
+        "- Narrada en primera persona con lenguaje coloquial auténtico.\n"
+        "- Coherencia absoluta en las decisiones y eventos (nada de cosas absurdas o forzadas).\n"
+        "- Entre 125 y 145 palabras.\n"
+        "- CERO EMOJIS ni formato markdown.\n\n"
+        "TITULO: [Título llamativo sin emojis, máximo 60 caracteres]"
     ),
 }
 
@@ -141,7 +155,7 @@ def _get_groq_client() -> Groq:
     key = os.getenv("GROQ_API_KEY")
     if not key:
         raise ValueError("GROQ_API_KEY no configurada en .env")
-    return Groq(api_key=key)
+    return Groq(api_key=key, max_retries=1)
 
 
 def _get_gemini_client():
@@ -204,73 +218,146 @@ def _parse_script_and_title(raw: str, default_title: str = "Historia de misterio
     return script, title
 
 
-def _audit_and_improve_script(
+def _parse_auditor_response(raw: str, default_title: str) -> Dict[str, Any]:
+    """Parsea la respuesta del Auditor para determinar si está APROBADO o RECHAZADO."""
+    cleaned = _clean(raw)
+    upper = cleaned.upper()
+
+    is_approved = "ESTADO: APROBADO" in upper or "ESTADO:APROBADO" in upper
+
+    # Extraer guión
+    script = ""
+    title = default_title
+    criticism = ""
+    instructions = ""
+
+    if "GUION:" in upper:
+        parts = re.split(r"GUION:\s*", cleaned, flags=re.IGNORECASE)
+        if len(parts) > 1:
+            rest = parts[1]
+            if "TITULO:" in rest.upper():
+                t_parts = re.split(r"TITULO:\s*", rest, flags=re.IGNORECASE)
+                script = t_parts[0].strip()
+                title = t_parts[1].split("\n")[0].strip()
+            else:
+                script = rest.strip()
+    elif is_approved:
+        script, title = _parse_script_and_title(cleaned, default_title)
+
+    if not is_approved:
+        if "CRITICA:" in upper:
+            c_part = re.split(r"CRITICA:\s*", cleaned, flags=re.IGNORECASE)[1]
+            if "INSTRUCCIONES:" in c_part.upper():
+                criticism = re.split(r"INSTRUCCIONES:\s*", c_part, flags=re.IGNORECASE)[0].strip()
+                instructions = re.split(r"INSTRUCCIONES:\s*", c_part, flags=re.IGNORECASE)[1].strip()
+            else:
+                criticism = c_part.strip()
+        else:
+            criticism = cleaned[:300]
+
+    return {
+        "approved": is_approved,
+        "script": remove_emojis(_clean(script)),
+        "title": remove_emojis(_clean(title))[:60],
+        "criticism": criticism,
+        "instructions": instructions,
+        "raw": cleaned,
+    }
+
+
+def _call_llm(client: Groq, system_msg: str, user_msg: str, temperature: float = 0.8, max_tokens: int = 350) -> str:
+    """Invoca LLM probando modelos rápidos en cascada con fallback a Gemini."""
+    for model_name in ["qwen/qwen3.8-27b", "openai/gpt-oss-20b"]:
+        try:
+            r = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_msg},
+                    {"role": "user", "content": user_msg},
+                ],
+                temperature=temperature,
+                max_tokens=min(max_tokens, 380),
+            )
+            content = r.choices[0].message.content
+            if content and len(content.strip()) > 30:
+                return _clean(content)
+        except Exception as e:
+            logger.warning("Aviso en modelo %s: %s. Probando alternativa...", model_name, str(e)[:120])
+
+    # Fallback a Gemini
+    try:
+        gemini_c = _get_gemini_client()
+        res = gemini_c.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=f"{system_msg}\n\n{user_msg}",
+        )
+        if res.text:
+            return _clean(res.text)
+    except Exception as eg:
+        logger.error("Fallback Gemini también falló: %s", eg)
+
+    raise RuntimeError("Todos los motores de IA fallaron al generar respuesta.")
+
+
+def _audit_and_evaluate_draft(
     draft_script: str,
     draft_title: str,
     module_type: str,
     client: Groq,
-) -> tuple[str, str]:
-    """Paso 2: Auditor de IA (openai/gpt-oss-120b) que evalúa y mejora el guión para máxima viralidad."""
-    if module_type not in AUDITOR_USER_PROMPT:
-        logger.warning("No hay prompt auditor para módulo '%s', saltando auditoría.", module_type)
-        return draft_script, draft_title
-
-    auditor_prompt = AUDITOR_USER_PROMPT[module_type].format(
+    is_final_round: bool = False,
+) -> Dict[str, Any]:
+    """Paso Auditor: Evalúa la coherencia lógica de la historia y aprueba o rechaza con críticas específicas."""
+    criteria = AUDITOR_CRITERIA_PROMPT.get(module_type, AUDITOR_CRITERIA_PROMPT["mystery"]).format(
         draft_script=draft_script,
         draft_title=draft_title,
     )
 
-    logger.info("[DUAL-AI Paso 2/2] Auditando y mejorando guión con Auditor Viral...")
-    raw_improved = None
-    for model_name in ["qwen/qwen3.8-27b", "openai/gpt-oss-20b"]:
-        try:
-            response = client.chat.completions.create(
-                model=model_name,
-                messages=[
-                    {"role": "system", "content": AUDITOR_SYSTEM_PROMPT},
-                    {"role": "user", "content": auditor_prompt},
-                ],
-                temperature=0.78,
-                max_tokens=850,
-            )
-            content = response.choices[0].message.content
-            if content and len(content.strip()) > 50:
-                raw_improved = _clean(content)
-                logger.info("Auditor completado con éxito usando Groq (%s)", model_name)
-                break
-        except Exception as exc:
-            logger.warning("Auditor con modelo %s falló: %s", model_name, exc)
+    if is_final_round:
+        criteria += (
+            "\n\nATENCIÓN: Esta es la RONDA FINAL. Si la historia aún tiene pequeñas fallas, "
+            "tú mismo como Director Editorial REESCRIBE Y PULE el guión definitivo con lógica impecable "
+            "y respóndelo inmediatamente como ESTADO: APROBADO con el GUION y TITULO listos."
+        )
 
-    if not raw_improved:
-        try:
-            gemini_c = _get_gemini_client()
-            r = gemini_c.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=f"{AUDITOR_SYSTEM_PROMPT}\n\n{auditor_prompt}",
-            )
-            if r.text and len(r.text.strip()) > 50:
-                raw_improved = _clean(r.text)
-                logger.info("Auditor completado con éxito usando Google Gemini (gemini-2.5-flash)")
-        except Exception as exc_gem:
-            logger.warning("Auditor con Gemini también falló: %s", exc_gem)
-
-    if not raw_improved:
-        logger.warning("Todos los modelos de auditoría fallaron. Usando borrador original.")
-        return draft_script, draft_title
-
-    improved_script, improved_title = _parse_script_and_title(raw_improved, draft_title)
-
-    # Validar que el resultado mejorado sea sustancialmente válido
-    word_count = len(improved_script.split())
-    if word_count < 80:
-        logger.warning("Auditor devolvió texto muy corto (%d palabras), usando borrador original.", word_count)
-        return draft_script, draft_title
-
-    logger.info(
-        "Guión auditado y mejorado: %d palabras | Título: %s",
-        word_count, improved_title,
+    raw_response = _call_llm(
+        client=client,
+        system_msg=AUDITOR_SYSTEM_PROMPT,
+        user_msg=criteria,
+        temperature=0.65,
+        max_tokens=850,
     )
-    return improved_script, improved_title
+
+    return _parse_auditor_response(raw_response, draft_title)
+
+
+def _regenerate_with_criticism(
+    previous_script: str,
+    criticism: str,
+    instructions: str,
+    module_type: str,
+    client: Groq,
+) -> tuple[str, str]:
+    """El Generador reescribe la historia corrigiendo específicamente las fallas lógicas marcadas por el Auditor."""
+    sys_prompt = SYSTEM_PROMPTS.get(module_type, SYSTEM_PROMPTS["mystery"])
+    user_prompt = (
+        f"El Director Editorial RECHAZÓ tu borrador anterior por falta de coherencia lógica:\n\n"
+        f"BORRADOR ANTERIOR:\n\"\"\"{previous_script}\"\"\"\n\n"
+        f"FALLOS DETECTADOS POR EL AUDITOR:\n{criticism}\n\n"
+        f"INSTRUCCIONES DE CORRECCIÓN:\n{instructions}\n\n"
+        f"Reescribe la historia desde cero corrigiendo cada falla. "
+        f"La causa y efecto debe ser 100% lógica, humana y verosímil. "
+        f"Extensión estricta: entre 135 y 155 palabras. CERO emojis. Cero markdown.\n"
+        f"Al final incluye: TITULO: [título viral sin emojis]"
+    )
+
+    raw_new = _call_llm(
+        client=client,
+        system_msg=sys_prompt,
+        user_msg=user_prompt,
+        temperature=0.82,
+        max_tokens=650,
+    )
+    return _parse_script_and_title(raw_new)
 
 
 def generate_script(
@@ -278,66 +365,85 @@ def generate_script(
     extra_context: Optional[str] = None,
     **kwargs,
 ) -> Dict[str, str]:
-    """Genera guión y título usando sistema DUAL de IA:
-    - Paso 1: Generador Creativo (Qwen 3.8 27B) — crea la narrativa y el suspenso.
-    - Paso 2: Auditor Viral (GPT-OSS 120B) — afina el gancho, escala la tensión y pule el título.
+    """Genera guión usando un LOOP INTERACTIVO DUAL DE IA (Generador <-> Auditor):
+    1. IA Generadora crea el borrador.
+    2. IA Auditora evalúa coherencia lógica, gancho y categoría.
+    3. Si el Auditor rechaza, la IA Generadora corrige los fallos específicos.
+    4. Se itera hasta que el Auditor emita 'ESTADO: APROBADO' (máximo 3 rondas).
     """
-    if module_type not in USER_PROMPTS:
+    if module_type not in SYSTEM_PROMPTS:
         raise ValueError(f"Módulo desconocido: {module_type}")
 
     client = _get_groq_client()
-
+    sys_prompt = SYSTEM_PROMPTS[module_type]
     user_prompt = USER_PROMPTS[module_type]
-    if module_type == "news":
-        user_prompt = user_prompt.format(noticia=extra_context or "")
-    elif module_type == "reddit":
-        user_prompt = user_prompt.format(historia_reddit=extra_context or "")
 
-    # ── PASO 1: Generador — crea el borrador ──────────────────────────────────
-    logger.info("[DUAL-AI Paso 1/2] Generando borrador creativo con Qwen-27B — módulo: %s", module_type)
-    raw = None
-    for model_name in ["qwen/qwen3.8-27b", "openai/gpt-oss-20b", "openai/gpt-oss-120b"]:
-        try:
-            response = client.chat.completions.create(
-                model=model_name,
-                messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": user_prompt},
-                ],
-                temperature=0.92,
-                max_tokens=600,
-            )
-            raw = _clean(response.choices[0].message.content)
-            logger.info("Borrador generado con éxito usando %s", model_name)
+    if module_type == "news" and extra_context:
+        user_prompt += f"\n\nContexto de la noticia: {extra_context}"
+    elif module_type == "reddit" and extra_context:
+        user_prompt += f"\n\nHistoria base de Reddit: {extra_context}"
+
+    # ── RONDA 1: Generación inicial ──────────────────────────────────────────
+    logger.info("=== [DUAL-AI LOOP] Iniciando generación y filtro de coherencia — Categoría: %s ===", module_type.upper())
+    logger.info("[Ronda 1] IA Generadora creando propuesta inicial...")
+
+    raw_initial = _call_llm(client, sys_prompt, user_prompt, temperature=0.90, max_tokens=600)
+    current_script, current_title = _parse_script_and_title(raw_initial)
+    logger.info("[Ronda 1] Borrador inicial listo (%d palabras): '%s'", len(current_script.split()), current_title)
+
+    max_rounds = 3
+    final_script = current_script
+    final_title = current_title
+
+    for round_num in range(1, max_rounds + 1):
+        is_final = (round_num == max_rounds)
+        logger.info("[Ronda %d/%d] IA Auditora evaluando coherencia lógica y categoría...", round_num, max_rounds)
+
+        audit = _audit_and_evaluate_draft(
+            draft_script=current_script,
+            draft_title=current_title,
+            module_type=module_type,
+            client=client,
+            is_final_round=is_final,
+        )
+
+        if audit["approved"] and len(audit["script"].split()) >= 80:
+            logger.info("✓ [DUAL-AI APROBADO] El Auditor aprobó la historia en la ronda %d!", round_num)
+            final_script = audit["script"]
+            final_title = audit["title"] or current_title
             break
-        except Exception as exc:
-            logger.warning("Generador con modelo %s falló: %s", model_name, exc)
 
-    if not raw:
-        # Fallback a Gemini si Groq está caído
-        logger.warning("Falló Groq para borrador, usando Gemini como fallback...")
-        try:
-            gemini_c = _get_gemini_client()
-            r = gemini_c.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=f"{SYSTEM_PROMPT}\n\n{user_prompt}",
+        if not is_final:
+            logger.warning(
+                "✗ [Ronda %d RECHAZADA] Auditor detectó falta de coherencia: %s",
+                round_num,
+                audit["criticism"][:150] + "..." if len(audit["criticism"]) > 150 else audit["criticism"],
             )
-            raw = _clean(r.text)
-        except Exception as exc2:
-            logger.error("Error en generación con Gemini: %s", exc2)
-            raise RuntimeError(f"Fallo en generación de guión: {exc2}") from exc2
+            logger.info("[Ronda %d] IA Generadora reescribiendo y corrigiendo lógica...", round_num + 1)
+            current_script, current_title = _regenerate_with_criticism(
+                previous_script=current_script,
+                criticism=audit["criticism"],
+                instructions=audit["instructions"],
+                module_type=module_type,
+                client=client,
+            )
+        else:
+            # En ronda final, si el script devuelto por el auditor es válido, tomarlo
+            if audit["script"] and len(audit["script"].split()) >= 80:
+                final_script = audit["script"]
+                final_title = audit["title"] or current_title
+            else:
+                final_script = current_script
+                final_title = current_title
+            logger.info("✓ [DUAL-AI FINAL] Finalizado ciclo de auditoría.")
 
-    draft_script, draft_title = _parse_script_and_title(raw)
-    logger.info("[Paso 1/2] Borrador: %d palabras | Título: %s", len(draft_script.split()), draft_title)
-
-    # ── PASO 2: Auditor — audita y mejora el borrador ─────────────────────────
-    final_script, final_title = _audit_and_improve_script(
-        draft_script, draft_title, module_type, client
-    )
+    final_script = remove_emojis(_clean(final_script))
+    final_title = remove_emojis(_clean(final_title))[:60]
 
     logger.info(
-        "[DUAL-AI FINAL] Guión listo: %d palabras | Título: %s",
-        len(final_script.split()), final_title,
+        "=== [DUAL-AI ÉXITO] Guión verificado y aprobado: %d palabras | Título: '%s' ===",
+        len(final_script.split()),
+        final_title,
     )
     return {"script": final_script, "title": final_title}
 

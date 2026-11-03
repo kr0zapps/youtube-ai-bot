@@ -189,7 +189,9 @@ def run(
 
         # Paso 3: Síntesis de voz con Edge-TTS
         logger.info("[3/7] Sintetizando voz casual con Edge-TTS...")
-        voice_name = cfg.get("voice", {}).get("voice_reddit", "es-MX-JorgeNeural")
+        voice_cfg = cfg.get("voice", {})
+        voice_name = voice_cfg.get("voice_reddit", "es-MX-JorgeNeural")
+        voice_rate = voice_cfg.get("rate", "-4%")
         audio_path = os.path.join(work_dir, "voice.mp3")
 
         word_timings = asyncio.run(
@@ -197,6 +199,7 @@ def run(
                 text=script_text,
                 output_path=audio_path,
                 voice_name=voice_name,
+                rate=voice_rate,
             )
         )
 

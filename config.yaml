@@ -6,10 +6,11 @@ video:
   duration_min_seconds: 20
 
 voice:
-  language: es-ES
-  voice_mystery: es-ES-AlvaroNeural     # Voz masculina dramática
-  voice_news: es-ES-ElviraNeural         # Voz femenina clara
-  voice_reddit: es-MX-JorgeNeural        # Voz masculina casual
+  language: es-MX
+  rate: "-4%"                            # Velocidad pausada con respiración natural (elimina efecto robótico)
+  voice_mystery: es-MX-JorgeNeural     # Voz masculina profunda y cinematográfica para historias
+  voice_news: es-MX-DaliaNeural         # Voz femenina conversacional y humana
+  voice_reddit: es-MX-JorgeNeural        # Voz masculina casual para anécdotas de Reddit
 
 subtitles:
   font: BebasNeue-Regular

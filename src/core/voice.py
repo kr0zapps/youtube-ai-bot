@@ -118,54 +118,77 @@ async def generate_voice(
 
     word_timings: List[Dict[str, Any]] = []
 
+    last_exc = None
+    for attempt in range(1, 4):
+        try:
+            word_timings = []
+            communicate = edge_tts.Communicate(
+                text=text.strip(),
+                voice=voice_name,
+                rate=rate,
+                volume=volume,
+            )
+
+            with open(output_path, "wb") as audio_file:
+                async for chunk in communicate.stream():
+                    chunk_type = chunk.get("type")
+                    if chunk_type == "audio":
+                        audio_file.write(chunk.get("data", b""))
+                    elif chunk_type == "WordBoundary":
+                        offset_ticks = chunk.get("offset", 0)
+                        duration_ticks = chunk.get("duration", 0)
+                        word_str = chunk.get("text", "").strip()
+                        if word_str:
+                            word_timings.append({
+                                "word": word_str,
+                                "start": round(offset_ticks / 10_000_000.0, 3),
+                                "end": round((offset_ticks + duration_ticks) / 10_000_000.0, 3),
+                            })
+                    elif chunk_type == "SentenceBoundary":
+                        # SentenceBoundary contiene marcas de tiempo exactas por oración
+                        offset_ticks = chunk.get("offset", 0)
+                        duration_ticks = chunk.get("duration", 0)
+                        sentence_text = chunk.get("text", "").strip()
+                        if sentence_text:
+                            s_start = offset_ticks / 10_000_000.0
+                            s_end = (offset_ticks + duration_ticks) / 10_000_000.0
+                            words_in_s = re.findall(r"\S+", sentence_text)
+                            if words_in_s:
+                                w_dur = (s_end - s_start) / len(words_in_s)
+                                for i, w in enumerate(words_in_s):
+                                    word_timings.append({
+                                        "word": w,
+                                        "start": round(s_start + i * w_dur, 3),
+                                        "end": round(s_start + (i + 1) * w_dur, 3),
+                                    })
+
+            file_size = os.path.getsize(output_path) if os.path.exists(output_path) else 0
+            if file_size > 0:
+                logger.info(
+                    "Audio generado exitosamente (intento %d/3): %s (tamaño: %d bytes)",
+                    attempt,
+                    output_path,
+                    file_size,
+                )
+                break
+            else:
+                raise RuntimeError("El archivo de audio generado está vacío.")
+        except Exception as exc:
+            last_exc = exc
+            logger.warning("Intento %d/3 de Edge-TTS falló: %s", attempt, exc)
+            if os.path.exists(output_path):
+                try:
+                    os.remove(output_path)
+                except OSError:
+                    pass
+            if attempt < 3:
+                await asyncio.sleep(2.0 * attempt)
+    else:
+        logger.error("Error definitivo al generar voz con Edge-TTS tras 3 intentos: %s", last_exc)
+        raise RuntimeError(f"Fallo en síntesis de voz tras 3 intentos: {last_exc}") from last_exc
+
     try:
-        communicate = edge_tts.Communicate(
-            text=text.strip(),
-            voice=voice_name,
-            rate=rate,
-            volume=volume,
-        )
-
-        with open(output_path, "wb") as audio_file:
-            async for chunk in communicate.stream():
-                chunk_type = chunk.get("type")
-                if chunk_type == "audio":
-                    audio_file.write(chunk.get("data", b""))
-                elif chunk_type == "WordBoundary":
-                    offset_ticks = chunk.get("offset", 0)
-                    duration_ticks = chunk.get("duration", 0)
-                    word_str = chunk.get("text", "").strip()
-                    if word_str:
-                        word_timings.append({
-                            "word": word_str,
-                            "start": round(offset_ticks / 10_000_000.0, 3),
-                            "end": round((offset_ticks + duration_ticks) / 10_000_000.0, 3),
-                        })
-                elif chunk_type == "SentenceBoundary":
-                    # SentenceBoundary contiene marcas de tiempo exactas por oración
-                    offset_ticks = chunk.get("offset", 0)
-                    duration_ticks = chunk.get("duration", 0)
-                    sentence_text = chunk.get("text", "").strip()
-                    if sentence_text:
-                        s_start = offset_ticks / 10_000_000.0
-                        s_end = (offset_ticks + duration_ticks) / 10_000_000.0
-                        words_in_s = re.findall(r"\S+", sentence_text)
-                        if words_in_s:
-                            w_dur = (s_end - s_start) / len(words_in_s)
-                            for i, w in enumerate(words_in_s):
-                                word_timings.append({
-                                    "word": w,
-                                    "start": round(s_start + i * w_dur, 3),
-                                    "end": round(s_start + (i + 1) * w_dur, 3),
-                                })
-
         file_size = os.path.getsize(output_path)
-        logger.info(
-            "Audio generado exitosamente: %s (tamaño: %d bytes)",
-            output_path,
-            file_size,
-        )
-
         # 1. Intentar alineación acústica milimétrica con Whisper Large V3 (Groq)
         whisper_timings = _align_with_whisper(output_path)
         if whisper_timings:
