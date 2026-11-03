@@ -16,6 +16,7 @@ import yaml
 import shutil
 import logging
 import asyncio
+import random
 from datetime import datetime
 from typing import Dict, Any, Optional, List
 from dotenv import load_dotenv
@@ -108,16 +109,76 @@ def fetch_top_reddit_story() -> Dict[str, str]:
 
 
 def _get_fallback_story() -> Dict[str, str]:
-    """Retorna una historia viral de respaldo lista para adaptar."""
-    return {
-        "title": "El misterioso paquete que llegó a mi puerta por error",
-        "text": (
-            "Título: Recibí un paquete anónimo que cambió mi vida.\n"
-            "Historia: Un martes por la mañana encontré una caja de madera antigua en mi puerta sin remitente. "
-            "Dentro había una cámara instantánea de los años 80 y una sola foto ya revelada... "
-            "En la foto se veía exactamente la sala de mi casa tomada desde la ventana, con la fecha de mañana escrita en el reverso."
-        ),
-    }
+    """Retorna una historia viral de respaldo aleatoria, emocionante y adictiva.
+    
+    Cero temas aburridos (economía, contabilidad, hojas de cálculo). Pura tensión humana,
+    venganzas inteligentes, secretos familiares y giros épicos.
+    """
+    viral_stories = [
+        {
+            "title": "Mi cuñado vendió el reloj de mi abuelo y se lo cobré en plena cena de Navidad",
+            "text": (
+                "Título: La venganza más satisfactoria contra mi cuñado ladrón.\n"
+                "Historia: Mi cuñado aprovechó que me mudé para robar el reloj de oro que me dejó mi abuelo y lo empeñó. "
+                "Cuando lo confronté, se rió en mi cara diciendo que no tenía pruebas. En lugar de pelear, fui a la tienda "
+                "de empeño, compré el reloj con la factura original y esperé a la cena de Navidad con toda la familia reunida. "
+                "Frente a sus padres y su esposa, le entregué como regalo la copia de la denuncia policial con su firma y video de las cámaras. "
+                "Tuvo que salir corriendo mientras su propia familia le exigía explicaciones."
+            ),
+        },
+        {
+            "title": "Mi vecino construyó una cerca en mi terreno y terminó perdiendo su piscina",
+            "text": (
+                "Título: El vecino arrogante que quiso robarme 4 metros de patio.\n"
+                "Historia: Mi vecino construyó una ampliación de su piscina invadiendo cuatro metros exactos de mi propiedad. "
+                "Cuando le pedí amablemente que revisara el plano, me gritó que llamara a mis abogados porque él tenía más dinero. "
+                "Hice el peritaje oficial con un topógrafo y el juez dictaminó que cualquier estructura construida en mi terreno "
+                "pasaba a ser legalmente mía. Contraté albañiles y levanté un muro de concreto de tres metros que dividió su piscina por la mitad. "
+                "Ahora la mitad de su agua está de mi lado y él no puede ni pisarla."
+            ),
+        },
+        {
+            "title": "Mi compañero de piso me robaba la comida hasta que usé Carolina Reaper",
+            "text": (
+                "Título: Lección inolvidable al ladrón de comida de mi refrigerador.\n"
+                "Historia: Llevaba seis meses cocinando tuppers para toda la semana y mi compañero de piso se los comía todos sin admitirlo jamás. "
+                "Siempre decía que debí habérmelos comido dormido. Cansado de la burla, preparé una lasaña deliciosa pero bañada en extracto puro "
+                "de Carolina Reaper, el ají más picante del planeta. A las tres de la mañana me despertaron gritos desesperados en la cocina: "
+                "estaba arrodillado frente al fregadero bebiendo leche directo del cartón con lágrimas y mocos en la cara. Nunca más volvió a tocar ni una uva ajena."
+            ),
+        },
+        {
+            "title": "Le regalé pruebas de ADN a mi familia y destapé una mentira de 30 años",
+            "text": (
+                "Título: El regalo de Navidad que destruyó la mentira de mi familia.\n"
+                "Historia: Para Navidad compré kits de genealogía y ADN para mis padres y mis dos hermanos, pensando que sería una actividad divertida. "
+                "Un mes después llegaron los resultados por correo. Mientras los míos y los de mi hermana coincidían al noventa y nueve por ciento, "
+                "mi hermano mayor no compartía ni un solo gen paterno con mi papá. La mesa quedó en un silencio sepulcral mientras mi madre se ponía "
+                "blanca como el papel. Lo que era una cena festiva terminó revelando una doble vida que mi madre había ocultado durante tres décadas enteras."
+            ),
+        },
+        {
+            "title": "Un estafador llamó para engañar a mi abuela y le tendí una trampa en vivo",
+            "text": (
+                "Título: El estafador que fue a buscar su propio arresto.\n"
+                "Historia: Un tipo llamó al teléfono fijo de mi abuela diciendo que yo estaba detenido en un choque y necesitaba cinco mil dólares en efectivo. "
+                "Por suerte yo estaba sentado al lado de ella. Le hice señas para que le siguiera la corriente con voz asustada y pactamos la entrega "
+                "en la puerta de la casa en treinta minutos. Llamé de inmediato a la comisaría local y dos oficiales encubiertos esperaron dentro de mi sala. "
+                "Cuando el sujeto llegó en su moto con una sonrisa triunfal y tocó el timbre, los policías salieron y lo redujeron en el suelo en dos segundos."
+            ),
+        },
+        {
+            "title": "La novia de mi mejor amigo exigió que pagáramos su fiesta y descubrí su secreto",
+            "text": (
+                "Título: La infidelidad descubierta por culpa de la avaricia.\n"
+                "Historia: La prometida de mi mejor amigo nos exigió a todos los padrinos mil dólares a cada uno para pagar su despedida de soltera en un hotel de lujo. "
+                "Cuando me negué, me amenazó con sacarme de la boda y prohibirle a mi amigo volverme a hablar. Sospechando de su actitud, revisé la reserva del hotel "
+                "porque un amigo trabajaba en la recepción: la habitación no era para sus amigas, estaba reservada para ella y su ex novio. "
+                "Le envié el comprobante con los nombres de huéspedes a mi amigo dos horas antes del ensayo de la boda. La boda se canceló de inmediato."
+            ),
+        },
+    ]
+    return random.choice(viral_stories)
 
 
 def _load_config(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
