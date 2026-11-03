@@ -10,8 +10,12 @@ import logging
 from typing import Dict, List, Optional
 
 from groq import Groq
-from google import genai
-from google.genai import types
+try:
+    from google import genai
+    from google.genai import types
+except ImportError:
+    genai = None
+    types = None
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -79,7 +83,9 @@ def _get_groq_client() -> Groq:
     return Groq(api_key=key)
 
 
-def _get_gemini_client() -> genai.Client:
+def _get_gemini_client():
+    if genai is None:
+        raise ImportError("google-genai no está instalado.")
     key = os.getenv("GEMINI_API_KEY")
     if not key:
         raise ValueError("GEMINI_API_KEY no configurada en .env")
