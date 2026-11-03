@@ -2,12 +2,11 @@ name: YouTube & TikTok AI Bot Automation
 
 on:
   schedule:
-    # 3 ejecuciones automáticas al día (horarios de máxima audiencia)
-    - cron: '0 13 * * *'   # 10:00 AM (Chile/Arg)
-    - cron: '0 19 * * *'   # 04:00 PM (Chile/Arg)
-    - cron: '0 1 * * *'    # 10:00 PM (Chile/Arg)
-  workflow_dispatch:        # Permite ejecutarlo manualmente con 1 clic desde GitHub
-
+    - cron: '17 13 * * *'   # 10:17 AM (Chile)
+    - cron: '17 19 * * *'   # 04:17 PM (Chile)
+    - cron: '17 1 * * *'    # 10:17 PM (Chile)
+  workflow_dispatch:
+  
 jobs:
   run-bot:
     runs-on: ubuntu-latest
