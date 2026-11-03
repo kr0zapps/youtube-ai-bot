@@ -1,0 +1,21 @@
+# Entorno virtual y dependencias
+venv/
+.env
+env/
+__pycache__/
+*.py[cod]
+
+# Secretos y credenciales de API (se configuran en GitHub Secrets)
+token.json
+client_secrets.json
+
+# Salidas de video temporales y logs
+output/
+logs/
+run_log.txt
+*.part
+*.tmp
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db

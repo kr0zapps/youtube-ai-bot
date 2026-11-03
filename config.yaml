@@ -1,0 +1,31 @@
+video:
+  width: 1080
+  height: 1920
+  fps: 30
+  duration_max_seconds: 58   # Shorts deben ser < 60s
+  duration_min_seconds: 20
+
+voice:
+  language: es-ES
+  voice_mystery: es-ES-AlvaroNeural     # Voz masculina dramática
+  voice_news: es-ES-ElviraNeural         # Voz femenina clara
+  voice_reddit: es-MX-JorgeNeural        # Voz masculina casual
+
+subtitles:
+  font: BebasNeue-Regular
+  font_size: 72
+  color: white
+  outline_color: black
+  outline_width: 3
+  words_per_subtitle: 3                  # Cuántas palabras por tarjeta
+
+schedule:
+  mystery_times: ["09:00", "15:00", "21:00"]   # 3 veces al día
+  news_times: ["08:00", "14:00", "20:00"]
+  reddit_times: ["10:00", "16:00", "22:00"]
+  timezone: America/Santiago
+
+gemini:
+  model: gemini-2.0-flash-lite
+  temperature: 0.9
+  max_output_tokens: 1024
