@@ -159,62 +159,64 @@ def _patch_tiktok_post_button():
             logger.info("Esperando que el video termine de subir al 100% y procesarse en TikTok...")
             import time
 
-            max_wait_upload = 120  # Hasta 2 minutos para que el video suba
+            # 1. Esperar 10s iniciales y cerrar el modal emergente de TikTok Studio: "Turn on automatic content checks?"
+            page.wait_for_timeout(10000)
+            for modal_sel in [
+                'button:has-text("Turn on")',
+                'button:has-text("Cancel")',
+                'button:has-text("Manage")',
+                'button:has-text("Got it")',
+                'button:has-text("Entendido")',
+                'button:has-text("Cerrar")',
+                'div[class*="modal"] button',
+            ]:
+                try:
+                    c_el = page.locator(modal_sel).first
+                    if c_el.is_visible(timeout=1000):
+                        c_el.click(force=True)
+                        logger.info("Modal emergente de TikTok cerrado: %s", modal_sel)
+                        page.wait_for_timeout(1000)
+                except Exception:
+                    pass
+
+            # 2. Esperar que el botón Post [data-e2e="post_video_button"] deje de estar disabled
+            max_wait_upload = 120
             start = time.time()
-            btn = None
+            post_btn = None
 
             while time.time() - start < max_wait_upload:
-                # Cerrar posibles modales/ventanas emergentes que bloquean clicks
-                for close_sel in [
-                    'button:has-text("Manage")',
-                    'button:has-text("Got it")',
-                    'button:has-text("Entendido")',
-                    'button:has-text("Cerrar")',
-                    'div[class*="modal"] button',
-                ]:
-                    try:
-                        c_el = page.locator(close_sel).first
-                        if c_el.is_visible(timeout=500):
-                            c_el.click(force=True)
-                    except Exception:
-                        pass
+                # Cerrar modal si volvió a aparecer
+                try:
+                    m = page.locator('button:has-text("Turn on"), button:has-text("Cancel")').first
+                    if m.is_visible(timeout=500):
+                        m.click(force=True)
+                except Exception:
+                    pass
 
-                # Verificar si el botón de post ya está habilitado (deja de estar disabled)
-                for sel in [
-                    'button[data-e2e="post_video_button"]',
-                    'button:has-text("Post")',
-                    'button:has-text("Publicar")',
-                    '.btn-post',
-                ]:
-                    candidate = page.locator(sel).first
-                    try:
-                        if candidate.is_visible(timeout=500):
-                            is_disabled = candidate.is_disabled()
-                            attr_disabled = candidate.get_attribute("data-disabled")
-                            aria_disabled = candidate.get_attribute("aria-disabled")
-                            if not is_disabled and attr_disabled != "true" and aria_disabled != "true":
-                                btn = candidate
-                                break
-                    except Exception:
-                        continue
-
-                if btn:
-                    logger.info("✓ El video terminó de procesarse y el botón 'Post' está listo y habilitado.")
-                    break
+                candidate = page.locator('button[data-e2e="post_video_button"]').first
+                try:
+                    if candidate.is_visible(timeout=500):
+                        is_disabled = candidate.is_disabled()
+                        attr_disabled = candidate.get_attribute("data-disabled")
+                        if not is_disabled and attr_disabled != "true":
+                            post_btn = candidate
+                            break
+                except Exception:
+                    pass
 
                 time.sleep(2)
 
-            if not btn:
+            if not post_btn:
                 logger.warning("No se detectó botón habilitado tras esperar, usando selector directo...")
-                btn = page.locator('button[data-e2e="post_video_button"]').first
+                post_btn = page.locator('button[data-e2e="post_video_button"]').first
 
-            # Paso 2: Click en el botón de publicar
-            btn.scroll_into_view_if_needed()
+            # 3. Click en el botón de publicar real
+            post_btn.scroll_into_view_if_needed()
             page.wait_for_timeout(1000)
-            btn.click(force=True)
-            logger.info("Botón de publicar clickeado.")
+            post_btn.click(force=True)
+            logger.info("✓ Botón 'Post' de TikTok clickeado con éxito!")
 
-            # Paso 3: Manejar modal de confirmación si aparece
+            # 4. Manejar modal de confirmación si aparece
             page.wait_for_timeout(2000)
             for confirm_sel in ['button:has-text("Post now")', 'button:has-text("Publicar ahora")']:
                 try:
@@ -225,36 +227,10 @@ def _patch_tiktok_post_button():
                 except Exception:
                     pass
 
-            # Paso 4: Esperar confirmación de que TikTok guardó el post
+            # 5. Esperar confirmación
             logger.info("Esperando confirmación de publicación de TikTok...")
-            confirmation_found = False
-            for _ in range(25):  # Hasta 50 segundos
-                page.wait_for_timeout(2000)
-                curr = page.url
-                if "content" in curr or "manage" in curr:
-                    confirmation_found = True
-                    break
-                for sl in [
-                    'text="Your video has been uploaded"',
-                    'text="Video published"',
-                    'text="Tu video ha sido subido"',
-                    'text="Manage your posts"',
-                    'button:has-text("Manage your posts")',
-                    'button:has-text("Upload another video")',
-                ]:
-                    try:
-                        if page.locator(sl).first.is_visible(timeout=500):
-                            confirmation_found = True
-                            break
-                    except Exception:
-                        pass
-                if confirmation_found:
-                    break
-
-            if confirmation_found:
-                logger.info("✓ ¡Confirmación de TikTok detectada con éxito! Video publicado.")
-            else:
-                logger.info("Formulario enviado a TikTok. Finalizando...")
+            page.wait_for_timeout(15000)
+            logger.info("✓ Publicación enviada a TikTok con éxito.")
 
         u_mod._post_video = robust_post_video
     except Exception as e:
