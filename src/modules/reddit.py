@@ -242,11 +242,11 @@ def run(
             gameplay_path=gameplay_clip if gameplay_clip else None,
         )
 
-        # Paso 7: Subida a YouTube
+        # Paso 7 y 8: Subida a YouTube y TikTok
         if dry_run or no_upload:
-            logger.info("[7/7] Modo DRY-RUN o NO-UPLOAD activo: saltando subida a YouTube.")
+            logger.info("[7/8] Modo DRY-RUN o NO-UPLOAD activo: saltando subida a YouTube y TikTok.")
         else:
-            logger.info("[7/7] Subiendo Short a YouTube...")
+            logger.info("[7/8] Subiendo Short a YouTube...")
             description = (
                 f"{script_text}\n\n"
                 "#Shorts #Reddit #RedditStories #HistoriasDeReddit #Confesiones #Viral"
@@ -271,17 +271,18 @@ def run(
             except Exception as up_exc:
                 logger.error("Error al subir a YouTube: %s. El video final se preserva.", up_exc)
 
-        # Paso 8: Distribución a TikTok
-        from src.core import tiktok as tiktok_module
-        try:
-            tiktok_tags = ["fyp", "parati", "reddit", "redditstories", "historias"]
-            tiktok_module.upload_to_tiktok(
-                video_path=final_video_path,
-                title=video_title,
-                tags=tiktok_tags,
-            )
-        except Exception as tk_exc:
-            logger.warning("Aviso TikTok: %s", tk_exc)
+            # Paso 8: Distribución a TikTok
+            from src.core import tiktok as tiktok_module
+            try:
+                logger.info("[8/8] Subiendo video automáticamente a TikTok...")
+                tiktok_tags = ["fyp", "parati", "reddit", "redditstories", "historias"]
+                tiktok_module.upload_to_tiktok(
+                    video_path=final_video_path,
+                    title=video_title,
+                    tags=tiktok_tags,
+                )
+            except Exception as tk_exc:
+                logger.warning("Aviso TikTok: %s", tk_exc)
 
         # Limpieza de archivos temporales
         if not dry_run and os.path.exists(work_dir):

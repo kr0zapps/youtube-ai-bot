@@ -143,9 +143,9 @@ def run(
             gameplay_path=gameplay_clip if gameplay_clip else None,
         )
 
-        # Paso 6: Subida a YouTube
+        # Paso 6: Subida a YouTube y TikTok
         if dry_run or no_upload:
-            logger.info("[6/6] Modo DRY-RUN o NO-UPLOAD activo: saltando subida a YouTube.")
+            logger.info("[6/6] Modo DRY-RUN o NO-UPLOAD activo: saltando subida a YouTube y TikTok.")
         else:
             logger.info("[6/6] Subiendo Short a YouTube...")
             description = (
@@ -172,17 +172,18 @@ def run(
             except Exception as up_exc:
                 logger.error("Error al subir a YouTube: %s. El video final se preserva.", up_exc)
 
-        # Paso 7: Distribución a TikTok (automático si está configurado o genera paquete de publicación)
-        from src.core import tiktok as tiktok_module
-        try:
-            tiktok_tags = ["fyp", "parati", "misterio", "terror", "creepypasta"]
-            tiktok_module.upload_to_tiktok(
-                video_path=final_video_path,
-                title=video_title,
-                tags=tiktok_tags,
-            )
-        except Exception as tk_exc:
-            logger.warning("Aviso TikTok: %s", tk_exc)
+            # Paso 7: Subida automática a TikTok
+            from src.core import tiktok as tiktok_module
+            try:
+                logger.info("[7/7] Subiendo video automáticamente a TikTok...")
+                tiktok_tags = ["fyp", "parati", "misterio", "terror", "creepypasta"]
+                tiktok_module.upload_to_tiktok(
+                    video_path=final_video_path,
+                    title=video_title,
+                    tags=tiktok_tags,
+                )
+            except Exception as tk_exc:
+                logger.warning("Aviso TikTok: %s", tk_exc)
 
         # Limpieza de archivos temporales de trabajo si no es dry_run
         if not dry_run and os.path.exists(work_dir):

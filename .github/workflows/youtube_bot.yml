@@ -21,10 +21,10 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Instalar FFmpeg y fuentes Impact
+      - name: Instalar FFmpeg
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-impact
+          sudo apt-get install -y ffmpeg fonts-liberation fonts-dejavu-core
 
       - name: Instalar librerías Python y Playwright
         run: |
