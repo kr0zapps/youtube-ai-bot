@@ -163,16 +163,21 @@ def _upload_via_cookies(video_path: str, caption: str) -> bool:
             "browser": "chromium",
             "headless": True,
         }
-        if session_id:
-            kwargs["sessionid"] = session_id
-        elif cookie_file:
+        if cookie_file:
             kwargs["cookies"] = cookie_file
+        elif session_id:
+            kwargs["sessionid"] = session_id
 
         logger.info("Enviando video a TikTok Creator Center...")
         results = upload_video(**kwargs)
-        if results:
+        # tiktok_uploader retorna la lista de videos que FALLARON.
+        # Por lo tanto, una lista vacía [] significa que se subió con ÉXITO.
+        if isinstance(results, list) and len(results) == 0:
             logger.info("✓ ¡Video publicado con éxito en TikTok!")
             return True
+        else:
+            logger.warning("Fallo en subida a TikTok: %s", results)
+            return False
     except Exception as e:
         logger.warning("Fallo en subida automática a TikTok: %s", e)
     return False
