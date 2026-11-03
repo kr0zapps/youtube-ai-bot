@@ -48,10 +48,11 @@ def authenticate():
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
         )
         page = context.new_page()
-        page.goto("https://www.tiktok.com/login", wait_until="networkidle")
+        page.set_default_timeout(0)  # Sin timeout para que no se cierre mientras verificas
+        page.goto("https://www.tiktok.com/login", wait_until="domcontentloaded")
 
         logged_in = False
-        max_wait = 300  # 5 minutos máximo
+        max_wait = 600  # 10 minutos para dar tiempo a la verificación 2FA / SMS
         start_time = time.time()
 
         while time.time() - start_time < max_wait:
@@ -60,10 +61,10 @@ def authenticate():
 
             cookie_names = {c["name"] for c in cookies}
             # TikTok asigna sessionid_ss o sid_guard solo cuando el login fue completado con éxito
-            has_auth_cookie = "sessionid_ss" in cookie_names or "sid_guard" in cookie_names
+            has_auth_cookie = any(c in cookie_names for c in ["sessionid_ss", "sid_guard", "uid_tt"])
             is_off_login = "login" not in curr_url
 
-            if has_auth_cookie and is_off_login:
+            if has_auth_cookie or (is_off_login and "sessionid" in cookie_names and len(cookies) > 5):
                 logged_in = True
                 print("\n✅ ¡LOGIN EXITOSO DETECTADO EN TIKTOK!")
                 page.wait_for_timeout(3000)  # Dejar que TikTok termine de registrar los tokens
