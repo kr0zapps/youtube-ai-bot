@@ -1,4 +1,4 @@
-name: YouTube AI Bot Automation
+name: YouTube & TikTok AI Bot Automation
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
     - cron: '0 13 * * *'   # 10:00 AM (Chile/Arg)
     - cron: '0 19 * * *'   # 04:00 PM (Chile/Arg)
     - cron: '0 1 * * *'    # 10:00 PM (Chile/Arg)
-  workflow_dispatch:        # Permite ejecutarlo manualmente con 1 clic desde la web de GitHub
+  workflow_dispatch:        # Permite ejecutarlo manualmente con 1 clic desde GitHub
 
 jobs:
   run-bot:
@@ -26,25 +26,30 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-impact
 
-      - name: Instalar librerías Python
+      - name: Instalar librerías Python y Playwright
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install yt-dlp
+          pip install yt-dlp tiktok-uploader playwright
+          python -m playwright install chromium --with-deps
 
-      - name: Restaurar credenciales y tokens
+      - name: Restaurar credenciales y tokens (YouTube + TikTok)
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
           YOUTUBE_CLIENT_SECRETS_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRETS_JSON }}
+          TIKTOK_SESSION_ID: ${{ secrets.TIKTOK_SESSION_ID }}
         run: |
           echo "GROQ_API_KEY=$GROQ_API_KEY" >> .env
           echo "GEMINI_API_KEY=$GEMINI_API_KEY" >> .env
           echo "YOUTUBE_CLIENT_SECRETS_FILE=client_secrets.json" >> .env
           echo "$YOUTUBE_CLIENT_SECRETS_JSON" > client_secrets.json
           echo "$YOUTUBE_TOKEN_JSON" > token.json
+          if [ -n "$TIKTOK_SESSION_ID" ]; then
+            echo "TIKTOK_SESSION_ID=$TIKTOK_SESSION_ID" >> .env
+          fi
 
-      - name: Ejecutar generación y subida de Short a YouTube
+      - name: Ejecutar generación y subida a YouTube y TikTok
         run: |
           python main.py --module mystery

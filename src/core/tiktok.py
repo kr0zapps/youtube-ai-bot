@@ -151,20 +151,28 @@ def _upload_via_official_api(
 
 
 def _upload_via_cookies(video_path: str, caption: str) -> bool:
-    """Sube video a TikTok Creator Center usando cookies de sesión."""
+    """Sube video a TikTok Creator Center de forma 100% desatendida y headless."""
+    session_id = os.getenv("TIKTOK_SESSION_ID")
+    cookie_file = "tiktok_cookies.txt" if os.path.exists("tiktok_cookies.txt") else ""
+
     try:
         from tiktok_uploader.upload import upload_video
-        cookie_file = "tiktok_cookies.txt"
-        success = upload_video(
-            filename=video_path,
-            description=caption,
-            cookies=cookie_file,
-        )
-        if success:
-            logger.info("✓ Video publicado en TikTok vía Creator Center.")
+        kwargs = {
+            "filename": os.path.abspath(video_path),
+            "description": caption,
+            "browser": "chromium",
+            "headless": True,
+        }
+        if session_id:
+            kwargs["sessionid"] = session_id
+        elif cookie_file:
+            kwargs["cookies"] = cookie_file
+
+        logger.info("Enviando video a TikTok Creator Center...")
+        results = upload_video(**kwargs)
+        if results:
+            logger.info("✓ ¡Video publicado con éxito en TikTok!")
             return True
-    except ImportError:
-        logger.warning("tiktok-uploader no instalado. Instalar con: pip install tiktok-uploader")
     except Exception as e:
-        logger.warning("Fallo en subida por cookies: %s", e)
+        logger.warning("Fallo en subida automática a TikTok: %s", e)
     return False
