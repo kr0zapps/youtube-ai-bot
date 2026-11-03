@@ -1,6 +1,7 @@
 """Módulo de generación de guiones usando Groq (LLM principal) + Gemini (imágenes).
 
 Groq usa llama-3.3-70b-versatile gratis con hasta 8.000 tokens de salida.
+Sistema dual de IA: Generador + Auditor para guiones de máxima calidad viral.
 Gemini se reserva para generar prompts de imágenes.
 """
 
@@ -22,7 +23,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 # ──────────────────────────────────────────────
-# PROMPTS
+# PROMPTS — GENERADOR (Paso 1)
 # ──────────────────────────────────────────────
 SYSTEM_PROMPT = (
     "Eres un guionista de élite de historias de terror, misterio y creepypastas virales para YouTube Shorts y TikTok. "
@@ -32,6 +33,66 @@ SYSTEM_PROMPT = (
     "PROHIBIDO USAR EMOJIS: Nunca uses ningún emoji ni emoticono bajo ninguna circunstancia. "
     "Nunca usas asteriscos, guiones, listas ni formato markdown. Solo texto corrido fluido con comas y puntos."
 )
+
+# ──────────────────────────────────────────────
+# PROMPTS — AUDITOR (Paso 2: Filtro de calidad)
+# ──────────────────────────────────────────────
+AUDITOR_SYSTEM_PROMPT = (
+    "Eres un editor jefe de contenido viral con 10 anos de experiencia en YouTube Shorts y TikTok de habla hispana. "
+    "Tu especialidad es tomar guiones buenos y convertirlos en guiones EXCEPCIONALES que generan millones de vistas. "
+    "Eres implacable, exigente y solo aceptas lo mejor. "
+    "REGLAS ABSOLUTAS: "
+    "1. CERO emojis ni emoticons en ningun lugar. "
+    "2. CERO asteriscos, guiones, listas ni formato markdown. "
+    "3. Solo texto corrido con comas y puntos, como habla real de persona. "
+    "4. NUNCA uses la palabra 'relatos' en el titulo ni en el guion."
+)
+
+AUDITOR_USER_PROMPT = {
+    "mystery": (
+        "Tienes este borrador de guion de terror/misterio para YouTube Shorts:\n\n"
+        "GUION BORRADOR:\n{draft_script}\n\n"
+        "TITULO BORRADOR: {draft_title}\n\n"
+        "Tu mision como editor jefe es auditarlo y reescribirlo para maximizar su potencial viral. Evalua y mejora:\n"
+        "1. GANCHO (primeros 2 segundos): debe ser tan perturbador que sea imposible no seguir viendo. "
+        "Si el gancho es debil o predecible, reescribelo con algo que genere miedo o curiosidad inmediata.\n"
+        "2. TENSION SOSTENIDA: cada oracion debe escalar la tension. Agrega detalles sensoriales muy especificos "
+        "(el olor a humedo, el crujido exacto, la sensacion de que algo te mira desde atras).\n"
+        "3. GIRO FINAL: el final debe ser un golpe que deje al espectador con piel de gallina y ganas de comentar. "
+        "Si el giro es predecible o flojo, cambialo por algo que nadie espera.\n"
+        "4. FLUIDEZ: debe sonar como alguien contandote algo aterrador que le paso, no como texto escrito.\n"
+        "5. LONGITUD: entre 135 y 160 palabras exactas. Cuenta las palabras y ajusta.\n"
+        "6. TITULO: debe generar click inevitable. Maximo 55 caracteres. Sin emojis. Sin la palabra 'relatos'.\n\n"
+        "Devuelve UNICAMENTE el guion mejorado sin encabezados ni explicaciones, y al final escribe:\n"
+        "TITULO: [titulo mejorado]"
+    ),
+    "news": (
+        "Tienes este borrador de guion de noticias para YouTube Shorts:\n\n"
+        "GUION BORRADOR:\n{draft_script}\n\n"
+        "TITULO BORRADOR: {draft_title}\n\n"
+        "Mejoralo para maxima viralidad:\n"
+        "1. El primer dato debe ser tan impactante que sea imposible no seguir viendo.\n"
+        "2. Lenguaje claro, directo, como periodista de calle hablando a camara.\n"
+        "3. Termina con una pregunta que invite a comentar.\n"
+        "4. Entre 120 y 140 palabras. Cero emojis. Cero formato.\n"
+        "5. Titulo impactante, maximo 60 caracteres, sin emojis.\n\n"
+        "Devuelve UNICAMENTE el guion mejorado y al final:\n"
+        "TITULO: [titulo mejorado]"
+    ),
+    "reddit": (
+        "Tienes este borrador de historia de Reddit para YouTube Shorts:\n\n"
+        "GUION BORRADOR:\n{draft_script}\n\n"
+        "TITULO BORRADOR: {draft_title}\n\n"
+        "Mejoralo para maxima viralidad:\n"
+        "1. Voz muy coloquial, como contandoselo a un amigo con emocion real.\n"
+        "2. Agrega reacciones y pensamientos internos autenticos.\n"
+        "3. El momento de revelacion debe ser electrico.\n"
+        "4. Entre 120 y 140 palabras. Cero emojis. Cero formato.\n"
+        "5. Titulo enganoso en el buen sentido, maximo 60 caracteres, sin emojis.\n\n"
+        "Devuelve UNICAMENTE el guion mejorado y al final:\n"
+        "TITULO: [titulo mejorado]"
+    ),
+}
 
 USER_PROMPTS = {
     "mystery": (
@@ -117,42 +178,9 @@ def _clean(text: str) -> str:
     return text.strip()
 
 
-def generate_script(
-    module_type: str,
-    extra_context: Optional[str] = None,
-    **kwargs,
-) -> Dict[str, str]:
-    """Genera guión y título usando Groq (llama-3.3-70b-versatile)."""
-    if module_type not in USER_PROMPTS:
-        raise ValueError(f"Módulo desconocido: {module_type}")
-
-    client = _get_groq_client()
-
-    user_prompt = USER_PROMPTS[module_type]
-    if module_type == "news":
-        user_prompt = user_prompt.format(noticia=extra_context or "")
-    elif module_type == "reddit":
-        user_prompt = user_prompt.format(historia_reddit=extra_context or "")
-
-    logger.info("Generando guión con Groq (llama-3.3-70b) módulo: %s", module_type)
-
-    try:
-        response = client.chat.completions.create(
-            model="qwen/qwen3.8-27b",
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_prompt},
-            ],
-            temperature=0.9,
-            max_tokens=512,
-        )
-        raw = _clean(response.choices[0].message.content)
-    except Exception as exc:
-        logger.error("Error con Groq: %s", exc)
-        raise RuntimeError(f"Fallo en Groq: {exc}") from exc
-
-    # Parsear guión y título
-    title = "Historia de misterio #Shorts"
+def _parse_script_and_title(raw: str, default_title: str = "Historia de misterio") -> tuple[str, str]:
+    """Extrae guión y título del texto crudo del LLM."""
+    title = default_title
     if "TITULO:" in raw.upper():
         idx = raw.upper().index("TITULO:")
         script = _clean(raw[:idx])
@@ -168,16 +196,150 @@ def generate_script(
             script = " ".join(lines[:-1])
         else:
             script = raw
-            title = "Historia de misterio #Shorts"
-
-    # Limpiar formato residual y asegurar cero emojis
+    # Limpiar etiquetas residuales
     script = re.sub(r"^\*{0,2}(Guión|Script|Narración):?\*{0,2}\s*", "", script, flags=re.IGNORECASE)
     title = re.sub(r"^\*{0,2}(Título|Title|TITULO):?\*{0,2}\s*", "", title, flags=re.IGNORECASE)
     script = remove_emojis(_clean(script))
     title = remove_emojis(_clean(title))[:60]
+    return script, title
 
-    logger.info("Guión generado: %d palabras | Título: %s", len(script.split()), title)
-    return {"script": script, "title": title}
+
+def _audit_and_improve_script(
+    draft_script: str,
+    draft_title: str,
+    module_type: str,
+    client: Groq,
+) -> tuple[str, str]:
+    """Paso 2: Auditor de IA (openai/gpt-oss-120b) que evalúa y mejora el guión para máxima viralidad."""
+    if module_type not in AUDITOR_USER_PROMPT:
+        logger.warning("No hay prompt auditor para módulo '%s', saltando auditoría.", module_type)
+        return draft_script, draft_title
+
+    auditor_prompt = AUDITOR_USER_PROMPT[module_type].format(
+        draft_script=draft_script,
+        draft_title=draft_title,
+    )
+
+    logger.info("[DUAL-AI Paso 2/2] Auditando y mejorando guión con Auditor Viral...")
+    raw_improved = None
+    for model_name in ["qwen/qwen3.8-27b", "openai/gpt-oss-20b"]:
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": AUDITOR_SYSTEM_PROMPT},
+                    {"role": "user", "content": auditor_prompt},
+                ],
+                temperature=0.78,
+                max_tokens=850,
+            )
+            content = response.choices[0].message.content
+            if content and len(content.strip()) > 50:
+                raw_improved = _clean(content)
+                logger.info("Auditor completado con éxito usando Groq (%s)", model_name)
+                break
+        except Exception as exc:
+            logger.warning("Auditor con modelo %s falló: %s", model_name, exc)
+
+    if not raw_improved:
+        try:
+            gemini_c = _get_gemini_client()
+            r = gemini_c.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=f"{AUDITOR_SYSTEM_PROMPT}\n\n{auditor_prompt}",
+            )
+            if r.text and len(r.text.strip()) > 50:
+                raw_improved = _clean(r.text)
+                logger.info("Auditor completado con éxito usando Google Gemini (gemini-2.5-flash)")
+        except Exception as exc_gem:
+            logger.warning("Auditor con Gemini también falló: %s", exc_gem)
+
+    if not raw_improved:
+        logger.warning("Todos los modelos de auditoría fallaron. Usando borrador original.")
+        return draft_script, draft_title
+
+    improved_script, improved_title = _parse_script_and_title(raw_improved, draft_title)
+
+    # Validar que el resultado mejorado sea sustancialmente válido
+    word_count = len(improved_script.split())
+    if word_count < 80:
+        logger.warning("Auditor devolvió texto muy corto (%d palabras), usando borrador original.", word_count)
+        return draft_script, draft_title
+
+    logger.info(
+        "Guión auditado y mejorado: %d palabras | Título: %s",
+        word_count, improved_title,
+    )
+    return improved_script, improved_title
+
+
+def generate_script(
+    module_type: str,
+    extra_context: Optional[str] = None,
+    **kwargs,
+) -> Dict[str, str]:
+    """Genera guión y título usando sistema DUAL de IA:
+    - Paso 1: Generador Creativo (Qwen 3.8 27B) — crea la narrativa y el suspenso.
+    - Paso 2: Auditor Viral (GPT-OSS 120B) — afina el gancho, escala la tensión y pule el título.
+    """
+    if module_type not in USER_PROMPTS:
+        raise ValueError(f"Módulo desconocido: {module_type}")
+
+    client = _get_groq_client()
+
+    user_prompt = USER_PROMPTS[module_type]
+    if module_type == "news":
+        user_prompt = user_prompt.format(noticia=extra_context or "")
+    elif module_type == "reddit":
+        user_prompt = user_prompt.format(historia_reddit=extra_context or "")
+
+    # ── PASO 1: Generador — crea el borrador ──────────────────────────────────
+    logger.info("[DUAL-AI Paso 1/2] Generando borrador creativo con Qwen-27B — módulo: %s", module_type)
+    raw = None
+    for model_name in ["qwen/qwen3.8-27b", "openai/gpt-oss-20b", "openai/gpt-oss-120b"]:
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt},
+                ],
+                temperature=0.92,
+                max_tokens=600,
+            )
+            raw = _clean(response.choices[0].message.content)
+            logger.info("Borrador generado con éxito usando %s", model_name)
+            break
+        except Exception as exc:
+            logger.warning("Generador con modelo %s falló: %s", model_name, exc)
+
+    if not raw:
+        # Fallback a Gemini si Groq está caído
+        logger.warning("Falló Groq para borrador, usando Gemini como fallback...")
+        try:
+            gemini_c = _get_gemini_client()
+            r = gemini_c.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=f"{SYSTEM_PROMPT}\n\n{user_prompt}",
+            )
+            raw = _clean(r.text)
+        except Exception as exc2:
+            logger.error("Error en generación con Gemini: %s", exc2)
+            raise RuntimeError(f"Fallo en generación de guión: {exc2}") from exc2
+
+    draft_script, draft_title = _parse_script_and_title(raw)
+    logger.info("[Paso 1/2] Borrador: %d palabras | Título: %s", len(draft_script.split()), draft_title)
+
+    # ── PASO 2: Auditor — audita y mejora el borrador ─────────────────────────
+    final_script, final_title = _audit_and_improve_script(
+        draft_script, draft_title, module_type, client
+    )
+
+    logger.info(
+        "[DUAL-AI FINAL] Guión listo: %d palabras | Título: %s",
+        len(final_script.split()), final_title,
+    )
+    return {"script": final_script, "title": final_title}
 
 
 def generate_image_prompts(

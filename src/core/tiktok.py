@@ -150,34 +150,95 @@ def _upload_via_official_api(
     return False
 
 
+def _dismiss_tiktok_modals(page):
+    """Cierra cualquier modal emergente de TikTok Studio que bloquee la interfaz."""
+    modal_buttons = [
+        'button:has-text("Turn on")',
+        'button:has-text("Cancel")',
+        'button:has-text("Manage")',
+        'button:has-text("Got it")',
+        'button:has-text("Entendido")',
+        'button:has-text("Cerrar")',
+        'button:has-text("Aceptar")',
+        'button:has-text("Allow")',
+        'div[class*="modal"] button',
+    ]
+    for sel in modal_buttons:
+        try:
+            btn = page.locator(sel).first
+            if btn.is_visible(timeout=500):
+                btn.click(force=True)
+                logger.info("Modal emergente de TikTok cerrado: %s", sel)
+                page.wait_for_timeout(500)
+        except Exception:
+            pass
+
+    # Si aún hay overlays bloqueando clics (data-floating-ui-portal o TUXModal-overlay), eliminarlos del DOM
+    try:
+        page.evaluate("""
+            const overlays = document.querySelectorAll('.TUXModal-overlay, [data-floating-ui-portal]');
+            overlays.forEach(el => {
+                const text = el.innerText || '';
+                if (text.includes("check if your video") || text.includes("automatic content checks")) {
+                    el.remove();
+                }
+            });
+        """)
+    except Exception:
+        pass
+
+
 def _patch_tiktok_post_button():
-    """Parchea el botón de publicación de tiktok_uploader para esperar a que el video termine de subir al 100% antes de clickear."""
+    """Parchea funciones de tiktok_uploader para manejar modales agresivos de TikTok Studio
+    y asegurar que tanto la descripción como el botón de publicación funcionen al 100%."""
     try:
         import tiktok_uploader.upload as u_mod
+        orig_remove_split = getattr(u_mod, "_remove_split_window", None)
+        orig_set_desc = getattr(u_mod, "_set_description", None)
+        orig_set_interactivity = getattr(u_mod, "_set_interactivity", None)
+
+        def patched_remove_split(page):
+            if orig_remove_split:
+                try:
+                    orig_remove_split(page)
+                except Exception:
+                    pass
+            _dismiss_tiktok_modals(page)
+
+        def patched_set_interactivity(page, *args, **kwargs):
+            _dismiss_tiktok_modals(page)
+            if orig_set_interactivity:
+                try:
+                    orig_set_interactivity(page, *args, **kwargs)
+                except Exception as e:
+                    logger.warning("Aviso en interactividad de TikTok (no crítico): %s", e)
+
+        def patched_set_description(page, description):
+            _dismiss_tiktok_modals(page)
+            page.wait_for_timeout(1000)
+            try:
+                if orig_set_desc:
+                    orig_set_desc(page, description)
+            except Exception as e:
+                logger.warning("Fallo al escribir descripción con método normal (%s). Usando método forzado...", e)
+                _dismiss_tiktok_modals(page)
+                try:
+                    from tiktok_uploader.browsers import config
+                    desc_loc = page.locator(f"xpath={config.selectors.upload.description}").first
+                    desc_loc.wait_for(state="visible", timeout=10000)
+                    desc_loc.click(force=True)
+                    desc_loc.fill(description)
+                    logger.info("Descripción de TikTok establecida mediante fallback forzado.")
+                except Exception as ex2:
+                    logger.error("No se pudo establecer descripción en TikTok: %s", ex2)
 
         def robust_post_video(page):
             logger.info("Esperando que el video termine de subir al 100% y procesarse en TikTok...")
             import time
 
-            # 1. Esperar 10s iniciales y cerrar el modal emergente de TikTok Studio: "Turn on automatic content checks?"
-            page.wait_for_timeout(10000)
-            for modal_sel in [
-                'button:has-text("Turn on")',
-                'button:has-text("Cancel")',
-                'button:has-text("Manage")',
-                'button:has-text("Got it")',
-                'button:has-text("Entendido")',
-                'button:has-text("Cerrar")',
-                'div[class*="modal"] button',
-            ]:
-                try:
-                    c_el = page.locator(modal_sel).first
-                    if c_el.is_visible(timeout=1000):
-                        c_el.click(force=True)
-                        logger.info("Modal emergente de TikTok cerrado: %s", modal_sel)
-                        page.wait_for_timeout(1000)
-                except Exception:
-                    pass
+            # 1. Esperar y cerrar modales emergentes
+            page.wait_for_timeout(8000)
+            _dismiss_tiktok_modals(page)
 
             # 2. Esperar que el botón Post [data-e2e="post_video_button"] deje de estar disabled
             max_wait_upload = 120
@@ -185,13 +246,7 @@ def _patch_tiktok_post_button():
             post_btn = None
 
             while time.time() - start < max_wait_upload:
-                # Cerrar modal si volvió a aparecer
-                try:
-                    m = page.locator('button:has-text("Turn on"), button:has-text("Cancel")').first
-                    if m.is_visible(timeout=500):
-                        m.click(force=True)
-                except Exception:
-                    pass
+                _dismiss_tiktok_modals(page)
 
                 candidate = page.locator('button[data-e2e="post_video_button"]').first
                 try:
@@ -232,7 +287,11 @@ def _patch_tiktok_post_button():
             page.wait_for_timeout(15000)
             logger.info("✓ Publicación enviada a TikTok con éxito.")
 
+        u_mod._remove_split_window = patched_remove_split
+        u_mod._set_interactivity = patched_set_interactivity
+        u_mod._set_description = patched_set_description
         u_mod._post_video = robust_post_video
+        logger.info("Parches de TikTok Studio aplicados con éxito (modales, descripción y botón de post).")
     except Exception as e:
         logger.warning("No se pudo aplicar el parche de publicación de TikTok: %s", e)
 

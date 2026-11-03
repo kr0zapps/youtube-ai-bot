@@ -8,6 +8,7 @@ __pycache__/
 # Secretos y credenciales de API (se configuran en GitHub Secrets)
 token.json
 client_secrets.json
+*cookies*.txt
 
 # Salidas de video temporales y logs
 output/
@@ -15,6 +16,9 @@ logs/
 run_log.txt
 *.part
 *.tmp
+assets/gameplay/temp_*
+assets/gameplay/*_opt.mp4
+assets/gameplay/*_final.mp4
 
 # Archivos de sistema
 .DS_Store

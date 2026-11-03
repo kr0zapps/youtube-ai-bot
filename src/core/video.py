@@ -1,7 +1,7 @@
-"""Módulo de ensamblaje de video con FFmpeg.
+"""MÃ³dulo de ensamblaje de video con FFmpeg.
 
-Ensambla imágenes verticales (1080x1920) con transiciones fade entre cada imagen,
-mezcla la voz con música de fondo calibrada al 15% y quema subtítulos animados (.ass).
+Ensambla imÃ¡genes verticales (1080x1920) con transiciones fade entre cada imagen,
+mezcla la voz con mÃºsica de fondo calibrada al 15% y quema subtÃ­tulos animados (.ass).
 """
 
 import os
@@ -44,12 +44,12 @@ def find_ffmpeg_executable(config: Optional[Dict[str, Any]] = None) -> str:
             return candidate
 
     raise FileNotFoundError(
-        "No se encontró el ejecutable 'ffmpeg'. Asegúrate de tener FFmpeg instalado."
+        "No se encontrÃ³ el ejecutable 'ffmpeg'. AsegÃºrate de tener FFmpeg instalado."
     )
 
 
 def get_audio_duration(audio_path: str, ffmpeg_bin: str) -> float:
-    """Determina la duración exacta de un archivo de audio en segundos usando FFmpeg."""
+    """Determina la duraciÃ³n exacta de un archivo de audio en segundos usando FFmpeg."""
     if not os.path.exists(audio_path):
         raise FileNotFoundError(f"Archivo de audio no encontrado: {audio_path}")
 
@@ -67,10 +67,10 @@ def get_audio_duration(audio_path: str, ffmpeg_bin: str) -> float:
         if match:
             hours, minutes, seconds = match.groups()
             total_sec = float(hours) * 3600 + float(minutes) * 60 + float(seconds)
-            logger.info("Duración de audio calculada: %.2f segundos (%s)", total_sec, audio_path)
+            logger.info("DuraciÃ³n de audio calculada: %.2f segundos (%s)", total_sec, audio_path)
             return total_sec
     except Exception as exc:
-        logger.warning("Fallo al obtener duración con FFmpeg: %s", exc)
+        logger.warning("Fallo al obtener duraciÃ³n con FFmpeg: %s", exc)
 
     size_bytes = os.path.getsize(audio_path)
     estimated = max(10.0, (size_bytes * 8) / (48 * 1000))
@@ -97,8 +97,8 @@ def assemble_video(
     """Ensambla el video final vertical (1080x1920).
 
     Modos:
-    - gameplay_path proporcionado → usa el clip de gameplay como fondo (mejor resultado)
-    - image_paths → usa imágenes con fade entre cada una
+    - gameplay_path proporcionado â†’ usa el clip de gameplay como fondo (mejor resultado)
+    - image_paths â†’ usa imÃ¡genes con fade entre cada una
     """
     if not gameplay_path and not image_paths:
         raise ValueError("Se requiere gameplay_path o image_paths.")
@@ -115,7 +115,7 @@ def assemble_video(
 
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
 
-    # ── MODO GAMEPLAY: usar clip de video como fondo ──────────────────────────
+    # â”€â”€ MODO GAMEPLAY: usar clip de video como fondo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if gameplay_path and os.path.exists(gameplay_path):
         logger.info("Modo GAMEPLAY: usando %s como fondo", os.path.basename(gameplay_path))
         return _assemble_with_gameplay(
@@ -129,18 +129,18 @@ def assemble_video(
             width=width, height=height, fps=fps,
         )
 
-    # ── MODO IMÁGENES: clips con fade ──────────────────────────────────────────
+    # â”€â”€ MODO IMÃGENES: clips con fade â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     num_images = len(image_paths)
     duration_per_image = max(3.0, audio_duration / num_images)
 
     logger.info(
-        "Iniciando ensamble: %d imágenes, duración total: %.2fs, %.2fs/imagen",
+        "Iniciando ensamble: %d imÃ¡genes, duraciÃ³n total: %.2fs, %.2fs/imagen",
         num_images, audio_duration, duration_per_image,
     )
 
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
 
-    # ── Paso 1: Generar un clip .mp4 por imagen con fade in/out ────────────────
+    # â”€â”€ Paso 1: Generar un clip .mp4 por imagen con fade in/out â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     clip_paths = []
     fade_duration = min(0.5, duration_per_image * 0.08)
     fade_out_start = max(0.1, duration_per_image - fade_duration)
@@ -166,7 +166,7 @@ def assemble_video(
         clip_paths.append(clip_out)
 
         z_start, z_end, pan_x, pan_y = kb_moves[idx % len(kb_moves)]
-        # Escalar la imagen más grande para dar espacio al paneo
+        # Escalar la imagen mÃ¡s grande para dar espacio al paneo
         scale_w = int(width * 1.2)
         scale_h = int(height * 1.2)
         # Paneo suave usando zoompan simplificado: solo zoom, sin paneo complejo
@@ -187,7 +187,7 @@ def assemble_video(
             "-vf", vf,
             "-r", str(fps),
             "-t", f"{duration_per_image:.3f}",
-            "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
+            "-c:v", "libx264", "-preset", "medium", "-crf", "18",
             "-pix_fmt", "yuv420p", "-an",
             clip_out,
         ]
@@ -205,20 +205,20 @@ def assemble_video(
                 ffmpeg_bin, "-y",
                 "-loop", "1", "-t", f"{duration_per_image:.3f}", "-i", img_path,
                 "-vf", f"scale={width}:{height}:force_original_aspect_ratio=increase,crop={width}:{height}",
-                "-r", str(fps), "-c:v", "libx264", "-preset", "veryfast",
+                "-r", str(fps), "-c:v", "libx264", "-preset", "medium",
                 "-pix_fmt", "yuv420p", "-an", clip_out,
             ]
             subprocess.run(cmd_simple, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                            text=True, encoding="utf-8", errors="replace")
 
-    # ── Paso 2: Crear lista de concat para FFmpeg (rutas absolutas) ─────────────
+    # â”€â”€ Paso 2: Crear lista de concat para FFmpeg (rutas absolutas) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     concat_list_path = output_path.replace(".mp4", "_concat.txt")
     with open(concat_list_path, "w", encoding="utf-8") as f:
         for cp in clip_paths:
             abs_cp = os.path.abspath(cp).replace("\\", "/")
             f.write(f"file '{abs_cp}'\n")
 
-    # ── Paso 3: Unir clips con concat demuxer ─────────────────────────────────
+    # â”€â”€ Paso 3: Unir clips con concat demuxer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     silent_video = output_path.replace(".mp4", "_silent.mp4")
     cmd_concat = [
         ffmpeg_bin, "-y",
@@ -237,7 +237,7 @@ def assemble_video(
         logger.error("Error en concat: %s", proc_concat.stderr[-300:])
         raise RuntimeError("Fallo al concatenar clips de video.")
 
-    # ── Paso 4: Mezclar audio + subtítulos sobre el video ─────────────────────
+    # â”€â”€ Paso 4: Mezclar audio + subtÃ­tulos sobre el video â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     has_music = bool(music_path and os.path.exists(music_path))
 
     input_args = ["-i", silent_video, "-i", audio_path]
@@ -246,7 +246,7 @@ def assemble_video(
 
     filter_parts = []
 
-    # Subtítulos
+    # SubtÃ­tulos
     if subtitle_path and os.path.exists(subtitle_path):
         escaped_sub = _format_ffmpeg_path(subtitle_path)
         fonts_dir = _format_ffmpeg_path(os.path.join("assets", "fonts"))
@@ -272,13 +272,13 @@ def assemble_video(
         "-filter_complex", ";\n".join(filter_parts),
         "-map", "[vout]", "-map", "[aout]",
         "-t", f"{audio_duration:.2f}",
-        "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
+        "-c:v", "libx264", "-preset", "medium", "-crf", "18",
         "-pix_fmt", "yuv420p",
         "-c:a", "aac", "-b:a", "192k",
         output_path,
     ]
 
-    logger.info("Ensamblando video final con audio y subtítulos...")
+    logger.info("Ensamblando video final con audio y subtÃ­tulos...")
     try:
         proc_final = subprocess.run(
             cmd_final,
@@ -289,9 +289,9 @@ def assemble_video(
     except subprocess.CalledProcessError as exc:
         logger.error("Error en ensamble final: %s", exc.stderr[-400:])
 
-        # Fallback sin subtítulos
+        # Fallback sin subtÃ­tulos
         if subtitle_path and "subtitles" in exc.stderr:
-            logger.warning("Reintentando sin subtítulos...")
+            logger.warning("Reintentando sin subtÃ­tulos...")
             cmd_nosub = [
                 ffmpeg_bin, "-y",
                 "-i", silent_video, "-i", audio_path,
@@ -305,7 +305,7 @@ def assemble_video(
         else:
             raise RuntimeError(f"Fallo en ensamble de video: {exc.stderr[:400]}") from exc
 
-    # ── Limpieza de archivos temporales ───────────────────────────────────────
+    # â”€â”€ Limpieza de archivos temporales â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     for cp in clip_paths:
         try:
             os.remove(cp)
@@ -317,7 +317,7 @@ def assemble_video(
         except OSError:
             pass
 
-    logger.info("Video ensamblado con éxito: %s (%d bytes)", output_path, os.path.getsize(output_path))
+    logger.info("Video ensamblado con Ã©xito: %s (%d bytes)", output_path, os.path.getsize(output_path))
     return output_path
 
 
@@ -337,7 +337,7 @@ def _assemble_with_gameplay(
     import random
     has_music = bool(music_path and os.path.exists(music_path))
 
-    # Obtener duración del gameplay para elegir un inicio aleatorio
+    # Obtener duraciÃ³n del gameplay para elegir un inicio aleatorio
     gameplay_duration = get_audio_duration(gameplay_path, ffmpeg_bin)
     seek_args = []
     if gameplay_duration > audio_duration + 10:
@@ -371,7 +371,7 @@ def _assemble_with_gameplay(
     else:
         filter_parts.append(f"{vf_base}[vout]")
 
-    # Audio: voz destacada + música de fondo envolvente
+    # Audio: voz destacada + mÃºsica de fondo envolvente
     if has_music:
         filter_parts.append(
             "[1:a]volume=1.4[avoice];"
@@ -387,13 +387,13 @@ def _assemble_with_gameplay(
         "-filter_complex", ";\n".join(filter_parts),
         "-map", "[vout]", "-map", "[aout]",
         "-t", f"{audio_duration:.2f}",
-        "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
+        "-c:v", "libx264", "-preset", "medium", "-crf", "18",
         "-pix_fmt", "yuv420p",
         "-c:a", "aac", "-b:a", "192k",
         output_path,
     ]
 
-    logger.info("Ensamblando video con gameplay + audio + subtítulos...")
+    logger.info("Ensamblando video con gameplay + audio + subtÃ­tulos...")
     try:
         subprocess.run(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -401,16 +401,16 @@ def _assemble_with_gameplay(
         )
     except subprocess.CalledProcessError as exc:
         logger.error("Error en modo gameplay: %s", exc.stderr[-400:])
-        # Fallback sin subtítulos
+        # Fallback sin subtÃ­tulos
         if subtitle_path and "subtitles" in exc.stderr:
-            logger.warning("Reintentando sin subtítulos...")
+            logger.warning("Reintentando sin subtÃ­tulos...")
             cmd_nosub = [
                 ffmpeg_bin, "-y",
                 "-stream_loop", "-1", "-i", gameplay_path, "-i", audio_path,
                 "-vf", f"scale={width*2}:{height*2}:force_original_aspect_ratio=increase,crop={width}:{height}",
                 "-map", "0:v", "-map", "1:a",
                 "-t", f"{audio_duration:.2f}",
-                "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
+                "-c:v", "libx264", "-preset", "medium", "-crf", "18",
                 "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k",
                 output_path,
             ]
@@ -421,3 +421,4 @@ def _assemble_with_gameplay(
 
     logger.info("Video gameplay ensamblado: %s (%d bytes)", output_path, os.path.getsize(output_path))
     return output_path
+

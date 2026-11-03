@@ -56,4 +56,4 @@ jobs:
 
       - name: Ejecutar generación y subida a YouTube y TikTok
         run: |
-          python main.py --module mystery
+          python main.py --module $(python -c "import random; print(random.choice(['mystery','mystery','mystery','news','reddit']))")
