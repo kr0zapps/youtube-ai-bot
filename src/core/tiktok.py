@@ -150,12 +150,86 @@ def _upload_via_official_api(
     return False
 
 
+def _patch_tiktok_post_button():
+    """Parchea el botón de publicación de tiktok_uploader para usar force=True y evitar intercepciones de popups."""
+    try:
+        import tiktok_uploader.upload as u_mod
+
+        def robust_post_video(page):
+            logger.info("Esperando que el video termine de cargarse y procesarse en TikTok...")
+            # Cerrar posibles modales/ventanas emergentes que bloquean clicks
+            for close_sel in [
+                'button:has-text("Manage")',
+                'button:has-text("Got it")',
+                'button:has-text("Entendido")',
+                'button:has-text("Cerrar")',
+                'div[class*="modal"] button',
+            ]:
+                try:
+                    btn = page.locator(close_sel).first
+                    if btn.is_visible(timeout=1000):
+                        btn.click(force=True)
+                except Exception:
+                    pass
+
+            # Intentar clickear el botón de publicar con selectores múltiples y force=True
+            clicked = False
+            for selector in [
+                'button:has-text("Post")',
+                'button:has-text("Publicar")',
+                '[data-e2e="post_video_button"]',
+                '.btn-post',
+                f"xpath={u_mod.config.selectors.upload.post}",
+            ]:
+                try:
+                    btn = page.locator(selector).first
+                    if btn.is_visible(timeout=3000):
+                        btn.scroll_into_view_if_needed()
+                        page.wait_for_timeout(1000)
+                        btn.click(force=True)
+                        clicked = True
+                        logger.info("✓ Botón 'Post' de TikTok clickeado con éxito (%s)", selector)
+                        break
+                except Exception:
+                    continue
+
+            if not clicked:
+                logger.info("Intentando click de respaldo con JavaScript en TikTok...")
+                page.evaluate("""
+                    () => {
+                        const btns = Array.from(document.querySelectorAll('button'));
+                        const post = btns.find(b => {
+                            const t = (b.innerText || '').trim().toLowerCase();
+                            return t === 'post' || t === 'publicar' || t.includes('post');
+                        });
+                        if (post) post.click();
+                    }
+                """)
+
+            # Manejar modal de confirmación si aparece
+            page.wait_for_timeout(2000)
+            for confirm_sel in ['button:has-text("Post now")', 'button:has-text("Publicar ahora")']:
+                try:
+                    c_btn = page.locator(confirm_sel).first
+                    if c_btn.is_visible(timeout=2000):
+                        c_btn.click(force=True)
+                except Exception:
+                    pass
+
+            page.wait_for_timeout(6000)
+
+        u_mod._post_video = robust_post_video
+    except Exception as e:
+        logger.warning("No se pudo aplicar el parche de publicación de TikTok: %s", e)
+
+
 def _upload_via_cookies(video_path: str, caption: str) -> bool:
     """Sube video a TikTok Creator Center de forma 100% desatendida y headless."""
     session_id = os.getenv("TIKTOK_SESSION_ID")
     cookie_file = "tiktok_cookies.txt" if os.path.exists("tiktok_cookies.txt") else ""
 
     try:
+        _patch_tiktok_post_button()
         from tiktok_uploader.upload import upload_video
         kwargs = {
             "filename": os.path.abspath(video_path),
