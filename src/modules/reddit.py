@@ -271,6 +271,18 @@ def run(
             except Exception as up_exc:
                 logger.error("Error al subir a YouTube: %s. El video final se preserva.", up_exc)
 
+        # Paso 8: Distribución a TikTok
+        from src.core import tiktok as tiktok_module
+        try:
+            tiktok_tags = ["fyp", "parati", "reddit", "redditstories", "historias"]
+            tiktok_module.upload_to_tiktok(
+                video_path=final_video_path,
+                title=video_title,
+                tags=tiktok_tags,
+            )
+        except Exception as tk_exc:
+            logger.warning("Aviso TikTok: %s", tk_exc)
+
         # Limpieza de archivos temporales
         if not dry_run and os.path.exists(work_dir):
             try:
