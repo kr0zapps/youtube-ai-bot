@@ -93,12 +93,13 @@ def assemble_video(
     output_path: str,
     config: Optional[Dict[str, Any]] = None,
     gameplay_path: Optional[str] = None,
+    reddit_card_path: Optional[str] = None,
 ) -> str:
     """Ensambla el video final vertical (1080x1920).
 
     Modos:
-    - gameplay_path proporcionado â†’ usa el clip de gameplay como fondo (mejor resultado)
-    - image_paths â†’ usa imÃ¡genes con fade entre cada una
+    - gameplay_path proporcionado → usa el clip de gameplay como fondo (mejor resultado)
+    - image_paths → usa imágenes con fade entre cada una
     """
     if not gameplay_path and not image_paths:
         raise ValueError("Se requiere gameplay_path o image_paths.")
@@ -115,7 +116,7 @@ def assemble_video(
 
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
 
-    # â”€â”€ MODO GAMEPLAY: usar clip de video como fondo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── MODO GAMEPLAY: usar clip de video como fondo ─────────────────────────
     if gameplay_path and os.path.exists(gameplay_path):
         logger.info("Modo GAMEPLAY: usando %s como fondo", os.path.basename(gameplay_path))
         return _assemble_with_gameplay(
@@ -127,6 +128,7 @@ def assemble_video(
             audio_duration=audio_duration,
             ffmpeg_bin=ffmpeg_bin,
             width=width, height=height, fps=fps,
+            reddit_card_path=reddit_card_path,
         )
 
     # â”€â”€ MODO IMÃGENES: clips con fade â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -332,12 +334,16 @@ def _assemble_with_gameplay(
     width: int = 1080,
     height: int = 1920,
     fps: int = 30,
+    reddit_card_path: Optional[str] = None,
 ) -> str:
     """Ensambla el video usando un clip de gameplay como fondo con punto de inicio aleatorio."""
     import random
     has_music = bool(music_path and os.path.exists(music_path))
+    has_card = bool(reddit_card_path and os.path.exists(reddit_card_path))
+    whoosh_path = os.path.join("assets", "audio", "whoosh.mp3")
+    has_whoosh = bool(has_card and os.path.exists(whoosh_path))
 
-    # Obtener duraciÃ³n del gameplay para elegir un inicio aleatorio
+    # Obtener duración del gameplay para elegir un inicio aleatorio
     gameplay_duration = get_audio_duration(gameplay_path, ffmpeg_bin)
     seek_args = []
     if gameplay_duration > audio_duration + 10:
@@ -347,10 +353,25 @@ def _assemble_with_gameplay(
         seek_args = ["-ss", f"{start_sec:.2f}"]
 
     input_args = [*seek_args, "-stream_loop", "-1", "-i", gameplay_path, "-i", audio_path]
+    cur_idx = 2
+
+    music_idx = None
     if has_music:
         input_args.extend(["-stream_loop", "-1", "-i", music_path])
+        music_idx = cur_idx
+        cur_idx += 1
 
-    music_idx = 2 if has_music else None
+    whoosh_idx = None
+    if has_whoosh:
+        input_args.extend(["-i", whoosh_path])
+        whoosh_idx = cur_idx
+        cur_idx += 1
+
+    card_idx = None
+    if has_card:
+        input_args.extend(["-i", reddit_card_path])
+        card_idx = cur_idx
+        cur_idx += 1
 
     filter_parts = []
 
@@ -359,25 +380,44 @@ def _assemble_with_gameplay(
         f"[0:v]scale={width}:{height}:force_original_aspect_ratio=increase,"
         f"crop={width}:{height},"
         f"eq=brightness=0.01:saturation=1.12,"
-        f"unsharp=5:5:0.6:5:5:0.0"
+        f"unsharp=5:5:0.6:5:5:0.0[vbg]"
     )
+    filter_parts.append(vf_base)
+    last_v = "vbg"
+
+    # Hook visual de Reddit: aparece centrado en los primeros 3.6s con fade-out suave
+    if has_card:
+        filter_parts.append(
+            f"[{card_idx}:v]fade=t=out:st=3.2:d=0.5:alpha=1[cardfaded];"
+            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y=360:enable='between(t,0,3.7)'[vcard]"
+        )
+        last_v = "vcard"
 
     if subtitle_path and os.path.exists(subtitle_path):
         escaped_sub = _format_ffmpeg_path(subtitle_path)
         fonts_dir = _format_ffmpeg_path(os.path.join("assets", "fonts"))
         filter_parts.append(
-            f"{vf_base}[vscaled];"
-            f"[vscaled]subtitles=filename='{escaped_sub}':fontsdir='{fonts_dir}'[vout]"
+            f"[{last_v}]subtitles=filename='{escaped_sub}':fontsdir='{fonts_dir}'[vout]"
         )
     else:
-        filter_parts.append(f"{vf_base}[vout]")
+        filter_parts.append(f"[{last_v}]null[vout]")
 
-    # Audio: voz destacada + música de fondo envolvente
+    # Audio: voz destacada + música de fondo + efecto whoosh de entrada
+    audio_inputs = ["[1:a]volume=1.4[avoice]"]
+    mix_sources = ["[avoice]"]
+
     if has_music:
+        audio_inputs.append(f"[{music_idx}:a]volume=0.22[amusic]")
+        mix_sources.append("[amusic]")
+
+    if has_whoosh:
+        audio_inputs.append(f"[{whoosh_idx}:a]volume=0.45[awhoosh]")
+        mix_sources.append("[awhoosh]")
+
+    if len(mix_sources) > 1:
+        filter_parts.extend(audio_inputs)
         filter_parts.append(
-            "[1:a]volume=1.4[avoice];"
-            f"[{music_idx}:a]volume=0.22[amusic];"
-            "[avoice][amusic]amix=inputs=2:duration=first:dropout_transition=2[aout]"
+            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=2[aout]"
         )
     else:
         filter_parts.append("[1:a]volume=1.0[aout]")

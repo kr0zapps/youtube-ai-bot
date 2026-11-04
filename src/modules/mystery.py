@@ -130,6 +130,20 @@ def run(
             config=cfg,
         )
 
+        # Paso 4.5: Generar tarjeta visual de Reddit / Archivos Secretos (Hook visual)
+        from src.core import reddit_card
+        card_path = os.path.join(work_dir, "reddit_card.png")
+        try:
+            reddit_card.generate_reddit_card(
+                hook_text=script_text[:190],
+                output_path=card_path,
+                category="mystery",
+                theme="dark",
+            )
+        except Exception as c_err:
+            logger.warning("Aviso tarjeta misterio: %s", c_err)
+            card_path = None
+
         # Paso 5: Ensamble del video con FFmpeg
         logger.info("[5/6] Ensamblando video con FFmpeg (Ken Burns, música y subtítulos)...")
         music_path = os.path.join("assets", "music", "mystery_bg.mp3")
@@ -144,6 +158,7 @@ def run(
             output_path=final_video_path,
             config=cfg,
             gameplay_path=gameplay_clip if gameplay_clip else None,
+            reddit_card_path=card_path if (card_path and os.path.exists(card_path)) else None,
         )
 
         # Paso 6: Subida a YouTube y TikTok

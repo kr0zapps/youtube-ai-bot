@@ -176,6 +176,20 @@ def run(
             config=cfg,
         )
 
+        # Paso 5.5: Generar tarjeta visual de Reddit / Post viral (Hook de retención)
+        from src.core import reddit_card
+        card_path = os.path.join(work_dir, "reddit_card.png")
+        try:
+            reddit_card.generate_reddit_card(
+                hook_text=script_text[:190],
+                output_path=card_path,
+                category="bizarre",
+                theme=random.choice(["light", "dark"]),
+            )
+        except Exception as c_err:
+            logger.warning("Aviso tarjeta bizarro: %s", c_err)
+            card_path = None
+
         # Paso 6: Renderizado de video 1080x1920 60fps con FFmpeg
         logger.info("[6/7] Ensamblando video vertical...")
         final_video_path = os.path.join(base_output, f"bizarre_{timestamp}.mp4")
@@ -187,6 +201,7 @@ def run(
             output_path=final_video_path,
             config=cfg,
             gameplay_path=gameplay_clip,
+            reddit_card_path=card_path if (card_path and os.path.exists(card_path)) else None,
         )
 
         # Paso 7: Publicación a YouTube y TikTok

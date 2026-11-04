@@ -303,28 +303,9 @@ def _parse_auditor_response(raw: str, default_title: str) -> Dict[str, Any]:
     }
 
 
-def _call_llm(client: Groq, system_msg: str, user_msg: str, temperature: float = 0.8, max_tokens: int = 350) -> str:
-    """Invoca LLM probando modelos rápidos en cascada con fallback robusto a Gemini."""
-    # 1. Intentar con modelos en Groq
-    groq_models = ["qwen/qwen3.8-27b", "openai/gpt-oss-20b", "llama-3.1-8b-instant"]
-    for model_name in groq_models:
-        try:
-            r = client.chat.completions.create(
-                model=model_name,
-                messages=[
-                    {"role": "system", "content": system_msg},
-                    {"role": "user", "content": user_msg},
-                ],
-                temperature=temperature,
-                max_tokens=min(max_tokens, 380),
-            )
-            content = r.choices[0].message.content
-            if content and len(content.strip()) > 30:
-                return _clean(content)
-        except Exception as e:
-            logger.warning("Aviso en modelo Groq %s: %s. Probando alternativa...", model_name, str(e)[:120])
-
-    # 2. Fallback resiliente a Gemini (probando 2.5-flash, 2.0-flash y 2.0-flash-lite)
+def _call_llm(client: Groq, system_msg: str, user_msg: str, temperature: float = 0.8, max_tokens: int = 750) -> str:
+    """Invoca LLM probando primero los modelos más avanzados (Gemini 2.5 Flash y GPT-OSS-120B)."""
+    # 1. Prioridad máxima: Gemini 2.5 Flash (excelencia en narrativa humana, drama y retención)
     gemini_models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite"]
     for g_model in gemini_models:
         try:
@@ -334,10 +315,30 @@ def _call_llm(client: Groq, system_msg: str, user_msg: str, temperature: float =
                 contents=f"{system_msg}\n\n{user_msg}",
             )
             if res.text and len(res.text.strip()) > 30:
-                logger.info("Respuesta obtenida con éxito usando fallback Gemini (%s)", g_model)
+                logger.info("✓ Historia/Auditoría generada con éxito usando %s", g_model)
                 return _clean(res.text)
         except Exception as eg:
-            logger.warning("Aviso en modelo Gemini %s: %s. Probando siguiente...", g_model, str(eg)[:120])
+            logger.warning("Aviso en modelo Gemini %s: %s. Probando alternativa...", g_model, str(eg)[:120])
+
+    # 2. Fallback resiliente a modelos de alto nivel en Groq (GPT-OSS-120B y Qwen-27B)
+    groq_models = ["openai/gpt-oss-120b", "qwen/qwen3.8-27b", "openai/gpt-oss-20b"]
+    for model_name in groq_models:
+        try:
+            r = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_msg},
+                    {"role": "user", "content": user_msg},
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            content = r.choices[0].message.content
+            if content and len(content.strip()) > 30:
+                logger.info("✓ Historia/Auditoría generada con éxito usando Groq (%s)", model_name)
+                return _clean(content)
+        except Exception as e:
+            logger.warning("Aviso en modelo Groq %s: %s. Probando alternativa...", model_name, str(e)[:120])
 
     raise RuntimeError("Todos los motores de IA fallaron al generar respuesta.")
 

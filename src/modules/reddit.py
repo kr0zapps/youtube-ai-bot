@@ -290,6 +290,20 @@ def run(
             config=cfg,
         )
 
+        # Paso 5.5: Generar tarjeta visual de Reddit (Hook de retención)
+        from src.core import reddit_card
+        card_path = os.path.join(work_dir, "reddit_card.png")
+        try:
+            reddit_card.generate_reddit_card(
+                hook_text=script_text[:190],
+                output_path=card_path,
+                category="reddit",
+                theme=random.choice(["light", "dark"]),
+            )
+        except Exception as c_err:
+            logger.warning("Aviso tarjeta Reddit: %s", c_err)
+            card_path = None
+
         # Paso 6: Ensamble del video con FFmpeg
         logger.info("[6/7] Ensamblando video con FFmpeg...")
         music_path = os.path.join("assets", "music", "mystery_bg.mp3")
@@ -304,6 +318,7 @@ def run(
             output_path=final_video_path,
             config=cfg,
             gameplay_path=gameplay_clip if gameplay_clip else None,
+            reddit_card_path=card_path if (card_path and os.path.exists(card_path)) else None,
         )
 
         # Paso 7 y 8: Subida a YouTube y TikTok
