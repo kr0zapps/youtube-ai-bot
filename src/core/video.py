@@ -85,6 +85,35 @@ def _format_ffmpeg_path(path: str) -> str:
     return clean
 
 
+def extract_thumbnail(
+    video_path: str,
+    output_thumb_path: str,
+    timestamp_sec: float = 1.2,
+    config: Optional[Dict[str, Any]] = None,
+) -> str:
+    """Extrae un fotograma vertical en alta resolución (1080x1920) para usar de miniatura.
+
+    Captura exactamente el momento donde la tarjeta de Reddit está completamente visible y centrada.
+    """
+    if not os.path.exists(video_path):
+        raise FileNotFoundError(f"Video no encontrado para miniatura: {video_path}")
+
+    ffmpeg_bin = find_ffmpeg_executable(config)
+    os.makedirs(os.path.dirname(os.path.abspath(output_thumb_path)), exist_ok=True)
+
+    cmd = [
+        ffmpeg_bin, "-y",
+        "-ss", f"{timestamp_sec:.2f}",
+        "-i", video_path,
+        "-vframes", "1",
+        "-q:v", "2",
+        output_thumb_path,
+    ]
+    subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+    logger.info("✓ Miniatura extraída con tarjeta de Reddit: %s", output_thumb_path)
+    return output_thumb_path
+
+
 def assemble_video(
     image_paths: List[str],
     audio_path: str,
@@ -385,11 +414,11 @@ def _assemble_with_gameplay(
     filter_parts.append(vf_base)
     last_v = "vbg"
 
-    # Hook visual de Reddit: aparece centrado en los primeros 3.6s con fade-out suave
+    # Hook visual de Reddit: animación suave de entrada y salida con fade
     if has_card:
         filter_parts.append(
-            f"[{card_idx}:v]fade=t=out:st=3.2:d=0.5:alpha=1[cardfaded];"
-            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y=360:enable='between(t,0,3.7)'[vcard]"
+            f"[{card_idx}:v]fade=t=in:st=0:d=0.25:alpha=1,fade=t=out:st=3.35:d=0.45:alpha=1[cardfaded];"
+            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(lt(t,0.35), 360-150*(1-t/0.35)*(1-t/0.35), if(gt(t,3.35), 360-690*(t-3.35)*(t-3.35), 360))':enable='between(t,0,3.85)'[vcard]"
         )
         last_v = "vcard"
 
@@ -411,7 +440,7 @@ def _assemble_with_gameplay(
         mix_sources.append("[amusic]")
 
     if has_whoosh:
-        audio_inputs.append(f"[{whoosh_idx}:a]volume=2.2[awhoosh]")
+        audio_inputs.append(f"[{whoosh_idx}:a]volume=0.85[awhoosh]")
         mix_sources.append("[awhoosh]")
 
     if len(mix_sources) > 1:

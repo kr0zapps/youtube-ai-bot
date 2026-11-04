@@ -83,6 +83,7 @@ def upload_video(
     tags: Optional[List[str]] = None,
     category_id: str = "24",  # 24 = Entertainment, 22 = People & Blogs, 25 = News & Politics
     privacy_status: str = "public",
+    thumbnail_path: Optional[str] = None,
 ) -> str:
     """Sube un archivo de video a YouTube usando subida resumable.
 
@@ -195,4 +196,20 @@ def upload_video(
     video_id = response.get("id")
     logger.info("¡Video subido exitosamente a YouTube! Video ID: %s", video_id)
     logger.info("Enlace directo: https://youtube.com/shorts/%s", video_id)
+
+    # Subir miniatura personalizada oficial (tarjeta de Reddit en vertical)
+    if thumbnail_path and os.path.exists(thumbnail_path):
+        try:
+            logger.info("Subiendo miniatura personalizada con gancho visual a YouTube: %s", thumbnail_path)
+            youtube.thumbnails().set(
+                videoId=video_id,
+                media_body=MediaFileUpload(thumbnail_path, mimetype="image/jpeg"),
+            ).execute()
+            logger.info("✓ Miniatura oficial con tarjeta de Reddit establecida con éxito en YouTube!")
+        except Exception as th_err:
+            logger.warning(
+                "Aviso de miniatura en YouTube: %s. (Nota: YouTube Shorts usa automáticamente el primer fotograma si el canal aún no tiene verificación SMS).",
+                th_err,
+            )
+
     return video_id

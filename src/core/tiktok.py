@@ -36,6 +36,7 @@ def upload_to_tiktok(
     title: str,
     tags: Optional[List[str]] = None,
     privacy_level: str = "PUBLIC_TO_EVERYONE",  # PUBLIC_TO_EVERYONE, MUTUAL_FOLLOW_FRIENDS, FOLLOWER_OF_CREATOR, SELF_ONLY
+    cover_path: Optional[str] = None,
 ) -> bool:
     """Publica un video vertical en TikTok.
 
@@ -44,6 +45,7 @@ def upload_to_tiktok(
         title: Título y descripción del video (hasta 2200 caracteres).
         tags: Lista de hashtags opcionales.
         privacy_level: Nivel de privacidad en TikTok.
+        cover_path: Ruta a la portada personalizada con tarjeta de Reddit.
 
     Returns:
         True si la subida fue exitosa.
@@ -62,7 +64,7 @@ def upload_to_tiktok(
     if access_token:
         logger.info("Iniciando subida a TikTok vía Content Posting API Oficial...")
         try:
-            return _upload_via_official_api(video_path, full_caption, access_token, privacy_level)
+            return _upload_via_official_api(video_path, full_caption, access_token, privacy_level, cover_path)
         except Exception as exc:
             logger.error("Error en API oficial de TikTok: %s", exc)
 
@@ -70,7 +72,7 @@ def upload_to_tiktok(
     if session_id or os.path.exists("tiktok_cookies.txt"):
         logger.info("Iniciando subida a TikTok vía sesión web / Creator Center...")
         try:
-            return _upload_via_cookies(video_path, full_caption)
+            return _upload_via_cookies(video_path, full_caption, cover_path)
         except Exception as exc:
             logger.error("Error en subida por cookies a TikTok: %s", exc)
 
@@ -96,6 +98,7 @@ def _upload_via_official_api(
     caption: str,
     access_token: str,
     privacy_level: str,
+    cover_path: Optional[str] = None,
 ) -> bool:
     """Sube el video usando la API Oficial de TikTok v2."""
     file_size = os.path.getsize(video_path)
@@ -113,6 +116,7 @@ def _upload_via_official_api(
             "disable_duet": False,
             "disable_stitch": False,
             "disable_comment": False,
+            "video_cover_timestamp_ms": 1200,
         },
         "source_info": {
             "source": "FILE_UPLOAD",
@@ -296,7 +300,7 @@ def _patch_tiktok_post_button():
         logger.warning("No se pudo aplicar el parche de publicación de TikTok: %s", e)
 
 
-def _upload_via_cookies(video_path: str, caption: str) -> bool:
+def _upload_via_cookies(video_path: str, caption: str, cover_path: Optional[str] = None) -> bool:
     """Sube video a TikTok Creator Center de forma 100% desatendida y headless."""
     session_id = os.getenv("TIKTOK_SESSION_ID")
     cookie_file = "tiktok_cookies.txt" if os.path.exists("tiktok_cookies.txt") else ""
@@ -310,6 +314,9 @@ def _upload_via_cookies(video_path: str, caption: str) -> bool:
             "browser": "chromium",
             "headless": True,
         }
+        if cover_path and os.path.exists(cover_path):
+            kwargs["cover"] = os.path.abspath(cover_path)
+            logger.info("Portada personalizada configurada para TikTok: %s", cover_path)
         if cookie_file:
             kwargs["cookies"] = cookie_file
         elif session_id:

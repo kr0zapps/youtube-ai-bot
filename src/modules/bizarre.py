@@ -204,6 +204,14 @@ def run(
             reddit_card_path=card_path if (card_path and os.path.exists(card_path)) else None,
         )
 
+        # Paso 6.5: Extraer miniatura oficial con la tarjeta de Reddit visible (t=1.2s)
+        thumb_path = final_video_path.replace(".mp4", "_thumb.jpg")
+        try:
+            video.extract_thumbnail(final_video_path, thumb_path, timestamp_sec=1.2, config=cfg)
+        except Exception as th_err:
+            logger.warning("No se pudo extraer miniatura automática: %s", th_err)
+            thumb_path = None
+
         # Paso 7: Publicación a YouTube y TikTok
         if dry_run or no_upload:
             logger.info("[7/8] Modo DRY-RUN o NO-UPLOAD activo: saltando subida a YouTube y TikTok.")
@@ -221,6 +229,7 @@ def run(
                     description=desc,
                     tags=["shorts", "historias", "bizarro", "chisme", "karma", "reddit"],
                     category_id="24",
+                    thumbnail_path=thumb_path,
                 )
             except Exception as u_err:
                 logger.error("Error al subir a YouTube: %s", u_err)
@@ -233,6 +242,7 @@ def run(
                     video_path=final_video_path,
                     title=video_title,
                     tags=tiktok_tags,
+                    cover_path=thumb_path,
                 )
             except Exception as t_err:
                 logger.error("Error al subir a TikTok: %s", t_err)
