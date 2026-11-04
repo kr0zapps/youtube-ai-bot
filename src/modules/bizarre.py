@@ -200,23 +200,24 @@ def run(
 
             # YouTube
             try:
-                uploader.upload_short(
+                uploader.upload_video(
                     video_path=final_video_path,
                     title=f"{video_title} #shorts",
                     description=desc,
                     tags=["shorts", "historias", "bizarro", "chisme", "karma", "reddit"],
-                    config=cfg,
+                    category_id="24",
                 )
             except Exception as u_err:
                 logger.error("Error al subir a YouTube: %s", u_err)
 
             # TikTok
             try:
-                from src.core import tiktok
-                tiktok_desc = f"{video_title} {hashtags}"
-                tiktok.upload_to_tiktok(
+                from src.core import tiktok as tiktok_module
+                tiktok_tags = ["fyp", "parati", "bizarro", "chisme", "karma"]
+                tiktok_module.upload_to_tiktok(
                     video_path=final_video_path,
-                    description=tiktok_desc,
+                    title=video_title,
+                    tags=tiktok_tags,
                 )
             except Exception as t_err:
                 logger.error("Error al subir a TikTok: %s", t_err)
