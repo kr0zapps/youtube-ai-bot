@@ -340,7 +340,7 @@ def _assemble_with_gameplay(
     import random
     has_music = bool(music_path and os.path.exists(music_path))
     has_card = bool(reddit_card_path and os.path.exists(reddit_card_path))
-    whoosh_path = os.path.join("assets", "audio", "whoosh.mp3")
+    whoosh_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "assets", "audio", "whoosh.mp3"))
     has_whoosh = bool(has_card and os.path.exists(whoosh_path))
 
     # Obtener duración del gameplay para elegir un inicio aleatorio
@@ -407,17 +407,17 @@ def _assemble_with_gameplay(
     mix_sources = ["[avoice]"]
 
     if has_music:
-        audio_inputs.append(f"[{music_idx}:a]volume=0.22[amusic]")
+        audio_inputs.append(f"[{music_idx}:a]volume=0.20[amusic]")
         mix_sources.append("[amusic]")
 
     if has_whoosh:
-        audio_inputs.append(f"[{whoosh_idx}:a]volume=0.45[awhoosh]")
+        audio_inputs.append(f"[{whoosh_idx}:a]volume=2.2[awhoosh]")
         mix_sources.append("[awhoosh]")
 
     if len(mix_sources) > 1:
         filter_parts.extend(audio_inputs)
         filter_parts.append(
-            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=2[aout]"
+            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=0:normalize=0[aout]"
         )
     else:
         filter_parts.append("[1:a]volume=1.0[aout]")
