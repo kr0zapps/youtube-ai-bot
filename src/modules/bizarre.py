@@ -204,10 +204,10 @@ def run(
             reddit_card_path=card_path if (card_path and os.path.exists(card_path)) else None,
         )
 
-        # Paso 6.5: Extraer miniatura oficial con la tarjeta de Reddit visible (t=1.2s)
+        # Paso 6.5: Extraer miniatura oficial con la tarjeta de Reddit visible (t=2.5s)
         thumb_path = final_video_path.replace(".mp4", "_thumb.jpg")
         try:
-            video.extract_thumbnail(final_video_path, thumb_path, timestamp_sec=1.2, config=cfg)
+            video.extract_thumbnail(final_video_path, thumb_path, timestamp_sec=2.5, config=cfg)
         except Exception as th_err:
             logger.warning("No se pudo extraer miniatura automática: %s", th_err)
             thumb_path = None

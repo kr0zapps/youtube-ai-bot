@@ -88,7 +88,7 @@ def _format_ffmpeg_path(path: str) -> str:
 def extract_thumbnail(
     video_path: str,
     output_thumb_path: str,
-    timestamp_sec: float = 1.2,
+    timestamp_sec: float = 2.5,
     config: Optional[Dict[str, Any]] = None,
 ) -> str:
     """Extrae un fotograma vertical en alta resolución (1080x1920) para usar de miniatura.
@@ -431,11 +431,11 @@ def _assemble_with_gameplay(
     filter_parts.append(vf_base)
     last_v = "vbg"
 
-    # Hook visual de Reddit: animación suave de entrada y salida con fade
+    # Hook visual de Reddit: animación suave de entrada y salida con fade (duración extendida ~7.5s)
     if has_card:
         filter_parts.append(
-            f"[{card_idx}:v]fade=t=in:st=0:d=0.25:alpha=1,fade=t=out:st=3.35:d=0.45:alpha=1[cardfaded];"
-            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(lt(t,0.35), 360-150*(1-t/0.35)*(1-t/0.35), if(gt(t,3.35), 360-690*(t-3.35)*(t-3.35), 360))':enable='between(t,0,3.85)':eof_action=repeat[vcard]"
+            f"[{card_idx}:v]fade=t=in:st=0:d=0.25:alpha=1,fade=t=out:st=7.0:d=0.5:alpha=1[cardfaded];"
+            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(lt(t,0.25), 360-150*(1-t/0.25)*(1-t/0.25), if(gt(t,7.0), 360-600*(t-7.0)*(t-7.0), 360))':enable='between(t,0,7.55)':eof_action=repeat[vcard]"
         )
         last_v = "vcard"
 
@@ -588,11 +588,11 @@ def _assemble_with_dopamine_2x2(
     )
     last_v = "vbg"
 
-    # Tarjeta de Reddit animada centrada con fade in y slide out
+    # Tarjeta de Reddit animada centrada con fade in y slide out (duración extendida ~7.5s)
     if has_card:
         filter_parts.append(
-            f"[{card_idx}:v]fade=t=in:st=0:d=0.25:alpha=1,fade=t=out:st=3.35:d=0.45:alpha=1[cardfaded];"
-            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(lt(t,0.35), 360-150*(1-t/0.35)*(1-t/0.35), if(gt(t,3.35), 360-690*(t-3.35)*(t-3.35), 360))':enable='between(t,0,3.85)':eof_action=repeat[vcard]"
+            f"[{card_idx}:v]fade=t=in:st=0:d=0.25:alpha=1,fade=t=out:st=7.0:d=0.5:alpha=1[cardfaded];"
+            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(lt(t,0.25), 360-150*(1-t/0.25)*(1-t/0.25), if(gt(t,7.0), 360-600*(t-7.0)*(t-7.0), 360))':enable='between(t,0,7.55)':eof_action=repeat[vcard]"
         )
         last_v = "vcard"
 
