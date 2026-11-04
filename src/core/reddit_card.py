@@ -13,8 +13,8 @@ from typing import Optional, Dict, Any
 logger = logging.getLogger(__name__)
 
 SUBREDDITS = {
-    "reddit": ["r/Historias", "r/Confesiones", "r/Venganzas", "r/PreguntasReddit", "r/HistoriasDeVida"],
-    "mystery": ["r/Paranormal", "r/Terror", "r/Creepypastas", "r/MisteriosSinResolver", "r/ArchivosSecretos"],
+    "reddit": ["r/Historias", "r/Confesiones", "r/PreguntasReddit", "r/HistoriasDeReddit", "r/Venganzas"],
+    "mystery": ["r/terror", "r/Paranormal", "r/MisteriosSinResolver", "r/Creepypastas", "r/Terrorifico", "r/ArchivosSecretos"],
     "bizarre": ["r/GenteLoca", "r/CosasTurbias", "r/KarmaInstantaneo", "r/Sinverguenzas", "r/HistoriasBizarras"],
 }
 

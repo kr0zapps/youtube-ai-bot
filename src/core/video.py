@@ -145,9 +145,26 @@ def assemble_video(
 
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
 
-    # ── MODO GAMEPLAY: usar clip de video como fondo ─────────────────────────
+    # ── MODO GAMEPLAY 2x2 (Full Dopamina): 4 gameplays simultáneos en grid ────────
+    from src.core import gameplay as gp_mod
+    dopamine_clips = gp_mod.get_dopamine_2x2_clips()
+    if len(dopamine_clips) >= 4:
+        logger.info("Modo 2x2 FULL DOPAMINA activo con 4 gameplays: %s", [os.path.basename(c) for c in dopamine_clips[:4]])
+        return _assemble_with_dopamine_2x2(
+            gameplay_paths=dopamine_clips[:4],
+            audio_path=audio_path,
+            subtitle_path=subtitle_path,
+            music_path=music_path,
+            output_path=output_path,
+            audio_duration=audio_duration,
+            ffmpeg_bin=ffmpeg_bin,
+            width=width, height=height, fps=fps,
+            reddit_card_path=reddit_card_path,
+        )
+
+    # ── MODO GAMEPLAY SIMPLE: usar un solo clip de video como fondo ──────────
     if gameplay_path and os.path.exists(gameplay_path):
-        logger.info("Modo GAMEPLAY: usando %s como fondo", os.path.basename(gameplay_path))
+        logger.info("Modo GAMEPLAY simple: usando %s como fondo", os.path.basename(gameplay_path))
         return _assemble_with_gameplay(
             gameplay_path=gameplay_path,
             audio_path=audio_path,
@@ -398,7 +415,7 @@ def _assemble_with_gameplay(
 
     card_idx = None
     if has_card:
-        input_args.extend(["-i", reddit_card_path])
+        input_args.extend(["-loop", "1", "-i", reddit_card_path])
         card_idx = cur_idx
         cur_idx += 1
 
@@ -418,7 +435,7 @@ def _assemble_with_gameplay(
     if has_card:
         filter_parts.append(
             f"[{card_idx}:v]fade=t=in:st=0:d=0.25:alpha=1,fade=t=out:st=3.35:d=0.45:alpha=1[cardfaded];"
-            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(lt(t,0.35), 360-150*(1-t/0.35)*(1-t/0.35), if(gt(t,3.35), 360-690*(t-3.35)*(t-3.35), 360))':enable='between(t,0,3.85)'[vcard]"
+            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(lt(t,0.35), 360-150*(1-t/0.35)*(1-t/0.35), if(gt(t,3.35), 360-690*(t-3.35)*(t-3.35), 360))':enable='between(t,0,3.85)':eof_action=repeat[vcard]"
         )
         last_v = "vcard"
 
@@ -492,5 +509,137 @@ def _assemble_with_gameplay(
             raise RuntimeError(f"Fallo en modo gameplay: {exc.stderr[:300]}") from exc
 
     logger.info("Video gameplay ensamblado: %s (%d bytes)", output_path, os.path.getsize(output_path))
+    return output_path
+
+
+def _assemble_with_dopamine_2x2(
+    gameplay_paths: List[str],
+    audio_path: str,
+    subtitle_path: Optional[str],
+    music_path: Optional[str],
+    output_path: str,
+    audio_duration: float,
+    ffmpeg_bin: str,
+    width: int = 1080,
+    height: int = 1920,
+    fps: int = 30,
+    reddit_card_path: Optional[str] = None,
+) -> str:
+    """Ensambla el video en formato 2x2 'Full Dopamina' con 4 gameplays simultáneos:
+    - Superior Izquierda (540x960): Subway Surfers
+    - Superior Derecha (540x960): Minecraft Parkour
+    - Inferior Izquierda (540x960): GTA 5 Mega Ramp
+    - Inferior Derecha (540x960): CS Surf / Parkour
+    """
+    import random
+    has_music = bool(music_path and os.path.exists(music_path))
+    has_card = bool(reddit_card_path and os.path.exists(reddit_card_path))
+    whoosh_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "assets", "audio", "whoosh.mp3"))
+    has_whoosh = bool(has_card and os.path.exists(whoosh_path))
+
+    half_w = width // 2   # 540
+    half_h = height // 2  # 960
+
+    input_args = []
+    # 4 gameplays inputs (0, 1, 2, 3)
+    for gp in gameplay_paths[:4]:
+        gp_dur = get_audio_duration(gp, ffmpeg_bin)
+        seek_args = []
+        if gp_dur > audio_duration + 10:
+            max_start = gp_dur - audio_duration - 5
+            start_sec = random.uniform(0, max_start)
+            seek_args = ["-ss", f"{start_sec:.2f}"]
+        input_args.extend([*seek_args, "-stream_loop", "-1", "-i", gp])
+
+    # Audio voz (input 4)
+    input_args.extend(["-i", audio_path])
+    cur_idx = 5
+
+    music_idx = None
+    if has_music:
+        input_args.extend(["-stream_loop", "-1", "-i", music_path])
+        music_idx = cur_idx
+        cur_idx += 1
+
+    whoosh_idx = None
+    if has_whoosh:
+        input_args.extend(["-i", whoosh_path])
+        whoosh_idx = cur_idx
+        cur_idx += 1
+
+    card_idx = None
+    if has_card:
+        input_args.extend(["-loop", "1", "-i", reddit_card_path])
+        card_idx = cur_idx
+        cur_idx += 1
+
+    filter_parts = []
+    # Escalar y recortar cada uno de los 4 cuadrantes a 540x960
+    for i in range(4):
+        filter_parts.append(
+            f"[{i}:v]scale={half_w}:{half_h}:force_original_aspect_ratio=increase,"
+            f"crop={half_w}:{half_h},fps={fps}[v{i}]"
+        )
+
+    # Combinar en grid 2x2 usando xstack
+    filter_parts.append(
+        f"[v0][v1][v2][v3]xstack=inputs=4:layout=0_0|w0_0|0_h0|w0_h0,"
+        f"eq=brightness=0.01:saturation=1.12[vbg]"
+    )
+    last_v = "vbg"
+
+    # Tarjeta de Reddit animada centrada con fade in y slide out
+    if has_card:
+        filter_parts.append(
+            f"[{card_idx}:v]fade=t=in:st=0:d=0.25:alpha=1,fade=t=out:st=3.35:d=0.45:alpha=1[cardfaded];"
+            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(lt(t,0.35), 360-150*(1-t/0.35)*(1-t/0.35), if(gt(t,3.35), 360-690*(t-3.35)*(t-3.35), 360))':enable='between(t,0,3.85)':eof_action=repeat[vcard]"
+        )
+        last_v = "vcard"
+
+    if subtitle_path and os.path.exists(subtitle_path):
+        escaped_sub = _format_ffmpeg_path(subtitle_path)
+        fonts_dir = _format_ffmpeg_path(os.path.join("assets", "fonts"))
+        filter_parts.append(
+            f"[{last_v}]subtitles=filename='{escaped_sub}':fontsdir='{fonts_dir}'[vout]"
+        )
+    else:
+        filter_parts.append(f"[{last_v}]null[vout]")
+
+    # Audio mixing
+    audio_inputs = ["[4:a]volume=1.4[avoice]"]
+    mix_sources = ["[avoice]"]
+
+    if has_music:
+        audio_inputs.append(f"[{music_idx}:a]volume=0.20[amusic]")
+        mix_sources.append("[amusic]")
+
+    if has_whoosh:
+        audio_inputs.append(f"[{whoosh_idx}:a]volume=0.85[awhoosh]")
+        mix_sources.append("[awhoosh]")
+
+    if len(mix_sources) > 1:
+        filter_parts.extend(audio_inputs)
+        filter_parts.append(
+            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=0:normalize=0[aout]"
+        )
+    else:
+        filter_parts.append("[4:a]volume=1.0[aout]")
+
+    cmd = [
+        ffmpeg_bin, "-y",
+        *input_args,
+        "-filter_complex", ";\n".join(filter_parts),
+        "-map", "[vout]", "-map", "[aout]",
+        "-t", f"{audio_duration:.2f}",
+        "-r", str(fps),
+        "-c:v", "libx264", "-preset", "medium", "-crf", "18",
+        "-pix_fmt", "yuv420p",
+        "-c:a", "aac", "-b:a", "256k",
+        output_path,
+    ]
+
+    logger.info("Ensamblando video 2x2 FULL DOPAMINA con 4 gameplays simultáneos...")
+    subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8", errors="replace", check=True)
+    logger.info("✓ Video 2x2 Full Dopamina ensamblado: %s (%d bytes)", output_path, os.path.getsize(output_path))
     return output_path
 

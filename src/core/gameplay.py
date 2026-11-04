@@ -20,6 +20,35 @@ GAMEPLAY_DIR = os.path.join("assets", "gameplay")
 VIDEO_EXTENSIONS = {".mp4", ".mov", ".avi", ".mkv", ".webm"}
 
 
+def get_dopamine_2x2_clips() -> list[str]:
+    """Devuelve los 4 clips de gameplay para la composición 2x2 Full Dopamina:
+    1. Subway Surfers
+    2. Minecraft Parkour
+    3. GTA 5 Mega Ramp
+    4. CS Surf / Parkour
+    """
+    if not os.path.isdir(GAMEPLAY_DIR):
+        return []
+
+    preferred = ["subway_surfers.mp4", "minecraft_parkour.mp4", "gta5_mega_ramp.mp4", "cs_surf.mp4"]
+    found = []
+    for fname in preferred:
+        p = os.path.join(GAMEPLAY_DIR, fname)
+        if os.path.exists(p):
+            found.append(p)
+
+    if len(found) >= 4:
+        return found[:4]
+
+    # Fallback con cualquier video disponible
+    all_clips = [
+        os.path.join(GAMEPLAY_DIR, f)
+        for f in os.listdir(GAMEPLAY_DIR)
+        if os.path.splitext(f)[1].lower() in VIDEO_EXTENSIONS
+    ]
+    return all_clips
+
+
 def get_random_gameplay_clip() -> Optional[str]:
     """Devuelve la ruta de un clip de gameplay aleatorio de assets/gameplay/.
     
