@@ -161,6 +161,21 @@ def upload_video(
                 progress = int(status.progress() * 100)
                 logger.info("Progreso de subida a YouTube: %d%%", progress)
         except HttpError as exc:
+            error_details = str(exc)
+            if "uploadLimitExceeded" in error_details:
+                logger.error(
+                    "⚠️ LÍMITE DIARIO DE YOUTUBE ALCANZADO (uploadLimitExceeded): "
+                    "YouTube restringe la cantidad de videos que un canal puede subir por día "
+                    "(habitualmente 3 a 6 en canales sin verificación avanzada). "
+                    "Para desbloquear límites mayores: Ve a YouTube Studio -> Configuración -> "
+                    "Canal -> Acceso a funciones -> y activa 'Funciones avanzadas'. "
+                    "El límite se restablecerá automáticamente en 24 horas."
+                )
+                raise RuntimeError(
+                    "Límite diario de subida de YouTube alcanzado (uploadLimitExceeded). "
+                    "Se reanudará automáticamente cuando YouTube renueve la cuota diaria."
+                ) from exc
+
             if exc.resp.status in [500, 502, 503, 504] and retry_count < max_retries:
                 retry_count += 1
                 sleep_seconds = retry_count * 5

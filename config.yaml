@@ -1,7 +1,7 @@
 video:
   width: 1080
   height: 1920
-  fps: 30
+  fps: 60
   duration_max_seconds: 58   # Shorts deben ser < 60s
   duration_min_seconds: 20
 

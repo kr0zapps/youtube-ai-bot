@@ -354,11 +354,12 @@ def _assemble_with_gameplay(
 
     filter_parts = []
 
-    # Video: escalar gameplay a 1080x1920 con crop vertical central + oscurecer levemente
+    # Video: escalar gameplay a 1080x1920 con máxima nitidez, colores vivos y filtro unsharp
     vf_base = (
         f"[0:v]scale={width}:{height}:force_original_aspect_ratio=increase,"
         f"crop={width}:{height},"
-        f"eq=brightness=-0.06:saturation=0.9"
+        f"eq=brightness=0.01:saturation=1.12,"
+        f"unsharp=5:5:0.6:5:5:0.0"
     )
 
     if subtitle_path and os.path.exists(subtitle_path):
@@ -371,7 +372,7 @@ def _assemble_with_gameplay(
     else:
         filter_parts.append(f"{vf_base}[vout]")
 
-    # Audio: voz destacada + mÃºsica de fondo envolvente
+    # Audio: voz destacada + música de fondo envolvente
     if has_music:
         filter_parts.append(
             "[1:a]volume=1.4[avoice];"
@@ -387,9 +388,11 @@ def _assemble_with_gameplay(
         "-filter_complex", ";\n".join(filter_parts),
         "-map", "[vout]", "-map", "[aout]",
         "-t", f"{audio_duration:.2f}",
-        "-c:v", "libx264", "-preset", "medium", "-crf", "18",
+        "-r", str(fps),
+        "-c:v", "libx264", "-preset", "medium", "-crf", "17",
+        "-maxrate", "12M", "-bufsize", "24M",
         "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-b:a", "192k",
+        "-c:a", "aac", "-b:a", "256k",
         output_path,
     ]
 
