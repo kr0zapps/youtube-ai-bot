@@ -2,10 +2,10 @@ name: YouTube & TikTok AI Bot Automation
 
 on:
   schedule:
-    # Test proximo: 23:18 Chile (02:18 UTC)
-    - cron: '18 2 * * *'
-    # Test proximo: 23:20 Chile (02:20 UTC)
-    - cron: '20 2 * * *'
+    # Test public cron: 00:08 Chile (03:08 UTC)
+    - cron: '8 3 * * *'
+    # Test public cron: 00:10 Chile (03:10 UTC)
+    - cron: '10 3 * * *'
     # 10:15 AM Chile (13:15 UTC)
     - cron: '15 13 * * *'
     # 04:15 PM Chile (19:15 UTC)
