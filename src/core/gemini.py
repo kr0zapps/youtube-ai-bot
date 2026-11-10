@@ -67,12 +67,13 @@ SYSTEM_PROMPTS = {
 # ──────────────────────────────────────────────
 AUDITOR_SYSTEM_PROMPT = (
     "Eres el Director Editorial más exigente y veterano de contenido viral para YouTube Shorts y TikTok. "
-    "Tu doble misión sagrada es: '1. NUNCA ABURRIR A LA AUDIENCIA (cero temas fríos, secos o burocráticos). 2. COHERENCIA LÓGICA IMPECABLE'. "
+    "Tu triple misión sagrada es: "
+    "1. CONCISIÓN QUIRÚRGICA: PROHIBIDO EL RELLENO, LAS FRASES VACÍAS Y LAS REDUNDANCIAS. Si una historia alarga las cosas a propósito, repite ideas o usa muletillas ('y es que', 'cabe destacar', 'como era de esperarse'), la RECHAZAS DE INMEDIATO. Cada palabra debe ganarse su lugar. "
+    "2. NUNCA ABURRIR A LA AUDIENCIA (cero temas fríos, secos o burocráticos). "
+    "3. COHERENCIA LÓGICA IMPECABLE. "
     "Tu trabajo es auditar despiadadamente los borradores de los guionistas. "
-    "Si una historia es aburrida, sosa, le falta chispa o tiene contradicciones lógicas, "
-    "la RECHAZAS de inmediato y señalas qué le falta para atrapar a la gente desde el segundo 1. "
-    "Solo APRUEBAS cuando la historia es emocionante, adictiva, 100% lógica y atrapa como un imán. "
-    "REGLAS CRÍTICAS: Cero emojis. Cero markdown. Solo texto corrido. Prohibida la palabra 'relatos'."
+    "Solo APRUEBAS cuando la historia es concisa, emocionante, adictiva, 100% lógica y atrapa como un imán. "
+    "REGLAS CRÍTICAS: Entre 85 y 110 palabras exactas. Cero emojis. Cero markdown. Solo texto corrido. Prohibida la palabra 'relatos'."
 )
 
 AUDITOR_CRITERIA_PROMPT = {
@@ -82,47 +83,48 @@ AUDITOR_CRITERIA_PROMPT = {
         "1. ¿El gancho (0 a 3s) atrapa como un imán sin preámbulos?\n"
         "2. ¿Tiene coherencia lógica interna? ¿Las acciones y pistas tienen causa y efecto real?\n"
         "3. ¿El giro final encaja de forma lógica y deja escalofríos?\n"
-        "4. ¿Tiene entre 120 y 140 palabras exactas (38-45 segundos)?\n\n"
-        "Si la historia carece de lógica o no atrapa, responde estrictamente:\n"
+        "4. ¿Es CONCISO y SIN RELLENO? ¿Tiene entre 85 y 110 palabras exactas (~30-38 segundos)? Prohibido alargar con frases redundantes.\n\n"
+        "Si la historia carece de lógica, es redundante o no atrapa, responde estrictamente:\n"
         "ESTADO: RECHAZADO\n"
-        "CRITICA: [Explica exactamente el fallo lógico o de entretenimiento]\n"
-        "INSTRUCCIONES: [Qué debe cambiar el autor para que sea fascinante y lógica]\n\n"
-        "Si la historia es coherente, intrigante y sólida, responde:\n"
+        "CRITICA: [Explica exactamente el fallo lógico, redundancia o falta de tensión]\n"
+        "INSTRUCCIONES: [Qué debe cambiar el autor para que sea fascinante, concisa y lógica]\n\n"
+        "Si la historia es coherente, intrigante, concisa y sólida, responde:\n"
         "ESTADO: APROBADO\n"
-        "GUION: [Guión final perfeccionado en prosa continua]\n"
+        "GUION: [Guión final perfeccionado en prosa continua, 85-110 palabras]\n"
         "TITULO: [Título viral sin emojis, máximo 50 caracteres]"
     ),
     "reddit": (
         "Audita esta historia de Reddit:\n\"\"\"{draft_script}\"\"\"\nTítulo propuesto: {draft_title}\n\n"
-        "Filtro despiadado de calidad y entretenimiento:\n"
-        "1. ¿ES REALMENTE ENTRETENIDA Y ADICTIVA? Si el tema es aburrido (economía, contabilidad, hojas de cálculo, papeleo laboral o tecnicismos fríos) o carece de tensión humana, RECHÁZALA DE INMEDIATO. Debe ser un drama o chisme apasionante.\n"
-        "2. ¿El gancho (primeras 2 líneas) suelta una bomba que obliga a quedarse hasta el final?\n"
-        "3. ¿Tiene coherencia lógica y humana? ¿Las motivaciones y reacciones son verosímiles?\n"
-        "4. ¿El conflicto y desenlace son claros, emocionantes o de dulce revancha?\n"
-        "5. ¿Tiene entre 120 y 140 palabras exactas?\n\n"
-        "Si es aburrida, sosa, o carece de coherencia, responde:\n"
+        "Filtro despiadado de calidad, concisión y entretenimiento:\n"
+        "1. ¿ES CONCISA Y DIRECTA AL GRANO? PROHIBIDO EL RELLENO, LAS FRASES VACÍAS Y LAS REDUNDANCIAS. Si la historia repite ideas, usa explicaciones obvias o alarga la narrativa con palabras de relleno ('y es que', 'por si fuera poco', 'como era de esperarse'), RECHÁZALA DE INMEDIATO. Cada oración debe aportar un giro o dato crucial.\n"
+        "2. ¿ES REALMENTE ENTRETENIDA Y ADICTIVA? Si el tema es aburrido (economía, contabilidad, hojas de cálculo, papeleo laboral o tecnicismos fríos) o carece de tensión humana, RECHÁZALA. Debe ser un drama o chisme apasionante.\n"
+        "3. ¿El gancho (primeras 2 líneas) suelta una bomba que obliga a quedarse hasta el final?\n"
+        "4. ¿Tiene coherencia lógica y humana? ¿Las motivaciones y reacciones son verosímiles?\n"
+        "5. ¿Tiene entre 85 y 110 palabras exactas (~32-40 segundos)?\n\n"
+        "Si es redundante, aburrida, sosa o incoherente, responde:\n"
         "ESTADO: RECHAZADO\n"
-        "CRITICA: [Por qué es aburrida o dónde falla la lógica]\n"
-        "INSTRUCCIONES: [Cómo hacerla entretenida, vibrante y coherente]\n\n"
-        "Si es súper entretenida, coherente y lista para viralizarse, responde:\n"
+        "CRITICA: [Por qué es redundante, aburrida o dónde falla la lógica]\n"
+        "INSTRUCCIONES: [Cómo hacerla ultra concisa, vibrante y coherente eliminando todo relleno]\n\n"
+        "Si es súper entretenida, concisa, coherente y lista para viralizarse, responde:\n"
         "ESTADO: APROBADO\n"
-        "GUION: [Guión final perfeccionado en prosa continua]\n"
+        "GUION: [Guión final perfeccionado en prosa continua, 85-110 palabras]\n"
         "TITULO: [Título viral sin emojis, máximo 50 caracteres]"
     ),
     "bizarre": (
         "Audita esta historia de situaciones bizarras / gente loca / desastres épicos:\n\"\"\"{draft_script}\"\"\"\nTítulo propuesto: {draft_title}\n\n"
-        "Filtro de retención y adicción:\n"
-        "1. ¿Provoca asombro o risa incrédula de inmediato? Cero tecnicismos ni aburrimiento.\n"
-        "2. ¿El gancho (0 a 3s) describe una situación tan descarada que nadie puede dejar de escuchar?\n"
-        "3. ¿La resolución de karma o desastre es clara y satisfactoria?\n"
-        "4. ¿Tiene entre 120 y 140 palabras exactas?\n\n"
-        "Si es tibia, aburrida o incoherente, responde:\n"
+        "Filtro de concisión, retención y adicción:\n"
+        "1. ¿Es CONCISA y SIN RELLENO? Cero palabras vacías o redundantes. Cada frase debe disparar la historia hacia adelante.\n"
+        "2. ¿Provoca asombro o risa incrédula de inmediato? Cero tecnicismos ni aburrimiento.\n"
+        "3. ¿El gancho (0 a 3s) describe una situación tan descarada que nadie puede dejar de escuchar?\n"
+        "4. ¿La resolución de karma o desastre es clara y satisfactoria?\n"
+        "5. ¿Tiene entre 85 y 110 palabras exactas (~32-40 segundos)?\n\n"
+        "Si es tibia, redundante o incoherente, responde:\n"
         "ESTADO: RECHAZADO\n"
-        "CRITICA: [Por qué no atrapa o qué le falta]\n"
-        "INSTRUCCIONES: [Cómo subirle la intensidad y el karma]\n\n"
-        "Si es atrapante y sensacional, responde:\n"
+        "CRITICA: [Por qué no atrapa, qué relleno tiene o qué le falta]\n"
+        "INSTRUCCIONES: [Cómo recortar el relleno y subirle la intensidad y el karma]\n\n"
+        "Si es atrapante, concisa y sensacional, responde:\n"
         "ESTADO: APROBADO\n"
-        "GUION: [Guión final perfeccionado en prosa continua]\n"
+        "GUION: [Guión final perfeccionado en prosa continua, 85-110 palabras]\n"
         "TITULO: [Título viral sin emojis, máximo 50 caracteres]"
     ),
     "news": (
@@ -130,14 +132,14 @@ AUDITOR_CRITERIA_PROMPT = {
         "Evalúa con lupa:\n"
         "1. ¿Es riguroso, insólito y entretenido? Cero política ni economía.\n"
         "2. ¿El gancho es un dato desconcertante?\n"
-        "3. Longitud: entre 120 y 140 palabras.\n\n"
-        "Si tiene datos vagos o aburridos, responde:\n"
+        "3. Longitud: entre 85 y 110 palabras exactas. Cero relleno.\n\n"
+        "Si tiene datos vagos, aburridos o relleno, responde:\n"
         "ESTADO: RECHAZADO\n"
         "CRITICA: [Detalle del fallo]\n"
-        "INSTRUCCIONES: [Qué corregir]\n\n"
-        "Si es excelente, responde:\n"
+        "INSTRUCCIONES: [Qué corregir y qué recortar]\n\n"
+        "Si es excelente y conciso, responde:\n"
         "ESTADO: APROBADO\n"
-        "GUION: [Guión final en prosa continua]\n"
+        "GUION: [Guión final en prosa continua, 85-110 palabras]\n"
         "TITULO: [Título viral sin emojis, máximo 50 caracteres]"
     ),
 }
@@ -150,30 +152,32 @@ USER_PROMPTS = {
         "2. ESCALADA LÓGICA: Cada pista debe ser coherente con la anterior.\n"
         "3. MICRO-HOOK (segundo 15): Reengancha la curiosidad con una frase de quiebre.\n"
         "4. GIRO FINAL COHERENTE E INFINITE LOOP: El desenlace revela la verdad y conecta sutilmente con la primera frase.\n"
-        "5. EXTENSIÓN: Entre 120 y 140 palabras exactas.\n"
+        "5. CONCISIÓN ABSOLUTA: Entre 85 y 110 palabras exactas (~30-38s). PROHIBIDO EL RELLENO O FRASES REDUNDANTES.\n"
         "6. CERO EMOJIS ni markdown. Solo prosa fluida.\n\n"
         "TITULO: [Título viral sin emojis, máximo 50 caracteres]"
     ),
     "reddit": (
-        "Escribe una historia viral de Reddit adictiva, entretenida y con gancho brutal (drama familiar, secretos inconfesables, venganza épica contra alguien tóxico, o situación social incómoda llevada al límite).\n\n"
+        "Escribe una historia viral de Reddit ultra adictiva, concisa y con gancho brutal (drama familiar, venganza épica contra alguien tóxico, o karma demoledor).\n\n"
         "REGLAS OBLIGATORIAS:\n"
-        "- CERO TEMAS ABURRIDOS: Prohibido hablar de economía, finanzas, hojas de cálculo, contabilidad, contratos o burocracia laboral.\n"
+        "- CERO RELLENO O REDUNDANCIAS: Prohibido repetir ideas, dar explicaciones innecesarias o alargar las oraciones. Cada palabra debe ser precisa y avanzar la trama.\n"
+        "- CERO TEMAS ABURRIDOS: Prohibido hablar de economía, finanzas, hojas de cálculo, contabilidad o burocracia laboral.\n"
         "- GANCHO BRUTAL (0 a 3s): La primera frase debe soltar una bomba que impida deslizar el video.\n"
         "- MICRO-HOOK (segundo 15): Reengancha la tensión con un giro o revelación.\n"
         "- Narrada en primera persona con tono conversacional de chisme real y apasionado.\n"
         "- Desenlace satisfactorio y frase final que cierre en Infinite Loop.\n"
-        "- Entre 120 y 140 palabras exactas.\n"
+        "- EXTENSIÓN: Entre 85 y 110 palabras exactas (~32-40 segundos).\n"
         "- CERO EMOJIS ni formato markdown. Solo prosa fluida.\n\n"
         "TITULO: [Título irresistible sin emojis, máximo 50 caracteres]"
     ),
     "bizarre": (
         "Escribe una historia bizarra o desastre social de la vida real (estilo r/trashy, r/tifu, desastres épicos, karma instantáneo a gente sinvergüenza).\n\n"
         "REGLAS OBLIGATORIAS:\n"
+        "- CERO RELLENO: Nada de palabras redundantes o explicaciones obvias. Directo al grano con máxima energía.\n"
         "- GANCHO FEROZ (0 a 3s): Empieza describiendo el acto más descarado o vergonzoso posible.\n"
         "- TONO: Irónico, adictivo, como contándole la mayor locura de tu barrio a un amigo.\n"
         "- MICRO-HOOK (segundo 15): La situación empeora o se destapa la verdad en público.\n"
         "- DESENLACE: Karma dulce, humillación justa o final surrealista con Infinite Loop.\n"
-        "- Entre 120 y 140 palabras exactas.\n"
+        "- EXTENSIÓN: Entre 85 y 110 palabras exactas (~32-40 segundos).\n"
         "- CERO EMOJIS ni formato markdown. Solo prosa fluida.\n\n"
         "TITULO: [Título impactante sin emojis, máximo 50 caracteres]"
     ),
@@ -181,7 +185,7 @@ USER_PROMPTS = {
         "Escribe un guión de curiosidad insólita real para YouTube Shorts.\n\n"
         "REGLAS:\n"
         "- CERO TEMAS POLÍTICOS O ECONÓMICOS. Solo misterios reales o ciencia asombrosa.\n"
-        "- Entre 120 y 135 palabras.\n"
+        "- Entre 85 y 105 palabras exactas. Cero relleno.\n"
         "- Comienza con un dato desconcertante.\n"
         "- CERO EMOJIS ni formato markdown.\n\n"
         "TITULO: [Título impactante sin emojis, máximo 50 caracteres]"
@@ -231,23 +235,54 @@ def _clean(text: str) -> str:
 
 
 def _parse_script_and_title(raw: str, default_title: str = "Historia de misterio") -> tuple[str, str]:
-    """Extrae guión y título del texto crudo del LLM."""
+    """Extrae guión y título del texto crudo del LLM de forma robusta."""
     title = default_title
-    if "TITULO:" in raw.upper():
-        idx = raw.upper().index("TITULO:")
-        script = _clean(raw[:idx])
-        title = _clean(raw[idx:].split(":", 1)[-1].split("\n")[0])
-    elif "---" in raw:
-        parts = raw.split("---", 1)
+    raw_clean = _clean(raw)
+    upper_raw = raw_clean.upper()
+
+    if "TITULO:" in upper_raw:
+        idx = upper_raw.index("TITULO:")
+        # Si TITULO está en la primera mitad del texto, se generó primero el título y luego el guión
+        if idx < len(raw_clean) // 3:
+            lines = raw_clean.split("\n")
+            title_parts = []
+            script_parts = []
+            capturing_title = False
+            for line in lines:
+                l_strip = line.strip()
+                if not l_strip:
+                    continue
+                if l_strip.upper().startswith("TITULO:"):
+                    title_parts.append(l_strip.split(":", 1)[-1].strip())
+                    capturing_title = True
+                elif l_strip.upper().startswith("GUION:") or l_strip.upper().startswith("GUIÓN:"):
+                    capturing_title = False
+                    script_parts.append(l_strip.split(":", 1)[-1].strip())
+                elif capturing_title:
+                    title_parts.append(l_strip)
+                else:
+                    script_parts.append(l_strip)
+            if title_parts:
+                title = " ".join(title_parts)
+            if script_parts:
+                script = " ".join(script_parts)
+            else:
+                script = raw_clean
+        else:
+            # TITULO está al final
+            script = _clean(raw_clean[:idx])
+            title = _clean(raw_clean[idx:].split(":", 1)[-1].split("\n")[0])
+    elif "---" in raw_clean:
+        parts = raw_clean.split("---", 1)
         script = _clean(parts[0])
         title = _clean(parts[1].split("\n")[0])
     else:
-        lines = [l.strip() for l in raw.split("\n") if l.strip()]
+        lines = [l.strip() for l in raw_clean.split("\n") if l.strip()]
         if len(lines) >= 2 and len(lines[-1]) < 80:
             title = lines[-1]
             script = " ".join(lines[:-1])
         else:
-            script = raw
+            script = raw_clean
     # Limpiar etiquetas residuales
     script = re.sub(r"^\*{0,2}(Guión|Script|Narración):?\*{0,2}\s*", "", script, flags=re.IGNORECASE)
     title = re.sub(r"^\*{0,2}(Título|Title|TITULO):?\*{0,2}\s*", "", title, flags=re.IGNORECASE)
@@ -390,7 +425,7 @@ def _regenerate_with_criticism(
         f"INSTRUCCIONES DE CORRECCIÓN:\n{instructions}\n\n"
         f"Reescribe la historia desde cero corrigiendo cada falla. "
         f"La causa y efecto debe ser 100% lógica, humana y verosímil. "
-        f"Extensión estricta: entre 135 y 155 palabras. CERO emojis. Cero markdown.\n"
+        f"CONCISIÓN TOTAL: Entre 85 y 110 palabras exactas. PROHIBIDO EL RELLENO Y LAS REDUNDANCIAS. CERO emojis. Cero markdown.\n"
         f"Al final incluye: TITULO: [título viral sin emojis]"
     )
 

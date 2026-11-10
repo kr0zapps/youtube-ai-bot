@@ -322,7 +322,7 @@ def assemble_video(
         "-t", f"{audio_duration:.2f}",
         "-c:v", "libx264", "-preset", "medium", "-crf", "18",
         "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-b:a", "192k",
+        "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2",
         output_path,
     ]
 
@@ -431,11 +431,11 @@ def _assemble_with_gameplay(
     filter_parts.append(vf_base)
     last_v = "vbg"
 
-    # Hook visual de Reddit: animación suave de entrada y salida con fade (duración extendida ~7.5s)
+    # Hook visual de Reddit: visible desde el fotograma 0 (para asegurar miniatura en YouTube Shorts) y salida suave a los 9.5s
     if has_card:
         filter_parts.append(
-            f"[{card_idx}:v]fade=t=in:st=0:d=0.25:alpha=1,fade=t=out:st=7.0:d=0.5:alpha=1[cardfaded];"
-            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(lt(t,0.25), 360-150*(1-t/0.25)*(1-t/0.25), if(gt(t,7.0), 360-600*(t-7.0)*(t-7.0), 360))':enable='between(t,0,7.55)':eof_action=repeat[vcard]"
+            f"[{card_idx}:v]fade=t=out:st=9.0:d=0.5:alpha=1[cardfaded];"
+            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(gt(t,9.0), 360-600*(t-9.0)*(t-9.0), 360)':enable='between(t,0,9.55)':eof_action=repeat[vcard]"
         )
         last_v = "vcard"
 
@@ -448,25 +448,25 @@ def _assemble_with_gameplay(
     else:
         filter_parts.append(f"[{last_v}]null[vout]")
 
-    # Audio: voz destacada + música de fondo + efecto whoosh de entrada
-    audio_inputs = ["[1:a]volume=1.4[avoice]"]
+    # Audio: voz destacada + música de fondo + efecto whoosh de entrada (44.1kHz estéreo estandarizado para TikTok y YouTube)
+    audio_inputs = ["[1:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=1.4[avoice]"]
     mix_sources = ["[avoice]"]
 
     if has_music:
-        audio_inputs.append(f"[{music_idx}:a]volume=0.20[amusic]")
+        audio_inputs.append(f"[{music_idx}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.20[amusic]")
         mix_sources.append("[amusic]")
 
     if has_whoosh:
-        audio_inputs.append(f"[{whoosh_idx}:a]volume=0.85[awhoosh]")
+        audio_inputs.append(f"[{whoosh_idx}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.85[awhoosh]")
         mix_sources.append("[awhoosh]")
 
     if len(mix_sources) > 1:
         filter_parts.extend(audio_inputs)
         filter_parts.append(
-            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=0:normalize=0[aout]"
+            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=0:normalize=0,aformat=sample_rates=44100:channel_layouts=stereo[aout]"
         )
     else:
-        filter_parts.append("[1:a]volume=1.0[aout]")
+        filter_parts.append("[1:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=1.0[aout]")
 
     cmd = [
         ffmpeg_bin, "-y",
@@ -478,7 +478,7 @@ def _assemble_with_gameplay(
         "-c:v", "libx264", "-preset", "medium", "-crf", "17",
         "-maxrate", "12M", "-bufsize", "24M",
         "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-b:a", "256k",
+        "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2",
         output_path,
     ]
 
@@ -574,10 +574,15 @@ def _assemble_with_dopamine_2x2(
         cur_idx += 1
 
     filter_parts = []
-    # Escalar y recortar cada uno de los 4 cuadrantes a 540x960
+    # Escalar y recortar cada uno de los 4 cuadrantes a 540x960 (recortando borde inferior de Subway para eliminar marca de Windows)
     for i in range(4):
+        gp_name = os.path.basename(gameplay_paths[i]).lower()
+        if "subway" in gp_name:
+            crop_pre = "crop=in_w:in_h-90:0:0,"
+        else:
+            crop_pre = ""
         filter_parts.append(
-            f"[{i}:v]scale={half_w}:{half_h}:force_original_aspect_ratio=increase,"
+            f"[{i}:v]{crop_pre}scale={half_w}:{half_h}:force_original_aspect_ratio=increase,"
             f"crop={half_w}:{half_h},fps={fps}[v{i}]"
         )
 
@@ -588,11 +593,11 @@ def _assemble_with_dopamine_2x2(
     )
     last_v = "vbg"
 
-    # Tarjeta de Reddit animada centrada con fade in y slide out (duración extendida ~7.5s)
+    # Tarjeta de Reddit centrada desde el fotograma 0 (captura de miniatura perfecta para Shorts/TikTok) y salida suave a los 9.5s
     if has_card:
         filter_parts.append(
-            f"[{card_idx}:v]fade=t=in:st=0:d=0.25:alpha=1,fade=t=out:st=7.0:d=0.5:alpha=1[cardfaded];"
-            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(lt(t,0.25), 360-150*(1-t/0.25)*(1-t/0.25), if(gt(t,7.0), 360-600*(t-7.0)*(t-7.0), 360))':enable='between(t,0,7.55)':eof_action=repeat[vcard]"
+            f"[{card_idx}:v]fade=t=out:st=9.0:d=0.5:alpha=1[cardfaded];"
+            f"[{last_v}][cardfaded]overlay=x=(W-w)/2:y='if(gt(t,9.0), 360-600*(t-9.0)*(t-9.0), 360)':enable='between(t,0,9.55)':eof_action=repeat[vcard]"
         )
         last_v = "vcard"
 
@@ -605,25 +610,25 @@ def _assemble_with_dopamine_2x2(
     else:
         filter_parts.append(f"[{last_v}]null[vout]")
 
-    # Audio mixing
-    audio_inputs = ["[4:a]volume=1.4[avoice]"]
+    # Audio mixing: normalizar siempre a 44100Hz estéreo para compatibilidad absoluta con TikTok y YouTube
+    audio_inputs = ["[4:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=1.4[avoice]"]
     mix_sources = ["[avoice]"]
 
     if has_music:
-        audio_inputs.append(f"[{music_idx}:a]volume=0.20[amusic]")
+        audio_inputs.append(f"[{music_idx}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.20[amusic]")
         mix_sources.append("[amusic]")
 
     if has_whoosh:
-        audio_inputs.append(f"[{whoosh_idx}:a]volume=0.85[awhoosh]")
+        audio_inputs.append(f"[{whoosh_idx}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.85[awhoosh]")
         mix_sources.append("[awhoosh]")
 
     if len(mix_sources) > 1:
         filter_parts.extend(audio_inputs)
         filter_parts.append(
-            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=0:normalize=0[aout]"
+            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=0:normalize=0,aformat=sample_rates=44100:channel_layouts=stereo[aout]"
         )
     else:
-        filter_parts.append("[4:a]volume=1.0[aout]")
+        filter_parts.append("[4:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=1.0[aout]")
 
     cmd = [
         ffmpeg_bin, "-y",
@@ -634,7 +639,7 @@ def _assemble_with_dopamine_2x2(
         "-r", str(fps),
         "-c:v", "libx264", "-preset", "medium", "-crf", "18",
         "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-b:a", "256k",
+        "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2",
         output_path,
     ]
 

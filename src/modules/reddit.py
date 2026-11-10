@@ -31,19 +31,75 @@ logger = logging.getLogger(__name__)
 TARGET_SUBREDDITS = ["historias", "tifu", "AskReddit"]
 
 
-def fetch_top_reddit_story() -> Dict[str, str]:
-    """Obtiene la historia más votada del día de Reddit usando PRAW.
+def search_real_reddit_story() -> Optional[Dict[str, str]]:
+    """Investiga en vivo una historia REAL y verificada de Reddit con Google Search Grounding."""
+    try:
+        from src.core.gemini import _get_gemini_client
+        from google.genai import types
+        client = _get_gemini_client()
 
-    Si las credenciales no están configuradas o la red falla,
-    retorna una historia viral clásica de respaldo.
+        subs = ["r/tifu", "r/confesiones", "r/Historias", "r/pettyrevenge", "r/AmItheAsshole", "r/MaliciousCompliance", "r/AskReddit"]
+        chosen_sub = random.choice(subs)
+
+        prompt = (
+            f"Investiga en la web una historia viral REAL, verídica y documentada que haya sido publicada en Reddit en {chosen_sub} (o subreddits similares de historias reales, desahogos y karma). "
+            "Elige un post auténtico que haya tenido miles de upvotes (un drama familiar real, una venganza justa contra un abusador o estafador, o un error épico). "
+            "PROHIBIDO inventar historias ficticias. Debe ser un caso verídico publicado por un usuario en Reddit.\n\n"
+            "Devuelve estrictamente con esta estructura:\n"
+            "SUBREDDIT: r/NombreDelSubredditReal\n"
+            "TITULO: [Título real o resumen del post original]\n"
+            "HISTORIA: [Resumen conciso y factual de lo que ocurrió en 3 a 5 frases]\n"
+        )
+
+        for model_name in ["gemini-2.5-flash", "gemini-2.0-flash"]:
+            try:
+                res = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        tools=[types.Tool(google_search=types.GoogleSearch())],
+                        temperature=0.7,
+                    ),
+                )
+                if res.text and "HISTORIA:" in res.text:
+                    sub_name = chosen_sub
+                    title_name = "Historia de Reddit"
+                    for line in res.text.split("\n"):
+                        if line.upper().startswith("SUBREDDIT:"):
+                            sub_name = line.split(":", 1)[-1].strip()
+                        elif line.upper().startswith("TITULO:"):
+                            title_name = line.split(":", 1)[-1].strip()
+                    logger.info("✓ Historia real investigada con éxito en %s: '%s'", sub_name, title_name)
+                    return {
+                        "title": title_name,
+                        "text": f"Subreddit: {sub_name}\n\n{res.text}",
+                        "subreddit": sub_name,
+                    }
+            except Exception as m_err:
+                logger.warning("Aviso investigando en Reddit con %s: %s. Probando siguiente opción...", model_name, str(m_err)[:100])
+    except Exception as exc:
+        logger.warning("No se pudo investigar historia de Reddit con Google Search: %s. Pasando a respaldo.", exc)
+    return None
+
+
+def fetch_top_reddit_story() -> Dict[str, str]:
+    """Obtiene una historia viral real de Reddit.
+
+    Intenta primero mediante Google Search Grounding (buscando posts reales verificados),
+    luego PRAW si hay credenciales, y finalmente historias reales de respaldo.
     """
     client_id = os.getenv("REDDIT_CLIENT_ID")
     client_secret = os.getenv("REDDIT_CLIENT_SECRET")
     user_agent = os.getenv("REDDIT_USER_AGENT", "youtube-ai-bot/1.0")
 
+    # 1. Prioridad: Investigar historia viral real con Google Search Grounding en Reddit
+    real_story = search_real_reddit_story()
+    if real_story:
+        return real_story
+
     if not client_id or client_id == "tu_client_id" or not client_secret:
         logger.warning(
-            "Credenciales de Reddit no configuradas en .env. Usando historia viral destacada de archivo."
+            "API de Reddit no configurada en .env y búsqueda web falló. Usando historia viral destacada de archivo."
         )
         return _get_fallback_story()
 
@@ -175,6 +231,35 @@ def _get_fallback_story() -> Dict[str, str]:
                 "Cuando me negué, me amenazó con sacarme de la boda y prohibirle a mi amigo volverme a hablar. Sospechando de su actitud, revisé la reserva del hotel "
                 "porque un amigo trabajaba en la recepción: la habitación no era para sus amigas, estaba reservada para ella y su ex novio. "
                 "Le envié el comprobante con los nombres de huéspedes a mi amigo dos horas antes del ensayo de la boda. La boda se canceló de inmediato."
+            ),
+        },
+        {
+            "title": "Fingí ser francés durante 10 meses en la universidad y mis suegros me llevaron a París",
+            "text": (
+                "Título: La mentira de Reddit más absurda que llegó demasiado lejos.\n"
+                "Historia: En una fiesta universitaria para impresionar a una chica dije con acento que era un estudiante de intercambio de Lyon. "
+                "Ella quedó fascinada y empezamos a salir. Para mantener la mentira tuve que fingir no entender modismos y hablar con acento falso durante diez meses enteros frente a sus amigos y familia. "
+                "Todo colapsó cuando sus padres, como regalo de graduación, nos compraron pasajes sorpresa a París y me pidieron que fuera el guía de la familia. "
+                "Tuve que confesar todo en pleno aeropuerto antes de subir al avión."
+            ),
+        },
+        {
+            "title": "Cambié el cuadro de la oficina por una foto de Nicolas Cage y nadie lo notó en 4 años",
+            "text": (
+                "Título: La broma corporativa que duró cuatro años enteros.\n"
+                "Historia: En la sala de juntas de mi antigua empresa colgaba el retrato al óleo del supuesto fundador del siglo diecinueve. "
+                "Un viernes por la tarde imprimí una foto en alta resolución de Nicolas Cage vestido de época y la pegué exactamente dentro del marco original. "
+                "Durante cuatro años pasaron decenas de inversionistas, gerentes generales y clientes importantes sin que nadie sospechara jamás. "
+                "Solo se descubrió el día que la empresa fue vendida y un perito de arte fue a cotizar el supuesto cuadro histórico."
+            ),
+        },
+        {
+            "title": "Le puse un rastreador a mi bicicleta robada y la policía recuperó 40 más",
+            "text": (
+                "Título: El rastreador oculto que destruyó una banda completa.\n"
+                "Historia: Me robaron dos bicicletas en un mes afuera de mi trabajo. Para la tercera, escondí un rastreador GPS dentro del tubo del manubrio antes de salir. "
+                "Tres días después sonó la alerta en mi celular a las dos de la madrugada: la bicicleta se estaba moviendo hacia un galpón industrial abandonado. "
+                "Fui con dos patrullas policiales directamente a la ubicación exacta. Al forzar el portón no solo encontraron mi bicicleta, sino un desarmadero clandestino con más de cuarenta bicicletas de alta gama listas para ser enviadas al extranjero."
             ),
         },
     ]
