@@ -25,14 +25,77 @@ logger = logging.getLogger(__name__)
 RAW_DIR = os.path.join("gta6", "media", "raw")
 OFFICIAL_DIR = os.path.join("gta6", "media", "official")
 
-# Términos de búsqueda seguros (solo contenido público y legítimo)
+# Términos de búsqueda seguros (solo contenido público y legítimo, sin spoilers)
 GTA6_SEARCH_QUERIES = [
-    "GTA 6 gameplay first look",
-    "Grand Theft Auto VI launch day",
-    "GTA 6 Vice City gameplay",
-    "GTA VI Lucia Jason gameplay",
-    "GTA 6 PS5 gameplay reaction",
+    "GTA 6 open world free roam gameplay no commentary -spoiler -ending -cutscene",
+    "Grand Theft Auto VI exploration Vice City gameplay 4k",
+    "GTA 6 driving car night Vice City free roam",
+    "GTA VI Lucia Jason walking open world gameplay",
+    "GTA 6 PS5 graphical showcase free roam gameplay",
 ]
+
+USED_CLIPS_FILE = os.path.join("gta6", "media", "used_clips.json")
+
+
+def load_used_clips() -> List[str]:
+    """Carga la lista de nombres de archivo de clips que ya han sido usados para no repetirlos."""
+    if os.path.exists(USED_CLIPS_FILE):
+        try:
+            import json
+            with open(USED_CLIPS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
+
+
+def mark_clip_as_used(clip_path: str) -> None:
+    """Registra un clip como usado para evitar repeticiones."""
+    import json
+    used = load_used_clips()
+    base = os.path.basename(clip_path)
+    if base not in used:
+        used.append(base)
+    # Conservar el historial de los últimos 60 para rotar constantemente
+    if len(used) > 60:
+        used = used[-60:]
+    try:
+        os.makedirs(os.path.dirname(USED_CLIPS_FILE), exist_ok=True)
+        with open(USED_CLIPS_FILE, "w", encoding="utf-8") as f:
+            json.dump(used, f, indent=2)
+    except Exception:
+        pass
+
+
+def get_topic_query(text: str) -> str:
+    """Genera una búsqueda de YouTube contextual al tema del guión, 100% libre de spoilers.
+    
+    Filtra estrictamente cinemáticas de historia, muertes, finales y misiones clave.
+    """
+    t = text.lower() if text else ""
+
+    # 1. Físicas de agua, caimanes, pantanos, tormentas, naturaleza
+    if any(k in t for k in ["agua", "caimán", "caiman", "caimanes", "física", "fisica", "mar", "playa", "tormenta", "rio", "río", "pantano", "bote"]):
+        return "GTA 6 water physics alligator ocean boat free roam -spoiler -ending -cutscene -mission"
+
+    # 2. Policía, persecuciones, sistema táctico, estrellas
+    if any(k in t for k in ["policía", "policia", "policías", "estrellas", "persecución", "persecucion", "arresto", "escape", "patrulla", "sirena"]):
+        return "GTA 6 police chase 5 stars escape free roam gameplay -spoiler -ending -cutscene -mission"
+
+    # 3. Autos, superdeportivos, conducción nocturna, autopistas
+    if any(k in t for k in ["auto", "autos", "coche", "coches", "conducción", "conduccion", "conducir", "conduciendo", "manejar", "manejando", "velocidad", "tráfico", "trafico", "autopista", "deportivo", "superdeportivo", "carrera", "carreras"]):
+        return "GTA 6 driving supercar Vice City night cruise free roam -spoiler -ending -cutscene"
+
+    # 4. Protagonistas (Lucía / Jason), exploración a pie, NPCs, ciudad
+    if any(k in t for k in ["lucía", "lucia", "jason", "ciudad", "npcs", "gente", "vice city", "exploración", "exploracion"]):
+        return "GTA 6 Vice City open world exploration walking free roam -spoiler -ending -cutscene"
+
+    # 5. Rendimiento, gráficos, 60 FPS vs 30 FPS, resolución, PS5 / Xbox
+    if any(k in t for k in ["60 fps", "30 fps", "fps", "gráficos", "graficos", "rendimiento", "ps5", "xbox", "parche", "4k", "ray tracing"]):
+        return "GTA 6 PS5 4K graphics visual showcase free roam -spoiler -ending -cutscene"
+
+    # Default: gameplay de libre exploración en mundo abierto sin comentarios
+    return "GTA 6 open world free roam gameplay no commentary -spoiler -ending -cutscene -mission"
 
 # Creadores del watchlist — canales de YouTube a monitorear
 WATCHLIST_CHANNELS = [

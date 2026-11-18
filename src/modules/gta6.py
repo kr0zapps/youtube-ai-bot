@@ -93,68 +93,82 @@ def select_topic_from_bank(pillar: str) -> Dict[str, str]:
     }
 
 
-def find_background_video(pillar: str = "news") -> str:
-    """Selecciona un clip de fondo de GTA 6 en media/ o fallback en assets/gameplay/."""
-    # 1. Recopilar todos los clips oficiales y de gameplay disponibles de GTA 6
+def find_background_video(pillar: str = "news", topic_text: str = "") -> str:
+    """Selecciona o descarga un clip de GTA 6 relevante al tema, sin spoilers y rotando sin repetir."""
+    used_clips = clip_downloader.load_used_clips()
+    topic_query = clip_downloader.get_topic_query(topic_text)
+
+    # 1. Recopilar todos los clips válidos existentes (>2MB)
     gta6_clips = []
     for search_dir in [RAW_MEDIA_DIR, OFFICIAL_MEDIA_DIR]:
         if os.path.exists(search_dir):
             for f in os.listdir(search_dir):
-                # Omitir fragmentos de descarga parciales
                 if ".f" in f or f.endswith(".json") or f.endswith(".txt"):
                     continue
                 if f.lower().endswith((".mp4", ".mov", ".mkv")):
-                    gta6_clips.append(os.path.join(search_dir, f))
+                    full_p = os.path.join(search_dir, f)
+                    if os.path.exists(full_p) and os.path.getsize(full_p) > 2 * 1024 * 1024:
+                        gta6_clips.append(full_p)
 
-    if gta6_clips:
-        # Si el pilar es clip o tips, priorizar clips de gameplay en crudo si existen
+    # Filtrar solo clips que NO hayan sido usados recientemente
+    fresh_clips = [c for c in gta6_clips if os.path.basename(c) not in used_clips]
+
+    # A) Buscar clips frescos locales que coincidan con las palabras clave del tema
+    if fresh_clips:
+        # Palabras clave del tema
+        keywords = [w for w in re.findall(r"\w+", topic_query.lower()) if len(w) > 3 and not w.startswith("-")]
+        matching = [c for c in fresh_clips if any(kw in os.path.basename(c).lower() for kw in keywords)]
+
+        if matching:
+            chosen = random.choice(matching)
+            clip_downloader.mark_clip_as_used(chosen)
+            logger.info("✓ Usando clip local temático sin repetir [%s]: %s", pillar, chosen)
+            return chosen
+
+        # Si el pilar es clip/tips, preferir clips raw/gameplay no repetidos
         if pillar in ("clip", "tips"):
-            raw_clips = [c for c in gta6_clips if "raw" in c or "gameplay" in c]
-            if raw_clips:
-                chosen = random.choice(raw_clips)
-                logger.info("Usando clip de gameplay GTA 6 [%s]: %s", pillar, chosen)
+            raw_fresh = [c for c in fresh_clips if "raw" in c or "gameplay" in c]
+            if raw_fresh:
+                chosen = random.choice(raw_fresh)
+                clip_downloader.mark_clip_as_used(chosen)
+                logger.info("✓ Usando clip de gameplay fresco sin repetir [%s]: %s", pillar, chosen)
                 return chosen
 
-        chosen = random.choice(gta6_clips)
-        logger.info("Usando clip de GTA 6 seleccionado [%s]: %s", pillar, chosen)
+        chosen = random.choice(fresh_clips)
+        clip_downloader.mark_clip_as_used(chosen)
+        logger.info("✓ Usando clip local fresco sin repetir [%s]: %s", pillar, chosen)
         return chosen
 
-    # 2. Si no hay clips locales, auto-descargar gameplay fresco de GTA 6 en vivo
-    logger.info("No se encontraron clips locales de GTA 6. Descargando automáticamente clip de gameplay fresco...")
+    # B) Si no hay clips frescos o se requiere variedad temática: descargar clip nuevo y específico sin spoilers
+    logger.info("Buscando y descargando nuevo clip temático de GTA 6: '%s'...", topic_query)
     try:
+        # Variar el segundo de inicio para que los clips nunca se vean idénticos
+        start_offset = random.choice([20, 40, 60, 85, 110])
         downloaded = clip_downloader.search_and_download_clip(
-            query="GTA 6 gameplay 4k official",
+            query=topic_query,
             output_dir=RAW_MEDIA_DIR,
             max_duration=600,
             clip_duration=60,
-            start_offset=20,
-            max_results=3,
+            start_offset=start_offset,
+            max_results=5,
         )
         if downloaded:
             for d in downloaded:
-                if os.path.exists(d) and os.path.getsize(d) > 1024 * 1024:
-                    logger.info("✓ Clip de GTA 6 auto-descargado para fondo: %s", d)
+                if os.path.exists(d) and os.path.getsize(d) > 2 * 1024 * 1024:
+                    clip_downloader.mark_clip_as_used(d)
+                    logger.info("✓ Nuevo clip temático sin spoilers descargado: %s", d)
                     return d
     except Exception as dl_err:
-        logger.warning("Aviso en auto-descarga de gameplay de GTA 6: %s", dl_err)
+        logger.warning("Aviso en descarga de gameplay temático: %s", dl_err)
 
-    # 3. Fallback: clips de assets/gameplay/ (gta5_mega_ramp.mp4 u otro)
-    gta5_ramp = os.path.join("assets", "gameplay", "gta5_mega_ramp.mp4")
-    if os.path.exists(gta5_ramp):
-        logger.info("Usando fondo de gameplay GTA 5: %s", gta5_ramp)
-        return gta5_ramp
+    # C) Fallback: Si falló la descarga, reutilizar el clip menos reciente
+    if gta6_clips:
+        chosen = random.choice(gta6_clips)
+        clip_downloader.mark_clip_as_used(chosen)
+        logger.info("Fallback: reutilizando clip disponible: %s", chosen)
+        return chosen
 
-    gameplay_dir = os.path.join("assets", "gameplay")
-    if os.path.exists(gameplay_dir):
-        all_clips = [
-            os.path.join(gameplay_dir, f)
-            for f in os.listdir(gameplay_dir)
-            if f.lower().endswith((".mp4", ".mov"))
-        ]
-        if all_clips:
-            return random.choice(all_clips)
-
-    raise FileNotFoundError("No se encontró ningún clip de video para el fondo en media/ ni assets/gameplay/")
+    raise FileNotFoundError("No se encontró ningún clip de GTA 6 para el fondo.")
 
 
 def append_to_log(caption: str, media_path: str, credit: str = "Rockstar Games Official") -> None:
@@ -240,7 +254,7 @@ def run(
     # 5. Ensamblaje de Video Vertical 1080x1920 con FFmpeg
     logger.info("Paso 4: Ensamblando video vertical con gameplay de fondo...")
     if not bg_video:
-        bg_video = find_background_video(pillar=pillar)
+        bg_video = find_background_video(pillar=pillar, topic_text=f"{title} {script}")
     final_video_path = os.path.join(EDITS_DIR, f"gta6_{pillar}_{timestamp}.mp4")
 
     # Usar música synthwave de fondo estilo GTA 6 Vice City (Royalty Free / Sin Copyright)
