@@ -161,12 +161,40 @@ def find_background_video(pillar: str = "news", topic_text: str = "") -> str:
     except Exception as dl_err:
         logger.warning("Aviso en descarga de gameplay temático: %s", dl_err)
 
-    # C) Fallback: Si falló la descarga, reutilizar el clip menos reciente
+    # C) Fallback 1: Si falló la descarga, reutilizar el clip menos reciente si existe
     if gta6_clips:
         chosen = random.choice(gta6_clips)
         clip_downloader.mark_clip_as_used(chosen)
-        logger.info("Fallback: reutilizando clip disponible: %s", chosen)
+        logger.info("Fallback: reutilizando clip local de GTA 6: %s", chosen)
         return chosen
+
+    # D) Fallback 2: Intentar descargar el trailer oficial de GTA 6
+    logger.info("Fallback: Intentando descargar trailer oficial de GTA 6...")
+    try:
+        official_trailer = clip_downloader.download_official_trailer()
+        if official_trailer and os.path.exists(official_trailer):
+            return official_trailer
+    except Exception as t_err:
+        logger.warning("Aviso en trailer oficial: %s", t_err)
+
+    # E) Fallback 3: Usar el gameplay base de GTA 6 incluido en el repositorio
+    gta6_base = os.path.join("assets", "gameplay", "gta6_base_gameplay.mp4")
+    if os.path.exists(gta6_base):
+        logger.info("Fallback garantizado: usando gta6_base_gameplay.mp4 del repositorio")
+        return gta6_base
+
+    # F) Fallback 4: Cualquier gameplay disponible en assets/gameplay/
+    gameplay_dir = os.path.join("assets", "gameplay")
+    if os.path.exists(gameplay_dir):
+        all_clips = [
+            os.path.join(gameplay_dir, f)
+            for f in os.listdir(gameplay_dir)
+            if f.lower().endswith((".mp4", ".mov"))
+        ]
+        if all_clips:
+            fallback_chosen = random.choice(all_clips)
+            logger.info("Fallback de emergencia: usando %s", fallback_chosen)
+            return fallback_chosen
 
     raise FileNotFoundError("No se encontró ningún clip de GTA 6 para el fondo.")
 

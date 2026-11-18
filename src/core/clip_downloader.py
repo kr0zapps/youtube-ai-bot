@@ -122,21 +122,26 @@ def find_ffmpeg() -> str:
 
 
 def _base_ytdlp_flags() -> List[str]:
-    """Flags comunes anti-429: cookies.txt o cookies del navegador, player web, delays y retries."""
+    """Flags comunes anti-429: cookies si existen, player web, delays y retries."""
     flags = []
     
-    # 1. Si existe cookies.txt explícito, usarlo directamente (evita bloqueos de BD abierta)
+    # 1. Cookies solo si existen explícitamente para no fallar en entornos sin Brave (como Linux CI)
     if os.path.exists("cookies.txt"):
         flags.extend(["--cookies", "cookies.txt"])
     elif os.path.exists(os.path.join("..", "cookies.txt")):
         flags.extend(["--cookies", os.path.join("..", "cookies.txt")])
-    else:
-        flags.extend(["--cookies-from-browser", "brave"])
+    elif os.name == "nt":
+        # En Windows local solo si el ejecutable de Brave existe
+        brave_path = os.path.expandvars(r"%LOCALAPPDATA%\BraveSoftware\Brave-Browser\Application\brave.exe")
+        if os.path.exists(brave_path):
+            flags.extend(["--cookies-from-browser", "brave"])
 
-    # JS runtime para resolver el challenge de YouTube sin 429
-    node_path = r"C:\Program Files\nodejs\node.exe"
-    if os.path.exists(node_path):
-        flags.extend(["--js-runtimes", f"node:{node_path}"])
+    # 2. JS runtime para resolver el challenge de YouTube
+    node_bin = shutil.which("node")
+    if node_bin:
+        flags.extend(["--js-runtimes", f"node:{node_bin}"])
+    elif os.path.exists(r"C:\Program Files\nodejs\node.exe"):
+        flags.extend(["--js-runtimes", r"node:C:\Program Files\nodejs\node.exe"])
 
     # Ruta a FFmpeg para yt-dlp
     from src.core.video import find_ffmpeg_executable
