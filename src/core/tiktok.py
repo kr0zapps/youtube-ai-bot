@@ -308,10 +308,11 @@ def _upload_via_cookies(video_path: str, caption: str, cover_path: Optional[str]
     try:
         _patch_tiktok_post_button()
         from tiktok_uploader.upload import upload_video
+        browser_choice = "edge" if os.name == "nt" else "chromium"
         kwargs = {
             "filename": os.path.abspath(video_path),
             "description": caption,
-            "browser": "chromium",
+            "browser": browser_choice,
             "headless": True,
         }
         if cover_path and os.path.exists(cover_path):
