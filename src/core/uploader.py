@@ -1,7 +1,7 @@
-"""Módulo de subida de videos a YouTube Data API v3.
+﻿"""MÃ³dulo de subida de videos a YouTube Data API v3.
 
-Gestiona la autenticación OAuth2 persistiendo las credenciales en 'token.json'
-y sube automáticamente los videos como Shorts con metadatos optimizados.
+Gestiona la autenticaciÃ³n OAuth2 persistiendo las credenciales en 'token.json'
+y sube automÃ¡ticamente los videos como Shorts con metadatos optimizados.
 """
 
 import os
@@ -23,9 +23,9 @@ TOKEN_FILE = "token.json"
 def get_authenticated_service():
     """Obtiene el cliente autenticado de YouTube Data API v3.
 
-    Si existe 'token.json' válido, lo reutiliza.
-    Si expiró, lo refresca con el refresh token.
-    Si no existe, inicia el flujo de autenticación en el navegador local.
+    Si existe 'token.json' vÃ¡lido, lo reutiliza.
+    Si expirÃ³, lo refresca con el refresh token.
+    Si no existe, inicia el flujo de autenticaciÃ³n en el navegador local.
     """
     from google.oauth2.credentials import Credentials
     from google_auth_oauthlib.flow import InstalledAppFlow
@@ -41,12 +41,12 @@ def get_authenticated_service():
             credentials = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
             logger.debug("Token OAuth cargado desde: %s", TOKEN_FILE)
         except Exception as exc:
-            logger.warning("Error al leer %s: %s. Se solicitará autenticación nuevamente.", TOKEN_FILE, exc)
+            logger.warning("Error al leer %s: %s. Se solicitarÃ¡ autenticaciÃ³n nuevamente.", TOKEN_FILE, exc)
 
-    # 2. Refrescar o solicitar nuevo login si no es válido
+    # 2. Refrescar o solicitar nuevo login si no es vÃ¡lido
     if not credentials or not credentials.valid:
         if credentials and credentials.expired and credentials.refresh_token:
-            logger.info("El token ha expirado. Refrescando automáticamente...")
+            logger.info("El token ha expirado. Refrescando automÃ¡ticamente...")
             try:
                 credentials.refresh(Request())
             except Exception as exc:
@@ -56,16 +56,16 @@ def get_authenticated_service():
         if not credentials or not credentials.valid:
             if not os.path.exists(client_secrets_file):
                 raise FileNotFoundError(
-                    f"No se encontró el archivo de secretos de cliente: '{client_secrets_file}'.\n"
-                    "Descárgalo desde Google Cloud Console (APIs & Services > Credentials > OAuth 2.0 Client IDs) "
-                    "y colócalo en la raíz del proyecto."
+                    f"No se encontrÃ³ el archivo de secretos de cliente: '{client_secrets_file}'.\n"
+                    "DescÃ¡rgalo desde Google Cloud Console (APIs & Services > Credentials > OAuth 2.0 Client IDs) "
+                    "y colÃ³calo en la raÃ­z del proyecto."
                 )
 
-            logger.info("Iniciando flujo de autenticación OAuth en el navegador...")
+            logger.info("Iniciando flujo de autenticaciÃ³n OAuth en el navegador...")
             flow = InstalledAppFlow.from_client_secrets_file(client_secrets_file, SCOPES)
             credentials = flow.run_local_server(port=0)
 
-        # Guardar credenciales para próximas ejecuciones
+        # Guardar credenciales para prÃ³ximas ejecuciones
         try:
             with open(TOKEN_FILE, "w", encoding="utf-8") as token_out:
                 token_out.write(credentials.to_json())
@@ -89,10 +89,10 @@ def upload_video(
 
     Args:
         video_path: Ruta del video MP4 en disco.
-        title: Título del Short (debe incluir #Shorts).
-        description: Descripción del video.
+        title: TÃ­tulo del Short (debe incluir #Shorts).
+        description: DescripciÃ³n del video.
         tags: Lista de etiquetas/palabras clave.
-        category_id: ID de categoría de YouTube.
+        category_id: ID de categorÃ­a de YouTube.
         privacy_status: 'public', 'unlisted' o 'private'.
 
     Returns:
@@ -108,11 +108,11 @@ def upload_video(
     if not os.path.exists(video_path):
         raise FileNotFoundError(f"El video a subir no existe en la ruta: {video_path}")
 
-    # Asegurar que el título incluya el hashtag #Shorts para posicionamiento óptimo
+    # Asegurar que el tÃ­tulo incluya el hashtag #Shorts para posicionamiento Ã³ptimo
     if "#Shorts" not in title and "#shorts" not in title:
         title = f"{title.strip()} #Shorts"
 
-    # Truncar título al límite de 100 caracteres de YouTube
+    # Truncar tÃ­tulo al lÃ­mite de 100 caracteres de YouTube
     if len(title) > 100:
         title = title[:96].rstrip() + "... #Shorts"
 
@@ -140,7 +140,7 @@ def upload_video(
 
     media = MediaFileUpload(
         video_path,
-        chunksize=-1,  # Subida completa o en fragmentos automáticos
+        chunksize=-1,  # Subida completa o en fragmentos automÃ¡ticos
         resumable=True,
         mimetype="video/mp4",
     )
@@ -165,16 +165,16 @@ def upload_video(
             error_details = str(exc)
             if "uploadLimitExceeded" in error_details:
                 logger.error(
-                    "⚠️ LÍMITE DIARIO DE YOUTUBE ALCANZADO (uploadLimitExceeded): "
-                    "YouTube restringe la cantidad de videos que un canal puede subir por día "
-                    "(habitualmente 3 a 6 en canales sin verificación avanzada). "
-                    "Para desbloquear límites mayores: Ve a YouTube Studio -> Configuración -> "
+                    "âš ï¸ LÃMITE DIARIO DE YOUTUBE ALCANZADO (uploadLimitExceeded): "
+                    "YouTube restringe la cantidad de videos que un canal puede subir por dÃ­a "
+                    "(habitualmente 3 a 6 en canales sin verificaciÃ³n avanzada). "
+                    "Para desbloquear lÃ­mites mayores: Ve a YouTube Studio -> ConfiguraciÃ³n -> "
                     "Canal -> Acceso a funciones -> y activa 'Funciones avanzadas'. "
-                    "El límite se restablecerá automáticamente en 24 horas."
+                    "El lÃ­mite se restablecerÃ¡ automÃ¡ticamente en 24 horas."
                 )
                 raise RuntimeError(
-                    "Límite diario de subida de YouTube alcanzado (uploadLimitExceeded). "
-                    "Se reanudará automáticamente cuando YouTube renueve la cuota diaria."
+                    "LÃ­mite diario de subida de YouTube alcanzado (uploadLimitExceeded). "
+                    "Se reanudarÃ¡ automÃ¡ticamente cuando YouTube renueve la cuota diaria."
                 ) from exc
 
             if exc.resp.status in [500, 502, 503, 504] and retry_count < max_retries:
@@ -194,7 +194,7 @@ def upload_video(
             raise RuntimeError(f"Fallo durante la subida a YouTube: {exc}") from exc
 
     video_id = response.get("id")
-    logger.info("¡Video subido exitosamente a YouTube! Video ID: %s", video_id)
+    logger.info("Â¡Video subido exitosamente a YouTube! Video ID: %s", video_id)
     logger.info("Enlace directo: https://youtube.com/shorts/%s", video_id)
 
     # Subir miniatura personalizada oficial (tarjeta de Reddit en vertical)
@@ -205,11 +205,16 @@ def upload_video(
                 videoId=video_id,
                 media_body=MediaFileUpload(thumbnail_path, mimetype="image/jpeg"),
             ).execute()
-            logger.info("✓ Miniatura oficial con tarjeta de Reddit establecida con éxito en YouTube!")
+            logger.info("âœ“ Miniatura oficial con tarjeta de Reddit establecida con Ã©xito en YouTube!")
         except Exception as th_err:
             logger.warning(
-                "Aviso de miniatura en YouTube: %s. (Nota: YouTube Shorts usa automáticamente el primer fotograma si el canal aún no tiene verificación SMS).",
+                "Aviso de miniatura en YouTube: %s. (Nota: YouTube Shorts usa automÃ¡ticamente el primer fotograma si el canal aÃºn no tiene verificaciÃ³n SMS).",
                 th_err,
             )
 
     return video_id
+
+
+# Alias para compatibilidad
+upload_short = upload_video
+

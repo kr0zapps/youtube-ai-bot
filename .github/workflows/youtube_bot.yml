@@ -1,61 +1,200 @@
-name: YouTube & TikTok AI Bot Automation
+name: GTA 6 Clipping Page — YouTube + TikTok Automation
 
 on:
   schedule:
-    # 10:15 AM Chile (13:15 UTC)
-    - cron: '15 13 * * *'
-    # 04:15 PM Chile (19:15 UTC)
-    - cron: '15 19 * * *'
-    # 10:15 PM Chile (01:15 UTC dia siguiente)
-    - cron: '15 1 * * *'
+    # ── 7 slots diarios (hora Santiago GMT-3 → UTC) ──────────────────────────
+    # 08:00 Santiago → news
+    - cron: '0 11 * * *'
+    # 10:00 Santiago → tips
+    - cron: '0 13 * * *'
+    # 12:00 Santiago → clip
+    - cron: '0 15 * * *'
+    # 14:00 Santiago → news
+    - cron: '0 17 * * *'
+    # 17:00 Santiago → tips
+    - cron: '0 20 * * *'
+    # 20:00 Santiago → news
+    - cron: '0 23 * * *'
+    # 21:00 Santiago → clip
+    - cron: '0 0 * * *'
+
+    # ── Actualizar gameplay clips cada día a las 06:00 Santiago (09:00 UTC) ──
+    - cron: '0 9 * * *'
+
   workflow_dispatch:
-  
+    inputs:
+      pillar:
+        description: 'Pilar GTA 6 (news | tips | clip)'
+        required: true
+        default: 'news'
+        type: choice
+        options: [news, tips, clip]
+      dry_run:
+        description: 'Dry-run (no sube)'
+        required: false
+        default: 'false'
+        type: boolean
+      clip_url:
+        description: 'URL de clip viral (Twitter/X/TikTok/YouTube) — opcional'
+        required: false
+        default: ''
+        type: string
+
 jobs:
-  run-bot:
+  # ════════════════════════════════════════════════════════════════════════════
+  # JOB 1: Actualizar gameplay clips desde YouTube (corre 1x/día a las 09 UTC)
+  # ════════════════════════════════════════════════════════════════════════════
+  refresh-clips:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event.schedule == '0 9 * * *' || github.event_name == 'workflow_dispatch'
+
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Instalar FFmpeg + yt-dlp
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          pip install yt-dlp
+
+      - name: Descargar clips GTA 6 frescos de YouTube
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          mkdir -p gta6/media/raw
+          echo "Buscando clips virales de GTA 6 en YouTube..."
+          # Descargar top 3 clips recientes sin copyright (gameplay oficial/fan)
+          yt-dlp \
+            --no-playlist \
+            --max-downloads 3 \
+            --match-filter "duration < 120" \
+            --format "bestvideo[height<=1080][ext=mp4]+bestaudio/best[height<=1080]" \
+            --merge-output-format mp4 \
+            --output "gta6/media/raw/gta6_fresh_%(id)s.%(ext)s" \
+            --no-overwrites \
+            "ytsearch5:GTA 6 gameplay 2026 official" || true
+
+          ls -lh gta6/media/raw/ || true
+
+      - name: Commit clips actualizados
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🎮 Auto-refresh: Nuevos gameplay clips GTA 6 [skip ci]"
+          file_pattern: "gta6/media/raw/*.mp4"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # JOB 2: Generar video y publicar en YouTube Shorts + TikTok
+  # ════════════════════════════════════════════════════════════════════════════
+  generate-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    if: github.event.schedule != '0 9 * * *' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────────
       - name: Checkout del repositorio
         uses: actions/checkout@v4
 
+      # ── 2. Python ──────────────────────────────────────────────────────────
       - name: Configurar Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Instalar FFmpeg
+      # ── 3. Sistema: FFmpeg + fuentes + chromium ────────────────────────────
+      - name: Instalar FFmpeg, fuentes y herramientas
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-liberation fonts-dejavu-core
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-liberation fonts-dejavu-core \
+            fonts-open-sans wget xvfb
+          # Impact font para subtítulos
+          mkdir -p ~/.local/share/fonts
+          wget -q "https://github.com/google/fonts/raw/main/ofl/oswald/Oswald%5Bwght%5D.ttf" \
+            -O ~/.local/share/fonts/Oswald.ttf 2>/dev/null || true
+          fc-cache -f -v
 
-      - name: Instalar librerías Python y Playwright
+      # ── 4. Dependencias Python ─────────────────────────────────────────────
+      - name: Instalar dependencias Python
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install yt-dlp tiktok-uploader playwright
-          python -m playwright install chromium --with-deps
+          python -m playwright install chromium --with-deps 2>/dev/null || true
 
-      - name: Restaurar credenciales y tokens (YouTube + TikTok)
+      # ── 5. Restaurar credenciales desde GitHub Secrets ────────────────────
+      - name: Restaurar credenciales
         env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          GEMINI_API_KEY:              ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY:                ${{ secrets.GROQ_API_KEY }}
+          YOUTUBE_TOKEN_JSON:          ${{ secrets.YOUTUBE_TOKEN_JSON }}
           YOUTUBE_CLIENT_SECRETS_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRETS_JSON }}
-          TIKTOK_SESSION_ID: ${{ secrets.TIKTOK_SESSION_ID }}
-          TIKTOK_COOKIES_TXT: ${{ secrets.TIKTOK_COOKIES_TXT }}
+          TIKTOK_SESSION_ID:           ${{ secrets.TIKTOK_SESSION_ID }}
+          TIKTOK_COOKIES_TXT:          ${{ secrets.TIKTOK_COOKIES_TXT }}
         run: |
-          echo "GROQ_API_KEY=$GROQ_API_KEY" >> .env
-          echo "GEMINI_API_KEY=$GEMINI_API_KEY" >> .env
-          echo "YOUTUBE_CLIENT_SECRETS_FILE=client_secrets.json" >> .env
-          echo "$YOUTUBE_CLIENT_SECRETS_JSON" > client_secrets.json
-          echo "$YOUTUBE_TOKEN_JSON" > token.json
-          if [ -n "$TIKTOK_SESSION_ID" ]; then
-            echo "TIKTOK_SESSION_ID=$TIKTOK_SESSION_ID" >> .env
-          fi
-          if [ -n "$TIKTOK_COOKIES_TXT" ]; then
-            echo "$TIKTOK_COOKIES_TXT" > tiktok_cookies.txt
-          fi
+          # .env
+          echo "GEMINI_API_KEY=$GEMINI_API_KEY"                    >> .env
+          echo "GROQ_API_KEY=$GROQ_API_KEY"                        >> .env
+          echo "YOUTUBE_CLIENT_SECRETS_FILE=client_secrets.json"   >> .env
+          [ -n "$TIKTOK_SESSION_ID" ] && echo "TIKTOK_SESSION_ID=$TIKTOK_SESSION_ID" >> .env
 
-      - name: Ejecutar generación y subida a YouTube y TikTok
+          # YouTube OAuth
+          echo "$YOUTUBE_CLIENT_SECRETS_JSON" > client_secrets.json
+          echo "$YOUTUBE_TOKEN_JSON"           > token.json
+
+          # TikTok cookies
+          [ -n "$TIKTOK_COOKIES_TXT" ] && echo "$TIKTOK_COOKIES_TXT" > tiktok_cookies.txt
+
+      # ── 6. Determinar pilar según hora UTC ─────────────────────────────────
+      - name: Seleccionar pilar GTA 6
+        id: select_pillar
         run: |
-          python main.py --module $(python -c "import random; print(random.choice(['mystery', 'reddit', 'bizarre']))")
+          if [ -n "${{ github.event.inputs.pillar }}" ]; then
+            echo "PILLAR=${{ github.event.inputs.pillar }}" >> $GITHUB_ENV
+          else
+            HOUR=$(date -u +%-H)
+            case $HOUR in
+              11|17|23) echo "PILLAR=news" >> $GITHUB_ENV ;;
+              13|20)    echo "PILLAR=tips" >> $GITHUB_ENV ;;
+              15|0)     echo "PILLAR=clip" >> $GITHUB_ENV ;;
+              *)        echo "PILLAR=news" >> $GITHUB_ENV ;;
+            esac
+          fi
+          echo "Pilar seleccionado: $PILLAR"
+
+      # ── 7. Generar video y publicar (YouTube + TikTok) ────────────────────
+      - name: Generar y publicar video GTA 6
+        env:
+          PILLAR:       ${{ env.PILLAR }}
+          CLIP_URL:     ${{ github.event.inputs.clip_url }}
+          DRY_RUN_FLAG: ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}
+        run: |
+          CLIP_ARG=""
+          [ -n "$CLIP_URL" ] && CLIP_ARG="--clip-url $CLIP_URL"
+
+          echo "▶ python main.py --module gta6 --pillar $PILLAR $CLIP_ARG $DRY_RUN_FLAG"
+          python main.py --module gta6 --pillar "$PILLAR" $CLIP_ARG $DRY_RUN_FLAG
+
+      # ── 8. Scoreboard diario ───────────────────────────────────────────────
+      - name: Revisión Scoreboard
+        if: always()
+        run: python main.py --review daily || true
+
+      # ── 9. Subir artefactos (video + log) para debugging ──────────────────
+      - name: Guardar video como artefacto GitHub
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gta6-video-${{ env.PILLAR }}-${{ github.run_number }}
+          path: |
+            gta6/media/edits/*.mp4
+            gta6/log.md
+            gta6/scoreboard.csv
+          retention-days: 7

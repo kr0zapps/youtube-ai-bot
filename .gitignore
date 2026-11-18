@@ -20,6 +20,15 @@ assets/gameplay/temp_*
 assets/gameplay/*_opt.mp4
 assets/gameplay/*_final.mp4
 
+# Videos generados y clips crudos pesados de GTA 6 (evitar superar límites de GitHub 100MB)
+gta6/media/edits/*.mp4
+gta6/media/edits/*.ass
+gta6/media/edits/*.mp3
+gta6/media/raw/
+gta6/media/official/
+*.webm
+*.mkv
+
 # Archivos de sistema
 .DS_Store
 Thumbs.db

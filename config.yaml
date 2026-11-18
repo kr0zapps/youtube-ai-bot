@@ -7,10 +7,13 @@ video:
 
 voice:
   language: es-MX
-  rate: "+0%"                            # Velocidad natural y dinámica (38-45s: zona dorada de retención del algoritmo)
-  voice_mystery: es-MX-JorgeNeural     # Voz masculina profunda y cinematográfica para misterio
-  voice_reddit: es-MX-JorgeNeural        # Voz masculina casual para anécdotas de Reddit
-  voice_bizarre: es-MX-JorgeNeural       # Voz irónica y entretenida para desastres y gente loca
+  rate: "+0%"
+  # GTA 6 — Voz energética y cinematográfica
+  voice_gta6: es-MX-JorgeNeural
+  # Módulos originales
+  voice_mystery: es-MX-JorgeNeural
+  voice_reddit: es-MX-JorgeNeural
+  voice_bizarre: es-MX-JorgeNeural
   voice_news: es-MX-JorgeNeural
 
 subtitles:
@@ -19,15 +22,30 @@ subtitles:
   color: white
   outline_color: black
   outline_width: 3
-  words_per_subtitle: 3                  # Cuántas palabras por tarjeta
+  words_per_subtitle: 3
 
+# ─────────────────────────────────────────────────────────
+# Horario GTA 6 (Sección 9 / Sección 10 del SOP)
+# Zona horaria local: ajusta según tu ubicación
+# ─────────────────────────────────────────────────────────
 schedule:
-  mystery_times: ["09:00", "15:00", "21:00"]   # 3 veces al día
-  news_times: ["08:00", "14:00", "20:00"]
-  reddit_times: ["10:00", "16:00", "22:00"]
   timezone: America/Santiago
 
+  # Pilar 1: Noticias oficiales / Conteos regresivos
+  gta6_news_times:  ["08:00", "14:00", "20:00"]
+
+  # Pilar 2: HOW-TO / Guías de utilidad (máximos saves/shares)
+  gta6_tips_times:  ["10:00", "17:00"]
+
+  # Pilar 3: Clip Highlights / Análisis de tráiler
+  gta6_clip_times:  ["12:00", "21:00"]
+
+  # Módulos legacy (comentar si el canal es 100% GTA 6)
+  mystery_times:    ["09:00", "15:00", "21:00"]
+  news_times:       ["08:00", "14:00", "20:00"]
+  reddit_times:     ["10:00", "16:00", "22:00"]
+
 gemini:
-  model: gemini-2.0-flash-lite
+  model: gemini-2.5-flash
   temperature: 0.9
   max_output_tokens: 1024

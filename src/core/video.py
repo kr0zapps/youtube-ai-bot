@@ -29,14 +29,24 @@ def find_ffmpeg_executable(config: Optional[Dict[str, Any]] = None) -> str:
     if which_ffmpeg:
         return which_ffmpeg
 
-    user_profile = os.environ.get("USERPROFILE", r"C:\Users\krosa")
+    user_profile = os.environ.get("USERPROFILE", r"C:\Users\Usuario")
+    local_app_data = os.environ.get("LOCALAPPDATA", os.path.join(user_profile, "AppData", "Local"))
     candidate_paths = [
         os.path.join(user_profile, "Videos", "ffmpeg.exe"),
         os.path.join(user_profile, r"AppData\Local\Programs\ffmpeg\bin\ffmpeg.exe"),
+        os.path.join(local_app_data, r"Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.2-full_build\bin\ffmpeg.exe"),
         r"C:\ffmpeg\bin\ffmpeg.exe",
         r"C:\Program Files\ffmpeg\bin\ffmpeg.exe",
         r"C:\ProgramData\chocolatey\bin\ffmpeg.exe",
     ]
+
+    # Búsqueda dinámica en WinGet Packages si cambia la versión
+    winget_pkg_dir = os.path.join(local_app_data, r"Microsoft\WinGet\Packages")
+    if os.path.isdir(winget_pkg_dir):
+        for root, _, files in os.walk(winget_pkg_dir):
+            if "ffmpeg.exe" in files:
+                candidate_paths.insert(0, os.path.join(root, "ffmpeg.exe"))
+                break
 
     for candidate in candidate_paths:
         if os.path.isfile(candidate):
@@ -145,13 +155,11 @@ def assemble_video(
 
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
 
-    # ── MODO GAMEPLAY 2x2 (Full Dopamina): 4 gameplays simultáneos en grid ────────
-    from src.core import gameplay as gp_mod
-    dopamine_clips = gp_mod.get_dopamine_2x2_clips()
-    if len(dopamine_clips) >= 4:
-        logger.info("Modo 2x2 FULL DOPAMINA activo con 4 gameplays: %s", [os.path.basename(c) for c in dopamine_clips[:4]])
-        return _assemble_with_dopamine_2x2(
-            gameplay_paths=dopamine_clips[:4],
+    # ── MODO GAMEPLAY PRIORITARIO: si se proporciona gameplay_path (ej. GTA 6), usarlo siempre ──
+    if gameplay_path and os.path.exists(gameplay_path):
+        logger.info("Modo GAMEPLAY activo: usando %s como fondo", os.path.basename(gameplay_path))
+        return _assemble_with_gameplay(
+            gameplay_path=gameplay_path,
             audio_path=audio_path,
             subtitle_path=subtitle_path,
             music_path=music_path,
@@ -162,11 +170,13 @@ def assemble_video(
             reddit_card_path=reddit_card_path,
         )
 
-    # ── MODO GAMEPLAY SIMPLE: usar un solo clip de video como fondo ──────────
-    if gameplay_path and os.path.exists(gameplay_path):
-        logger.info("Modo GAMEPLAY simple: usando %s como fondo", os.path.basename(gameplay_path))
-        return _assemble_with_gameplay(
-            gameplay_path=gameplay_path,
+    # ── MODO GAMEPLAY 2x2 (Full Dopamina fallback si no hay clip específico) ────────
+    from src.core import gameplay as gp_mod
+    dopamine_clips = gp_mod.get_dopamine_2x2_clips()
+    if len(dopamine_clips) >= 4:
+        logger.info("Modo 2x2 FULL DOPAMINA activo con 4 gameplays: %s", [os.path.basename(c) for c in dopamine_clips[:4]])
+        return _assemble_with_dopamine_2x2(
+            gameplay_paths=dopamine_clips[:4],
             audio_path=audio_path,
             subtitle_path=subtitle_path,
             music_path=music_path,
@@ -322,7 +332,8 @@ def assemble_video(
         "-t", f"{audio_duration:.2f}",
         "-c:v", "libx264", "-preset", "medium", "-crf", "18",
         "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2",
+        "-c:a", "libmp3lame", "-b:a", "256k", "-ar", "44100", "-ac", "2",
+        "-movflags", "+faststart",
         output_path,
     ]
 
@@ -345,7 +356,7 @@ def assemble_video(
                 "-i", silent_video, "-i", audio_path,
                 "-map", "0:v", "-map", "1:a",
                 "-t", f"{audio_duration:.2f}",
-                "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+                "-c:v", "copy", "-c:a", "libmp3lame", "-b:a", "256k", "-ar", "44100", "-ac", "2",
                 output_path,
             ]
             subprocess.run(cmd_nosub, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -475,10 +486,11 @@ def _assemble_with_gameplay(
         "-map", "[vout]", "-map", "[aout]",
         "-t", f"{audio_duration:.2f}",
         "-r", str(fps),
-        "-c:v", "libx264", "-preset", "medium", "-crf", "17",
-        "-maxrate", "12M", "-bufsize", "24M",
+        "-c:v", "libx264", "-preset", "slow", "-crf", "15",
+        "-maxrate", "25M", "-bufsize", "50M",
         "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2",
+        "-c:a", "libmp3lame", "-b:a", "256k", "-ar", "44100", "-ac", "2",
+        "-movflags", "+faststart",
         output_path,
     ]
 
@@ -500,7 +512,8 @@ def _assemble_with_gameplay(
                 "-map", "0:v", "-map", "1:a",
                 "-t", f"{audio_duration:.2f}",
                 "-c:v", "libx264", "-preset", "medium", "-crf", "18",
-                "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k",
+                "-pix_fmt", "yuv420p", "-c:a", "libmp3lame", "-b:a", "256k",
+                "-movflags", "+faststart",
                 output_path,
             ]
             subprocess.run(cmd_nosub, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -639,7 +652,8 @@ def _assemble_with_dopamine_2x2(
         "-r", str(fps),
         "-c:v", "libx264", "-preset", "medium", "-crf", "18",
         "-pix_fmt", "yuv420p",
-        "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2",
+        "-c:a", "libmp3lame", "-b:a", "256k", "-ar", "44100", "-ac", "2",
+        "-movflags", "+faststart",
         output_path,
     ]
 
