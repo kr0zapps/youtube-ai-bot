@@ -321,7 +321,15 @@ def _upload_via_cookies(video_path: str, caption: str, cover_path: Optional[str]
         if cookie_file:
             kwargs["cookies"] = cookie_file
         elif session_id:
-            kwargs["sessionid"] = session_id
+            # Playwright exige que las cookies incluyan domain y path
+            kwargs["cookies_list"] = [
+                {
+                    "name": "sessionid",
+                    "value": session_id,
+                    "domain": ".tiktok.com",
+                    "path": "/",
+                }
+            ]
 
         logger.info("Enviando video a TikTok Creator Center...")
         results = upload_video(**kwargs)
