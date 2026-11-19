@@ -48,6 +48,8 @@ jobs:
   refresh-trends-and-clips:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: write
     if: github.event.schedule == '0 9 * * *' || github.event_name == 'workflow_dispatch'
 
     steps:
@@ -194,6 +196,8 @@ jobs:
   generate-and-publish:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    permissions:
+      contents: write
     if: github.event.schedule != '0 9 * * *' || github.event_name == 'workflow_dispatch'
 
     steps:
