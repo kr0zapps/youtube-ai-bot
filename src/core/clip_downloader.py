@@ -181,6 +181,24 @@ def _base_ytdlp_flags() -> List[str]:
     return flags
 
 
+def find_youtube_video_ids(query: str, max_results: int = 5) -> List[str]:
+    """Busca en YouTube usando curl_cffi con TLS impersonation de Chrome para evitar bot checks de ytsearch."""
+    import urllib.parse
+    import re
+    try:
+        from curl_cffi import requests
+        encoded = urllib.parse.quote_plus(query)
+        url = f"https://www.youtube.com/results?search_query={encoded}"
+        r = requests.get(url, impersonate="chrome120", timeout=15)
+        if r.status_code == 200:
+            ids = re.findall(r'watch\?v=([a-zA-Z0-9_-]{11})', r.text)
+            unique = list(dict.fromkeys(ids))
+            return unique[:max_results]
+    except Exception as e:
+        logger.warning("Aviso en búsqueda curl_cffi: %s", e)
+    return []
+
+
 def search_and_download_clip(
     query: str,
     output_dir: str,
@@ -191,8 +209,8 @@ def search_and_download_clip(
 ) -> List[str]:
     """Busca un video en YouTube por query y descarga un segmento dinámico y único.
 
-    Usa --download-sections para descargar rápidamente SOLO los 55-60s necesarios,
-    garantizando que cada video use un fragmento diferente y relacionado al tema.
+    Usa curl_cffi con impersonación de Chrome para obtener URLs reales de videos,
+    y descarga rápidamente SOLO los 55-60s necesarios con yt-dlp.
     """
     os.makedirs(output_dir, exist_ok=True)
     yt_dlp = find_yt_dlp()
@@ -201,71 +219,45 @@ def search_and_download_clip(
     output_template = os.path.join(output_dir, f"raw_{safe_query}_{timestamp}.%(ext)s")
 
     end_offset = start_offset + clip_duration
-    # Filtrar estrictamente transmisiones en vivo (!is_live & !was_live) que causan bloqueos de bot y SABR
-    # duration > 60 excluye live streams (que suelen reportar duration=0 o duración enorme)
     match_filter = f"!is_live & !was_live & duration < {max_duration} & duration > 60"
-    cmd = [
-        yt_dlp,
-        f"ytsearch{max_results}:{query}",
-        "--match-filter", match_filter,
-        f"--download-sections=*{start_offset}-{end_offset}",
-        "-f", "bestvideo[height<=1080]+bestaudio/18/best[ext=mp4]/best",
-        "--merge-output-format", "mp4",
-        "--no-playlist",
-        "--max-downloads", "1",
-        "--ignore-errors",  # Saltar videos que fallen (live streams, bots, etc.) y tomar el siguiente
-        "-o", output_template,
-        "--quiet",
-        "--no-warnings",
-    ] + _base_ytdlp_flags()
 
-    logger.info("Buscando y descargando segmento dinámico (%ds-%ds): '%s'...", start_offset, end_offset, query)
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
-        # Buscar primero si se descargó
-        downloaded = [
-            os.path.join(output_dir, f)
-            for f in os.listdir(output_dir)
-            if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
-        ]
-        if not downloaded:
-            logger.warning("yt-dlp sección rápida falló para '%s': %s", query, result.stderr[:200])
-            # Reintento con formato simple compatible sin streams en vivo
-            cmd_fallback = [
-                yt_dlp,
-                f"ytsearch{max_results}:{query}",
-                "--match-filter", f"!is_live & !was_live & duration < {max_duration} & duration > 60",
-                f"--download-sections=*{start_offset}-{end_offset}",
-                "-f", "18/best[ext=mp4]/best",
-                "--merge-output-format", "mp4",
-                "--no-playlist",
-                "--max-downloads", "1",
-                "--ignore-errors",
-                "-o", output_template,
-                "--quiet",
-                "--no-warnings",
-            ] + _base_ytdlp_flags()
-            subprocess.run(cmd_fallback, capture_output=True, text=True, timeout=120)
-    except subprocess.TimeoutExpired:
-        logger.warning("Timeout al descargar '%s'", query)
-        return []
-    except Exception as exc:
-        logger.error("Error al ejecutar yt-dlp: %s", exc)
-        return []
+    # 1. Obtener IDs directos con curl_cffi para evitar bot check en ytsearch
+    video_ids = find_youtube_video_ids(query, max_results=max_results)
+    targets = [f"https://www.youtube.com/watch?v={vid}" for vid in video_ids] if video_ids else [f"ytsearch{max_results}:{query}"]
 
-    # Buscar archivos descargados
-    downloaded = [
-        os.path.join(output_dir, f)
-        for f in os.listdir(output_dir)
-        if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
-    ]
+    logger.info("Buscando y descargando segmento dinámico (%ds-%ds) para: '%s' (%d candidatos)...", start_offset, end_offset, query, len(targets))
 
-    if not downloaded:
-        logger.warning("No se descargó ningún archivo para '%s'", query)
-        return []
+    for target in targets:
+        cmd = [
+            yt_dlp,
+            target,
+            "--match-filter", match_filter,
+            f"--download-sections=*{start_offset}-{end_offset}",
+            "-f", "bestvideo[height<=1080]+bestaudio/18/best[ext=mp4]/best",
+            "--merge-output-format", "mp4",
+            "--no-playlist",
+            "--max-downloads", "1",
+            "--ignore-errors",
+            "-o", output_template,
+            "--quiet",
+            "--no-warnings",
+        ] + _base_ytdlp_flags()
 
-    logger.info("✓ Clip dinámico descargado con éxito: %s", downloaded[0])
-    return downloaded
+        try:
+            subprocess.run(cmd, capture_output=True, text=True, timeout=90)
+            downloaded = [
+                os.path.join(output_dir, f)
+                for f in os.listdir(output_dir)
+                if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
+            ]
+            if downloaded:
+                logger.info("✓ Clip dinámico descargado con éxito: %s", downloaded[0])
+                return downloaded
+        except Exception as exc:
+            logger.warning("Aviso al descargar candidato %s: %s", target, exc)
+
+    logger.warning("No se pudo descargar ningún candidato para '%s'", query)
+    return []
 
 
 def trim_to_vertical_short(

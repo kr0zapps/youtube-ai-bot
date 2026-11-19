@@ -157,37 +157,48 @@ jobs:
               out = f"gta6/media/raw/trend_{safe}_{ts}.%(ext)s"
 
               print(f"\n→ Descargando clip dinámico para: {item['title']}")
-              target = vurl if vurl else f"ytsearch5:{q}"
-              print(f"  Destino: {target}")
+              vids = []
+              if not vurl:
+                  from src.core.clip_downloader import find_youtube_video_ids
+                  vids = find_youtube_video_ids(q, max_results=3)
+              targets = [vurl] if vurl else ([f"https://www.youtube.com/watch?v={v}" for v in vids] if vids else [f"ytsearch5:{q}"])
 
               start_sec = random.choice([25, 45, 70, 100, 140])
               end_sec = start_sec + 58
-              cmd = [
-                  "yt-dlp",
-                  target,
-                  "--match-filter", "!is_live & !was_live & duration < 900 & duration > 60",
-                  f"--download-sections=*{start_sec}-{end_sec}",
-                  "-f", "bestvideo[height<=1080]+bestaudio/18/best[ext=mp4]/best",
-                  "--merge-output-format", "mp4",
-                  "--no-playlist",
-                  "--max-downloads", "1",
-                  "--ignore-errors",
-                  "-o", out,
-                  "--no-overwrites",
-                  "--extractor-args", "youtube:player_client=android,ios",
-                  "--add-headers", "Accept-Language:en-US,en;q=0.9",
-                  "--retries", "3",
-                  "--sleep-interval", "1",
-                  "--quiet",
-                  "--no-warnings",
-              ]
-              if os.path.exists("cookies.txt") and os.path.getsize("cookies.txt") > 50:
-                  cmd.extend(["--cookies", "cookies.txt"])
-              result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
-              if result.returncode == 0:
-                  print(f"  ✓ Clip dinámico descargado con éxito")
-              else:
-                  print(f"  ⚠ Aviso en descarga rápida: {result.stderr[:200]}")
+              downloaded_ok = False
+              for target in targets:
+                  print(f"  Intentando destino: {target}")
+                  cmd = [
+                      "yt-dlp",
+                      target,
+                      "--match-filter", "!is_live & !was_live & duration < 900 & duration > 60",
+                      f"--download-sections=*{start_sec}-{end_sec}",
+                      "-f", "bestvideo[height<=1080]+bestaudio/18/best[ext=mp4]/best",
+                      "--merge-output-format", "mp4",
+                      "--no-playlist",
+                      "--max-downloads", "1",
+                      "--ignore-errors",
+                      "-o", out,
+                      "--no-overwrites",
+                      "--extractor-args", "youtube:player_client=android,ios",
+                      "--add-headers", "Accept-Language:en-US,en;q=0.9",
+                      "--retries", "3",
+                      "--sleep-interval", "1",
+                      "--quiet",
+                      "--no-warnings",
+                  ]
+                  if os.path.exists("cookies.txt") and os.path.getsize("cookies.txt") > 50:
+                      cmd.extend(["--cookies", "cookies.txt"])
+                  result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+                  # Verificar si se descargó
+                  if any(f.startswith(f"trend_{safe}_{ts}") for f in os.listdir("gta6/media/raw")):
+                      print(f"  ✓ Clip dinámico descargado con éxito")
+                      downloaded_ok = True
+                      break
+                  else:
+                      print(f"  ⚠ Falló candidato {target}: {result.stderr[:150]}")
+              if not downloaded_ok:
+                  print(f"  ⚠ No se pudo descargar ningún candidato para {item['title']}")
 
           # Listar clips disponibles
           clips = [f for f in os.listdir("gta6/media/raw") if f.endswith(".mp4")]
