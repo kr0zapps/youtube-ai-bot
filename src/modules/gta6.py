@@ -93,13 +93,23 @@ def select_topic_from_bank(pillar: str) -> Dict[str, str]:
     }
 
 
-def find_background_video(pillar: str = "news", topic_text: str = "") -> str:
-    """Selecciona o descarga un clip de GTA 6 relevante al tema, sin spoilers y NUNCA el tráiler oficial."""
-    used_clips = clip_downloader.load_used_clips()
-    topic_query = clip_downloader.get_topic_query(topic_text)
+def find_background_video(pillar: str = "news", topic_text: str = "", forced_clip_query: str = "") -> str:
+    """Selecciona o descarga un clip de GTA 6 relevante al tema del día.
 
-    # 1. INTENTO PRIORITARIO: Descargar SIEMPRE un clip fresco y único de YouTube de la temática de hoy
-    logger.info("Buscando y descargando gameplay fresco y diferente de GTA 6: '%s'...", topic_query)
+    Si se pasa forced_clip_query (desde la tendencia #1 del día), se usa esa búsqueda
+    directamente en YouTube para que el clip sea EXACTAMENTE el del tema que se comenta.
+    """
+    used_clips = clip_downloader.load_used_clips()
+
+    # Prioridad: query forzada desde trending topic > query calculada desde texto
+    if forced_clip_query:
+        topic_query = forced_clip_query
+        logger.info("Usando clip_query directa de la tendencia del día: '%s'", topic_query)
+    else:
+        topic_query = clip_downloader.get_topic_query(topic_text)
+
+    # 1. INTENTO PRIORITARIO: Descargar clip fresco de YouTube de la temática de hoy
+    logger.info("Buscando y descargando gameplay fresco relacionado al tema del día: '%s'...", topic_query)
     try:
         # Variar ampliamente el segundo de inicio (entre 30s y 240s) para que NUNCA sea el mismo fragmento
         start_offset = random.choice([35, 65, 95, 130, 170, 210])
@@ -186,15 +196,33 @@ def run(
     # 1. Cargar tendencias en vivo de las últimas 24 horas, hechos y borrador base
     facts_context = load_verified_facts()
     topic = select_topic_from_bank(pillar)
+
+    # Obtener EL tema más viral del día con su clip relacionado
+    top_trend = trend_fetcher.get_top_trending_topic()
+    logger.info(
+        "Tendencia #1 del día: '%s' [%s] → clip: %s",
+        top_trend.get("title", ""),
+        top_trend.get("source", ""),
+        top_trend.get("clip_query", ""),
+    )
+
+    # Actualizar facts.md con las noticias de hoy automáticamente
+    all_trends = trend_fetcher.fetch_live_trending_topics(max_topics=6)
+    trend_fetcher.save_facts_update(all_trends)
+
     live_trends = trend_fetcher.get_live_context_for_prompt()
-    if live_trends:
-        logger.info("Tendencias en vivo recolectadas exitosamente para la IA.")
 
     extra_context = (
         f"{live_trends}\n\n"
+        f"NOTICIA PRINCIPAL DE HOY:\n"
+        f"Título: {top_trend.get('title', '')}\n"
+        f"Detalle: {top_trend.get('detail', '')}\n\n"
         f"HECHOS BASE (FACTS.MD):\n{facts_context[:600]}\n\n"
         f"INSPIRACIÓN ADICIONAL:\n{topic['context']}"
     )
+
+    # Guardar el clip_query del trending topic para usarlo como fondo
+    _today_clip_query = top_trend.get("clip_query", "")
 
     credit = "Rockstar Games Official"
     bg_video = None
@@ -248,7 +276,11 @@ def run(
     # 5. Ensamblaje de Video Vertical 1080x1920 con FFmpeg
     logger.info("Paso 4: Ensamblando video vertical con gameplay de fondo...")
     if not bg_video:
-        bg_video = find_background_video(pillar=pillar, topic_text=f"{title} {script}")
+        bg_video = find_background_video(
+            pillar=pillar,
+            topic_text=f"{title} {script}",
+            forced_clip_query=_today_clip_query,
+        )
     final_video_path = os.path.join(EDITS_DIR, f"gta6_{pillar}_{timestamp}.mp4")
 
     # Usar música synthwave de fondo estilo GTA 6 Vice City (Royalty Free / Sin Copyright)

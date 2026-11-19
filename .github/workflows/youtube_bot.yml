@@ -2,7 +2,7 @@ name: GTA 6 Clipping Page — YouTube + TikTok Automation
 
 on:
   schedule:
-    # ── 7 slots diarios (hora Santiago GMT-3 → UTC) ──────────────────────────
+    # ── 7 slots diarios (hora Santiago GMT-3 → UTC) ───────────────────────────
     # 08:00 Santiago → news
     - cron: '0 11 * * *'
     # 10:00 Santiago → tips
@@ -18,7 +18,7 @@ on:
     # 21:00 Santiago → clip
     - cron: '0 0 * * *'
 
-    # ── Actualizar gameplay clips cada día a las 06:00 Santiago (09:00 UTC) ──
+    # ── Actualizar tendencias diarias y facts.md a las 06:00 Santiago (09 UTC) ──
     - cron: '0 9 * * *'
 
   workflow_dispatch:
@@ -41,12 +41,13 @@ on:
         type: string
 
 jobs:
-  # ════════════════════════════════════════════════════════════════════════════
-  # JOB 1: Actualizar gameplay clips desde YouTube (corre 1x/día a las 09 UTC)
-  # ════════════════════════════════════════════════════════════════════════════
-  refresh-clips:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # JOB 1: Actualizar tendencias del día + facts.md + clips relacionados
+  # Corre 1x/día a las 09:00 UTC (06:00 Santiago)
+  # ═══════════════════════════════════════════════════════════════════════════
+  refresh-trends-and-clips:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     if: github.event.schedule == '0 9 * * *' || github.event_name == 'workflow_dispatch'
 
     steps:
@@ -59,77 +60,173 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Instalar FFmpeg + yt-dlp
+      - name: Instalar FFmpeg + yt-dlp + dependencias
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
-          pip install yt-dlp
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Descargar clips GTA 6 frescos de YouTube
+      - name: Configurar credenciales
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          echo "GROQ_API_KEY=$GROQ_API_KEY" >> .env
+          echo "GEMINI_API_KEY=$GEMINI_API_KEY" >> .env
+
+      - name: Buscar tendencias del día y actualizar facts.md
+        run: |
+          python - <<'EOF'
+          import logging
+          logging.basicConfig(level=logging.INFO)
+          import sys
+          sys.path.insert(0, ".")
+          from src.core import trend_fetcher
+
+          print("=== Actualizando tendencias y facts.md ===")
+          topics = trend_fetcher.fetch_live_trending_topics(max_topics=8)
+
+          print(f"\n✓ {len(topics)} tendencias encontradas hoy:")
+          for i, t in enumerate(topics, 1):
+              print(f"  {i}. [{t.get('source','?')}] {t['title']}")
+              print(f"     Clip relacionado: {t.get('clip_query','')}")
+
+          # Actualizar facts.md con las noticias del día
+          trend_fetcher.save_facts_update(topics)
+          print("\n✓ facts.md actualizado con las tendencias de hoy.")
+
+          # Guardar JSON con las tendencias del día para los otros jobs
+          import json, os
+          os.makedirs("gta6", exist_ok=True)
+          with open("gta6/today_trends.json", "w", encoding="utf-8") as f:
+              json.dump(topics, f, ensure_ascii=False, indent=2)
+          print("✓ gta6/today_trends.json guardado.")
+          EOF
+
+      - name: Descargar clips GTA 6 relacionados a las tendencias del día
         run: |
           mkdir -p gta6/media/raw
-          echo "Buscando clips virales de GTA 6 en YouTube..."
-          # Descargar top 3 clips recientes sin copyright (gameplay oficial/fan)
-          yt-dlp \
-            --no-playlist \
-            --max-downloads 3 \
-            --match-filter "duration < 120" \
-            --format "bestvideo[height<=1080][ext=mp4]+bestaudio/best[height<=1080]" \
-            --merge-output-format mp4 \
-            --output "gta6/media/raw/gta6_fresh_%(id)s.%(ext)s" \
-            --no-overwrites \
-            "ytsearch5:GTA 6 gameplay 2026 official" || true
+          echo "=== Descargando clips relacionados a las tendencias de hoy ==="
 
-          ls -lh gta6/media/raw/ || true
+          # Leer las clip_queries del JSON generado
+          python - <<'EOF'
+          import json, subprocess, sys, os, re
+          from datetime import datetime
 
-      - name: Commit clips actualizados
+          trends_file = "gta6/today_trends.json"
+          if not os.path.exists(trends_file):
+              print("No hay today_trends.json, saltando descarga de clips.")
+              sys.exit(0)
+
+          with open(trends_file, "r", encoding="utf-8") as f:
+              topics = json.load(f)
+
+          # Tomar las top 3 clip_queries únicas del día
+          seen_queries = set()
+          queries_to_download = []
+          for t in topics:
+              q = t.get("clip_query", "")
+              if q and q not in seen_queries:
+                  seen_queries.add(q)
+                  queries_to_download.append({
+                      "query": q,
+                      "tag": t.get("topic_tag", "general"),
+                      "title": t["title"][:50],
+                  })
+              if len(queries_to_download) >= 3:
+                  break
+
+          print(f"Descargando {len(queries_to_download)} clips temáticos del día...")
+
+          for item in queries_to_download:
+              q = item["query"]
+              tag = item["tag"]
+              ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+              safe = re.sub(r"[^\w]", "_", tag)[:20]
+              out = f"gta6/media/raw/trend_{safe}_{ts}.%(ext)s"
+
+              print(f"\n→ Descargando clip para: {item['title']}")
+              print(f"  Query: {q}")
+
+              cmd = [
+                  "yt-dlp",
+                  f"ytsearch2:{q}",
+                  "--match-filter", "duration < 600",
+                  "-f", "bestvideo[height<=1080][ext=mp4]+bestaudio/best[height<=1080]",
+                  "--merge-output-format", "mp4",
+                  "--no-playlist",
+                  "--max-downloads", "1",
+                  "-o", out,
+                  "--no-overwrites",
+                  "--extractor-args", "youtube:player_client=web",
+                  "--add-headers", "Accept-Language:en-US,en;q=0.9",
+                  "--retries", "3",
+                  "--sleep-interval", "2",
+                  "--quiet",
+              ]
+              result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+              if result.returncode == 0:
+                  print(f"  ✓ Clip descargado con éxito")
+              else:
+                  print(f"  ⚠ No se pudo descargar (rate limit): {result.stderr[:200]}")
+
+          # Listar clips disponibles
+          clips = [f for f in os.listdir("gta6/media/raw") if f.endswith(".mp4")]
+          print(f"\n✓ Total de clips disponibles: {len(clips)}")
+          for c in clips:
+              size = os.path.getsize(f"gta6/media/raw/{c}") / (1024*1024)
+              print(f"  • {c} ({size:.1f} MB)")
+          EOF
+
+      - name: Commit tendencias y clips del día
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🎮 Auto-refresh: Nuevos gameplay clips GTA 6 [skip ci]"
-          file_pattern: "gta6/media/raw/*.mp4"
+          commit_message: "🔥 Auto-update: Tendencias del día + clips relacionados GTA 6 [skip ci]"
+          file_pattern: |
+            gta6/facts.md
+            gta6/today_trends.json
+            gta6/media/raw/*.mp4
 
-  # ════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════
   # JOB 2: Generar video y publicar en YouTube Shorts + TikTok
-  # ════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════
   generate-and-publish:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     if: github.event.schedule != '0 9 * * *' || github.event_name == 'workflow_dispatch'
 
     steps:
-      # ── 1. Checkout ────────────────────────────────────────────────────────
+      # ── 1. Checkout ─────────────────────────────────────────────────────────
       - name: Checkout del repositorio
         uses: actions/checkout@v4
 
-      # ── 2. Python ──────────────────────────────────────────────────────────
+      # ── 2. Python ───────────────────────────────────────────────────────────
       - name: Configurar Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      # ── 3. Sistema: FFmpeg + fuentes + chromium ────────────────────────────
+      # ── 3. Sistema: FFmpeg + fuentes + chromium ──────────────────────────────
       - name: Instalar FFmpeg, fuentes y herramientas
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg fonts-liberation fonts-dejavu-core \
             fonts-open-sans wget xvfb
-          # Impact font para subtítulos
           mkdir -p ~/.local/share/fonts
           wget -q "https://github.com/google/fonts/raw/main/ofl/oswald/Oswald%5Bwght%5D.ttf" \
             -O ~/.local/share/fonts/Oswald.ttf 2>/dev/null || true
           fc-cache -f -v
 
-      # ── 4. Dependencias Python ─────────────────────────────────────────────
+      # ── 4. Dependencias Python ──────────────────────────────────────────────
       - name: Instalar dependencias Python
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
           python -m playwright install chromium --with-deps 2>/dev/null || true
 
-      # ── 5. Restaurar credenciales desde GitHub Secrets ────────────────────
+      # ── 5. Restaurar credenciales desde GitHub Secrets ─────────────────────
       - name: Restaurar credenciales
         env:
           GEMINI_API_KEY:              ${{ secrets.GEMINI_API_KEY }}
@@ -139,20 +236,34 @@ jobs:
           TIKTOK_SESSION_ID:           ${{ secrets.TIKTOK_SESSION_ID }}
           TIKTOK_COOKIES_TXT:          ${{ secrets.TIKTOK_COOKIES_TXT }}
         run: |
-          # .env
           echo "GEMINI_API_KEY=$GEMINI_API_KEY"                    >> .env
           echo "GROQ_API_KEY=$GROQ_API_KEY"                        >> .env
           echo "YOUTUBE_CLIENT_SECRETS_FILE=client_secrets.json"   >> .env
           [ -n "$TIKTOK_SESSION_ID" ] && echo "TIKTOK_SESSION_ID=$TIKTOK_SESSION_ID" >> .env
 
-          # YouTube OAuth
           echo "$YOUTUBE_CLIENT_SECRETS_JSON" > client_secrets.json
           echo "$YOUTUBE_TOKEN_JSON"           > token.json
 
-          # TikTok cookies
           [ -n "$TIKTOK_COOKIES_TXT" ] && echo "$TIKTOK_COOKIES_TXT" > tiktok_cookies.txt
 
-      # ── 6. Determinar pilar según hora UTC ─────────────────────────────────
+      # ── 6. Mostrar tendencias del día (si están pre-generadas) ─────────────
+      - name: Mostrar tendencias del día
+        run: |
+          if [ -f "gta6/today_trends.json" ]; then
+            echo "=== Tendencias del día precargadas ==="
+            python - <<'EOF'
+          import json
+          with open("gta6/today_trends.json") as f:
+              topics = json.load(f)
+          for i, t in enumerate(topics[:5], 1):
+              print(f"{i}. [{t.get('source','?')}] {t['title']}")
+              print(f"   Clip: {t.get('clip_query','')}")
+          EOF
+          else
+            echo "No hay today_trends.json (el job refresh no corrió hoy). Se usarán las tendencias en tiempo real."
+          fi
+
+      # ── 7. Determinar pilar según hora UTC ──────────────────────────────────
       - name: Seleccionar pilar GTA 6
         id: select_pillar
         run: |
@@ -169,7 +280,7 @@ jobs:
           fi
           echo "Pilar seleccionado: $PILLAR"
 
-      # ── 7. Generar video y publicar (YouTube + TikTok) ────────────────────
+      # ── 8. Generar video y publicar (YouTube + TikTok) ─────────────────────
       - name: Generar y publicar video GTA 6
         env:
           PILLAR:       ${{ env.PILLAR }}
@@ -182,12 +293,12 @@ jobs:
           echo "▶ python main.py --module gta6 --pillar $PILLAR $CLIP_ARG $DRY_RUN_FLAG"
           python main.py --module gta6 --pillar "$PILLAR" $CLIP_ARG $DRY_RUN_FLAG
 
-      # ── 8. Scoreboard diario ───────────────────────────────────────────────
+      # ── 9. Scoreboard diario ────────────────────────────────────────────────
       - name: Revisión Scoreboard
         if: always()
         run: python main.py --review daily || true
 
-      # ── 9. Subir artefactos (video + log) para debugging ──────────────────
+      # ── 10. Subir artefactos (video + log) para debugging ──────────────────
       - name: Guardar video como artefacto GitHub
         if: always()
         uses: actions/upload-artifact@v4
@@ -197,4 +308,5 @@ jobs:
             gta6/media/edits/*.mp4
             gta6/log.md
             gta6/scoreboard.csv
+            gta6/today_trends.json
           retention-days: 7
