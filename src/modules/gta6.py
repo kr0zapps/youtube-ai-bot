@@ -171,10 +171,10 @@ def find_background_video(
     logger.info("Descarga dinámica de emergencia de mundo abierto de GTA 6...")
     try:
         emergency_queries = [
-            "GTA 6 free roam Vice City open world exploration -trailer -cutscene",
-            "GTA 6 funny streamer viral moments open world gameplay -trailer -cutscene",
-            "GTA 6 driving fast cars night Vice City cruise -trailer -cutscene",
-            "GTA 6 crazy police chase 5 stars gameplay -trailer -cutscene",
+            "GTA 6 free roam Vice City open world exploration -trailer -cutscene -live -livestream",
+            "GTA 6 funny streamer viral moments open world gameplay -trailer -cutscene -live -livestream",
+            "GTA 6 driving fast cars night Vice City cruise -trailer -cutscene -live -livestream",
+            "GTA 6 crazy police chase 5 stars gameplay -trailer -cutscene -live -livestream",
         ]
         emergency_query = random.choice(emergency_queries)
         start_offset = random.choice([35, 65, 95, 135, 175])
@@ -184,7 +184,7 @@ def find_background_video(
             max_duration=600,
             clip_duration=60,
             start_offset=start_offset,
-            max_results=3,
+            max_results=5,
         )
         if em_downloaded:
             for ed in em_downloaded:

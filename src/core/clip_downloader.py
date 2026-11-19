@@ -77,39 +77,39 @@ def get_topic_query(text: str) -> str:
 
     # 1. Trucos bloqueados, trampas, armas, Tanques
     if any(k in t for k in ["truco", "trucos", "trampa", "trampas", "cheat", "cheats", "bloqueado", "bloqueados", "armas"]):
-        return "GTA 6 funny gameplay weapons chaos free roam -trailer -ending -cutscene -mission"
+        return "GTA 6 funny gameplay weapons chaos free roam -trailer -ending -cutscene -mission -live -livestream"
 
     # 2. Memes, Calamardo, PC vs Consolas, tendencias de internet
     if any(k in t for k in ["meme", "memes", "calamardo", "pc", "internet", "redes", "tiktok", "twitter", "funeral"]):
-        return "GTA 6 funny streamer moments viral clips gameplay -trailer -ending -cutscene"
+        return "GTA 6 funny streamer moments viral clips gameplay -trailer -ending -cutscene -live -livestream"
 
     # 3. Realismo, Miami real vs Vice City, gráficos, iluminación
     if any(k in t for k in ["miami", "real", "realidad", "vida real", "iluminación", "luces", "gráfico", "grafico", "ps5"]):
-        return "GTA 6 realistic driving Vice City night cruise 4k -trailer -cutscene"
+        return "GTA 6 realistic driving Vice City night cruise 4k -trailer -cutscene -live -livestream"
 
     # 4. NPCs dementes, peatones, situaciones absurdas en la ciudad
     if any(k in t for k in ["npc", "npcs", "peatón", "peaton", "peatones", "gente", "dementes", "locura", "tienda", "florida"]):
-        return "GTA 6 crazy npc moments open world funny -trailer -ending -cutscene"
+        return "GTA 6 crazy npc moments open world funny -trailer -ending -cutscene -live -livestream"
 
     # 5. Físicas de agua, caimanes, pantanos, tormentas, lanchas
     if any(k in t for k in ["agua", "caimán", "caiman", "caimanes", "mar", "playa", "tormenta", "rio", "río", "pantano", "bote", "lancha"]):
-        return "GTA 6 water physics boat alligator swamp gameplay -trailer -ending -cutscene"
+        return "GTA 6 water physics boat alligator swamp gameplay -trailer -ending -cutscene -live -livestream"
 
     # 6. Policía, persecuciones, sistema táctico, 5 estrellas
     if any(k in t for k in ["policía", "policia", "policías", "estrellas", "persecución", "persecucion", "arresto", "escape", "patrulla"]):
-        return "GTA 6 police chase 5 stars escape gameplay -trailer -ending -cutscene"
+        return "GTA 6 police chase 5 stars escape gameplay -trailer -ending -cutscene -live -livestream"
 
     # 7. Autos, superdeportivos, conducción nocturna, carreras
     if any(k in t for k in ["auto", "autos", "coche", "coches", "conducción", "conduccion", "manejar", "manejando", "velocidad", "superdeportivo"]):
-        return "GTA 6 driving supercar Vice City night cruise -trailer -ending -cutscene"
+        return "GTA 6 driving supercar Vice City night cruise -trailer -ending -cutscene -live -livestream"
 
     # Default rotativo: variedad total de momentos virales de mundo abierto (NUNCA el tráiler)
     viral_queries = [
-        "GTA 6 funny moments streamer gameplay open world -trailer -cutscene",
-        "GTA 6 police chase chaos action free roam -trailer -cutscene",
-        "GTA 6 driving sports car Vice City night stunts -trailer -cutscene",
-        "GTA 6 crazy open world moments funny -trailer -cutscene",
-        "GTA 6 free roam exploration Vice City beach 4k -trailer -cutscene",
+        "GTA 6 funny moments streamer gameplay open world -trailer -cutscene -live -livestream",
+        "GTA 6 police chase chaos action free roam -trailer -cutscene -live -livestream",
+        "GTA 6 driving sports car Vice City night stunts -trailer -cutscene -live -livestream",
+        "GTA 6 crazy open world moments funny -trailer -cutscene -live -livestream",
+        "GTA 6 free roam exploration Vice City beach 4k -trailer -cutscene -live -livestream",
     ]
     return random.choice(viral_queries)
 
@@ -189,7 +189,7 @@ def search_and_download_clip(
     max_duration: int = 900,
     clip_duration: int = 58,
     start_offset: int = 30,
-    max_results: int = 3,
+    max_results: int = 5,
 ) -> List[str]:
     """Busca un video en YouTube por query y descarga un segmento dinámico y único.
 
@@ -204,7 +204,8 @@ def search_and_download_clip(
 
     end_offset = start_offset + clip_duration
     # Filtrar estrictamente transmisiones en vivo (!is_live & !was_live) que causan bloqueos de bot y SABR
-    match_filter = f"!is_live & !was_live & duration < {max_duration} & duration > 25"
+    # duration > 60 excluye live streams (que suelen reportar duration=0 o duración enorme)
+    match_filter = f"!is_live & !was_live & duration < {max_duration} & duration > 60"
     cmd = [
         yt_dlp,
         f"ytsearch{max_results}:{query}",
@@ -214,6 +215,7 @@ def search_and_download_clip(
         "--merge-output-format", "mp4",
         "--no-playlist",
         "--max-downloads", "1",
+        "--ignore-errors",  # Saltar videos que fallen (live streams, bots, etc.) y tomar el siguiente
         "-o", output_template,
         "--quiet",
         "--no-warnings",
@@ -228,11 +230,13 @@ def search_and_download_clip(
             cmd_fallback = [
                 yt_dlp,
                 f"ytsearch{max_results}:{query}",
-                "--match-filter", "!is_live & !was_live & duration < 600 & duration > 25",
+                "--match-filter", f"!is_live & !was_live & duration < {max_duration} & duration > 60",
+                f"--download-sections=*{start_offset}-{end_offset}",
                 "-f", "bestvideo[height<=720]+bestaudio/best[height<=720]/best",
                 "--merge-output-format", "mp4",
                 "--no-playlist",
                 "--max-downloads", "1",
+                "--ignore-errors",
                 "-o", output_template,
                 "--quiet",
                 "--no-warnings",
