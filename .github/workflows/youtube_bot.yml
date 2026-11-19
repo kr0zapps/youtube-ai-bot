@@ -221,9 +221,17 @@ jobs:
               if not downloaded_ok:
                   print(f"  ⚠ No se pudo descargar ningún candidato para {item['title']}")
 
+          # Limpiar cualquier clip que contenga nombres de juegos antiguos
+          for f in os.listdir("gta6/media/raw"):
+              if any(b in f.lower() for b in ["san_andreas", "sanandreas", "gta_sa", "gta4", "gta5", "gta_v", "gta3", "vice_city_2002"]):
+                  try:
+                      os.remove(os.path.join("gta6/media/raw", f))
+                  except Exception:
+                      pass
+
           # Listar clips disponibles
           clips = [f for f in os.listdir("gta6/media/raw") if f.endswith(".mp4")]
-          print(f"\n✓ Total de clips disponibles: {len(clips)}")
+          print(f"\n✓ Total de clips válidos de GTA 6 disponibles: {len(clips)}")
           for c in clips:
               size = os.path.getsize(f"gta6/media/raw/{c}") / (1024*1024)
               print(f"  • {c} ({size:.1f} MB)")

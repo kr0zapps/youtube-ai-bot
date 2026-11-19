@@ -155,6 +155,8 @@ def find_background_video(
         for f in os.listdir(RAW_MEDIA_DIR):
             if ".f" in f or f.endswith(".json") or f.endswith(".txt") or "trailer" in f.lower():
                 continue
+            if any(b in f.lower() for b in ["san_andreas", "sanandreas", "gta_sa", "gta4", "gta_iv", "gta5", "gta_v", "gta3"]):
+                continue
             if f.lower().endswith((".mp4", ".mov", ".mkv")):
                 full_p = os.path.join(RAW_MEDIA_DIR, f)
                 if os.path.exists(full_p) and os.path.getsize(full_p) > 1024 * 1024:
@@ -167,21 +169,21 @@ def find_background_video(
         logger.info("✓ Usando clip dinámico previo no repetido: %s", chosen)
         return chosen
 
-    # 4. CUARTA PRIORIDAD: Búsqueda dinámica de emergencia en YouTube (mundo abierto sin trailer)
+    # 4. CUARTA PRIORIDAD: Búsqueda dinámica de emergencia de GTA 6 en PS5 / Next Gen
     logger.info("Descarga dinámica de emergencia de mundo abierto de GTA 6...")
     try:
         emergency_queries = [
-            "GTA 6 free roam Vice City open world exploration -trailer -cutscene -live -livestream",
-            "GTA 6 funny streamer viral moments open world gameplay -trailer -cutscene -live -livestream",
-            "GTA 6 driving fast cars night Vice City cruise -trailer -cutscene -live -livestream",
-            "GTA 6 crazy police chase 5 stars gameplay -trailer -cutscene -live -livestream",
+            "GTA 6 PS5 4K HDR Gameplay",
+            "Grand Theft Auto VI Gameplay",
+            "GTA 6 Lucia Jason gameplay open world -trailer -cutscene",
+            "GTA 6 PS5 supercar driving gameplay 4k -trailer -cutscene",
         ]
         emergency_query = random.choice(emergency_queries)
-        start_offset = random.choice([35, 65, 95, 135, 175])
+        start_offset = random.choice([25, 45, 65, 85, 115])
         em_downloaded = clip_downloader.search_and_download_clip(
             query=emergency_query,
             output_dir=RAW_MEDIA_DIR,
-            max_duration=600,
+            max_duration=900,
             clip_duration=60,
             start_offset=start_offset,
             max_results=5,

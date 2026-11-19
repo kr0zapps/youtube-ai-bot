@@ -181,6 +181,32 @@ def _base_ytdlp_flags() -> List[str]:
     return flags
 
 
+def is_valid_gta6_title(title: str) -> bool:
+    """Valida estrictamente que el video sea de GTA 6 y NO de juegos antiguos o mods."""
+    if not title:
+        return False
+    t = title.lower()
+    # 1. Debe contener explícitamente GTA 6 / GTA VI / Grand Theft Auto VI
+    has_gta6 = any(k in t for k in ["gta 6", "gta vi", "gta6", "grand theft auto vi", "grand theft auto 6"])
+    if not has_gta6:
+        return False
+    # 2. Estrictamente prohibido contenido de juegos viejos de la saga (San Andreas, Vice City 2002, GTA 5, etc.)
+    banned = [
+        "san andreas", "gta sa", "gta: sa", "samp",
+        "gta 5", "gta v", "gta online", "gta5",
+        "gta 4", "gta iv", "gta4",
+        "gta 3", "gta iii", "gta3",
+        "vice city stories", "liberty city stories",
+        "definitive edition", "the definitive",
+        "modding", "modded", "gta v mod", "gta 5 mod",
+        "ps2", "ps3", "xbox 360", "2002", "2004", "2008", "2013",
+        "spiderman", "minecraft", "roblox", "lego"
+    ]
+    if any(b in t for b in banned):
+        return False
+    return True
+
+
 def find_youtube_video_ids(query: str, max_results: int = 5) -> List[str]:
     """Busca en YouTube usando curl_cffi con TLS impersonation de Chrome para evitar bot checks de ytsearch."""
     import urllib.parse
@@ -200,7 +226,10 @@ def find_youtube_video_ids(query: str, max_results: int = 5) -> List[str]:
 
 
 def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
-    """Busca videos de gameplay en Dailymotion usando su API pública gratuita sin bloqueos de IP en CI."""
+    """Busca videos de gameplay en Dailymotion usando su API pública gratuita sin bloqueos de IP en CI.
+    
+    Filtra rigurosamente los títulos para que sean 100% GTA 6 y NUNCA San Andreas, Vice City 2002 o GTA 5.
+    """
     import urllib.parse
     import urllib.request
     import json
@@ -208,22 +237,51 @@ def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
     clean_q = re.sub(r"-(trailer|cutscene|live|livestream|ending|mission)", "", query, flags=re.IGNORECASE)
     clean_q = re.sub(r"\s+", " ", clean_q).strip()
     encoded = urllib.parse.quote_plus(clean_q)
-    url = f"https://api.dailymotion.com/videos?search={encoded}&limit={max_results}&fields=id,title,duration"
+    url = f"https://api.dailymotion.com/videos?search={encoded}&limit=15&fields=id,title,duration"
     
+    results = []
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=10) as resp:
             data = json.loads(resp.read().decode("utf-8"))
-            results = []
             for item in data.get("list", []):
                 vid_id = item.get("id")
+                title = item.get("title", "")
                 dur = item.get("duration", 0)
-                if vid_id and dur > 20:
+                if vid_id and dur >= 25 and is_valid_gta6_title(title):
                     results.append(f"https://www.dailymotion.com/video/{vid_id}")
-            return results
     except Exception as e:
         logger.warning("Aviso en búsqueda Dailymotion: %s", e)
-    return []
+
+    # Si la query específica no devolvió videos que pasen el filtro estricto de GTA 6,
+    # consultar el catálogo verificado de gameplay next-gen de GTA 6
+    if not results:
+        fallback_queries = [
+            "GTA 6 PS5 4K HDR Gameplay",
+            "Grand Theft Auto VI Gameplay",
+            "GTA 6 Lucia Jason gameplay",
+            "GTA 6 next gen gameplay 4k"
+        ]
+        for fq in fallback_queries:
+            f_url = f"https://api.dailymotion.com/videos?search={urllib.parse.quote_plus(fq)}&limit=10&fields=id,title,duration"
+            try:
+                req = urllib.request.Request(f_url, headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    for item in data.get("list", []):
+                        vid_id = item.get("id")
+                        title = item.get("title", "")
+                        dur = item.get("duration", 0)
+                        if vid_id and dur >= 25 and is_valid_gta6_title(title):
+                            results.append(f"https://www.dailymotion.com/video/{vid_id}")
+                        if len(results) >= max_results:
+                            break
+            except Exception:
+                pass
+            if results:
+                break
+
+    return results[:max_results]
 
 
 def search_and_download_clip(

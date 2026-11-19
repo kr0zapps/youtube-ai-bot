@@ -45,7 +45,7 @@ GOOGLE_NEWS_FEEDS = [
 TOPIC_TO_CLIP_QUERY: List[Dict] = [
     {
         "keywords": ["cheat", "cheats", "truco", "trucos", "cheat code", "bloqueado", "blocked"],
-        "clip_query": "GTA 6 cheats testing funny weapons chaos free roam -trailer -cutscene -live -livestream",
+        "clip_query": "GTA 6 cheats testing weapons chaos free roam -trailer -cutscene -live -livestream",
         "topic_tag": "cheats",
     },
     {
@@ -70,7 +70,7 @@ TOPIC_TO_CLIP_QUERY: List[Dict] = [
     },
     {
         "keywords": ["realistic", "real life", "miami", "florida", "photo", "graphics", "4k", "real world", "gráfico"],
-        "clip_query": "GTA 6 realistic graphics Vice City 4k free roam driving -trailer -cutscene -live -livestream",
+        "clip_query": "GTA 6 realistic graphics 4k free roam driving -trailer -cutscene -live -livestream",
         "topic_tag": "realism",
     },
     {
@@ -85,7 +85,7 @@ TOPIC_TO_CLIP_QUERY: List[Dict] = [
     },
     {
         "keywords": ["driving", "car", "cars", "race", "speed", "auto", "autos", "supercar", "drift"],
-        "clip_query": "GTA 6 driving supercar Vice City night stunts speed -trailer -cutscene -live -livestream",
+        "clip_query": "GTA 6 PS5 supercar driving night speed -trailer -cutscene -live -livestream",
         "topic_tag": "driving",
     },
     {
@@ -95,21 +95,21 @@ TOPIC_TO_CLIP_QUERY: List[Dict] = [
     },
     {
         "keywords": ["vice city", "leonida", "city", "ciudad", "map", "mapa", "open world", "environment"],
-        "clip_query": "GTA 6 Vice City open world exploration 4k free roam -trailer -cutscene -live -livestream",
+        "clip_query": "GTA 6 open world exploration 4k free roam -trailer -cutscene -live -livestream",
         "topic_tag": "world",
     },
     {
         "keywords": ["release", "launch", "date", "hype", "pre-order", "lanzamiento", "fecha"],
-        "clip_query": "GTA 6 official gameplay open world exploration Vice City -trailer -cutscene -live -livestream",
+        "clip_query": "GTA 6 PS5 official gameplay open world exploration -trailer -cutscene -live -livestream",
         "topic_tag": "launch",
     },
 ]
 
 DEFAULT_CLIP_QUERIES = [
-    "GTA 6 funny moments viral gameplay open world -trailer -cutscene -live -livestream",
-    "GTA 6 free roam Vice City exploration chaos -trailer -cutscene -live -livestream",
-    "GTA 6 open world crazy moments 4k gameplay -trailer -cutscene -live -livestream",
-    "GTA 6 police chase funny streamer moments -trailer -cutscene -live -livestream",
+    "GTA 6 PS5 4K HDR Gameplay -trailer -cutscene -live -livestream",
+    "Grand Theft Auto VI Gameplay -trailer -cutscene -live -livestream",
+    "GTA 6 Lucia Jason gameplay open world -trailer -cutscene -live -livestream",
+    "GTA 6 PS5 police chase 5 stars gameplay -trailer -cutscene -live -livestream",
 ]
 
 # Fallbacks si no hay internet / Reddit está caído
