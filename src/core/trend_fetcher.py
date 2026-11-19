@@ -27,13 +27,15 @@ logger = logging.getLogger(__name__)
 REDDIT_FEEDS = [
     "https://www.reddit.com/r/GrandTheftAutoVI/top.json?t=day&limit=10",
     "https://www.reddit.com/r/GTA/top.json?t=day&limit=5",
-    "https://www.reddit.com/r/gaming/search.json?q=GTA+6&sort=top&t=day&limit=5",
 ]
 
 GOOGLE_NEWS_FEEDS = [
-    "https://news.google.com/rss/search?q=GTA+6+(viral+OR+meme+OR+funny+OR+gameplay+OR+clip+OR+streamer)+when:1d&hl=en-US&gl=US&ceid=US:en",
-    "https://news.google.com/rss/search?q=GTA+6+when:1d&hl=es-419&gl=CL&ceid=CL:es-419",
-    "https://news.google.com/rss/search?q=GTA+6+(twitter+OR+tiktok+OR+twitch+OR+streamer)+when:1d&hl=en-US&gl=US&ceid=US:en",
+    # Reddit posts virales de GTA 6 en las últimas 24 horas (vía Google News, sin bloqueos de IP)
+    "https://news.google.com/rss/search?q=GTA+6+site:reddit.com+when:1d&hl=en-US&gl=US&ceid=US:en",
+    # Memes virales, clips y reacciones en Twitter/X y streamers en las últimas 24 horas
+    "https://news.google.com/rss/search?q=GTA+6+(site:twitter.com+OR+site:x.com+OR+viral+OR+meme+OR+clip+OR+streamer)+when:1d&hl=en-US&gl=US&ceid=US:en",
+    # Noticias y tendencias en español de las últimas 24 horas
+    "https://news.google.com/rss/search?q=GTA+6+(viral+OR+meme+OR+clip+OR+gameplay)+when:1d&hl=es-419&gl=CL&ceid=CL:es-419",
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -199,7 +201,16 @@ def _fetch_reddit_topics() -> List[Dict]:
                 if not any(k in title.lower() for k in gta_keywords):
                     continue
 
-                # Enriquecer con clip query
+                # Extraer video_url si el post incluye o enlaza un clip viral directo
+                video_url = ""
+                post_url = post.get("url", "")
+                permalink = post.get("permalink", "")
+                if post.get("is_video") and permalink:
+                    video_url = f"https://www.reddit.com{permalink}"
+                elif any(dom in post_url.lower() for dom in ["v.redd.it", "youtube.com/watch", "youtu.be", "twitter.com", "x.com", "tiktok.com", "clips.twitch.tv"]):
+                    video_url = post_url
+
+                # Enriquecer con clip query contextual
                 combined = f"{title} {selftext}"
                 clip_info = _get_clip_query_for_topic(combined)
 
@@ -208,6 +219,7 @@ def _fetch_reddit_topics() -> List[Dict]:
                     "source": "Reddit",
                     "score": score,
                     "detail": selftext if selftext and selftext not in ("[deleted]", "[removed]") else "",
+                    "video_url": video_url,
                     "published": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
                     "clip_query": clip_info["clip_query"],
                     "topic_tag": clip_info["topic_tag"],

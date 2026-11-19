@@ -124,54 +124,62 @@ jobs:
           with open(trends_file, "r", encoding="utf-8-sig") as f:
               topics = json.load(f)
 
-          # Tomar las top 3 clip_queries únicas del día
+          # Tomar las top 4 tendencias únicas del día
           seen_queries = set()
           queries_to_download = []
           for t in topics:
               q = t.get("clip_query", "")
+              vurl = t.get("video_url", "")
               if q and q not in seen_queries:
                   seen_queries.add(q)
                   queries_to_download.append({
                       "query": q,
+                      "video_url": vurl,
                       "tag": t.get("topic_tag", "general"),
                       "title": t["title"][:50],
                   })
-              if len(queries_to_download) >= 3:
+              if len(queries_to_download) >= 4:
                   break
 
-          print(f"Descargando {len(queries_to_download)} clips temáticos del día...")
+          print(f"Descargando clips dinámicos para {len(queries_to_download)} temas del día...")
 
+          import random
           for item in queries_to_download:
               q = item["query"]
+              vurl = item.get("video_url", "")
               tag = item["tag"]
               ts = datetime.now().strftime("%Y%m%d_%H%M%S")
               safe = re.sub(r"[^\w]", "_", tag)[:20]
               out = f"gta6/media/raw/trend_{safe}_{ts}.%(ext)s"
 
-              print(f"\n→ Descargando clip para: {item['title']}")
-              print(f"  Query: {q}")
+              print(f"\n→ Descargando clip dinámico para: {item['title']}")
+              target = vurl if vurl else f"ytsearch2:{q}"
+              print(f"  Destino: {target}")
 
+              start_sec = random.choice([25, 45, 70, 100, 140])
+              end_sec = start_sec + 58
               cmd = [
                   "yt-dlp",
-                  f"ytsearch2:{q}",
-                  "--match-filter", "duration < 600",
-                  "-f", "bestvideo[height<=1080][ext=mp4]+bestaudio/best[height<=1080]",
+                  target,
+                  "--match-filter", "duration < 900",
+                  f"--download-sections=*{start_sec}-{end_sec}",
+                  "-f", "bestvideo[height<=720][ext=mp4]+bestaudio/best[height<=720][ext=mp4]/best",
                   "--merge-output-format", "mp4",
                   "--no-playlist",
                   "--max-downloads", "1",
                   "-o", out,
                   "--no-overwrites",
-                  "--extractor-args", "youtube:player_client=web",
+                  "--extractor-args", "youtube:player_client=android,ios,web",
                   "--add-headers", "Accept-Language:en-US,en;q=0.9",
                   "--retries", "3",
-                  "--sleep-interval", "2",
+                  "--sleep-interval", "1",
                   "--quiet",
               ]
               result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
               if result.returncode == 0:
-                  print(f"  ✓ Clip descargado con éxito")
+                  print(f"  ✓ Clip dinámico descargado con éxito")
               else:
-                  print(f"  ⚠ No se pudo descargar (rate limit): {result.stderr[:200]}")
+                  print(f"  ⚠ Aviso en descarga rápida: {result.stderr[:200]}")
 
           # Listar clips disponibles
           clips = [f for f in os.listdir("gta6/media/raw") if f.endswith(".mp4")]

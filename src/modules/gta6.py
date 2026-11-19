@@ -93,26 +93,41 @@ def select_topic_from_bank(pillar: str) -> Dict[str, str]:
     }
 
 
-def find_background_video(pillar: str = "news", topic_text: str = "", forced_clip_query: str = "") -> str:
-    """Selecciona o descarga un clip de GTA 6 relevante al tema del día.
+def find_background_video(
+    pillar: str = "news",
+    topic_text: str = "",
+    forced_clip_query: str = "",
+    video_url: str = "",
+) -> str:
+    """Descarga dinámicamente un clip de GTA 6 relevante al tema del video.
 
-    Si se pasa forced_clip_query (desde la tendencia #1 del día), se usa esa búsqueda
-    directamente en YouTube para que el clip sea EXACTAMENTE el del tema que se comenta.
+    100% dinámico:
+    1. Si hay video_url (ej. clip viral de Reddit/Twitter de la noticia de hoy), lo descarga directamente.
+    2. Si no, busca en YouTube un clip específico del tema que se comenta hoy.
+    3. Corta un fragmento aleatorio único (30s a 220s) para que nunca se repita.
+    4. Estrictamente PROHIBIDO el tráiler oficial.
     """
     used_clips = clip_downloader.load_used_clips()
+    os.makedirs(RAW_MEDIA_DIR, exist_ok=True)
 
-    # Prioridad: query forzada desde trending topic > query calculada desde texto
-    if forced_clip_query:
-        topic_query = forced_clip_query
-        logger.info("Usando clip_query directa de la tendencia del día: '%s'", topic_query)
-    else:
-        topic_query = clip_downloader.get_topic_query(topic_text)
+    # 1. PRIORIDAD MÁXIMA: Descargar el clip viral EXACTO del suceso de hoy si viene en la noticia
+    if video_url:
+        logger.info("Descargando clip viral directo del evento de hoy: %s", video_url)
+        try:
+            clip_data = clip_downloader.download_clip_by_url(video_url, output_dir=RAW_MEDIA_DIR)
+            if clip_data and os.path.exists(clip_data["video_path"]) and os.path.getsize(clip_data["video_path"]) > 1024 * 1024:
+                path = clip_data["video_path"]
+                clip_downloader.mark_clip_as_used(path)
+                logger.info("✓ Usando el clip viral EXACTO de lo que pasó: %s", path)
+                return path
+        except Exception as v_err:
+            logger.warning("No se pudo descargar el clip viral por URL: %s", v_err)
 
-    # 1. INTENTO PRIORITARIO: Descargar clip fresco de YouTube de la temática de hoy
-    logger.info("Buscando y descargando gameplay fresco relacionado al tema del día: '%s'...", topic_query)
+    # 2. SEGUNDA PRIORIDAD: Descargar gameplay dinámico de YouTube para el tema de HOY
+    topic_query = forced_clip_query or clip_downloader.get_topic_query(topic_text)
+    logger.info("Buscando y descargando gameplay dinámico de GTA 6 para el tema: '%s'...", topic_query)
     try:
-        # Variar ampliamente el segundo de inicio (entre 30s y 240s) para que NUNCA sea el mismo fragmento
-        start_offset = random.choice([35, 65, 95, 130, 170, 210])
+        start_offset = random.choice([30, 55, 80, 115, 145, 180, 220])
         downloaded = clip_downloader.search_and_download_clip(
             query=topic_query,
             output_dir=RAW_MEDIA_DIR,
@@ -123,19 +138,18 @@ def find_background_video(pillar: str = "news", topic_text: str = "", forced_cli
         )
         if downloaded:
             for d in downloaded:
-                # Validar que exista, no sea el tráiler y tenga tamaño real
                 if (
                     os.path.exists(d)
-                    and os.path.getsize(d) > 2 * 1024 * 1024
+                    and os.path.getsize(d) > 1024 * 1024
                     and "trailer" not in os.path.basename(d).lower()
                 ):
                     clip_downloader.mark_clip_as_used(d)
-                    logger.info("✓ Clip de gameplay nuevo y único descargado con éxito: %s", d)
+                    logger.info("✓ Clip de gameplay dinámico descargado para el tema de hoy: %s", d)
                     return d
     except Exception as dl_err:
-        logger.warning("Aviso en descarga de gameplay en vivo: %s", dl_err)
+        logger.warning("Aviso en descarga dinámica de gameplay: %s", dl_err)
 
-    # 2. SEGUNDO INTENTO: Recopilar clips locales existentes en RAW_MEDIA_DIR (PROHIBIDO el tráiler)
+    # 3. TERCERA PRIORIDAD: Usar clips locales descargados previamente que no hayan sido usados
     gta6_clips = []
     if os.path.exists(RAW_MEDIA_DIR):
         for f in os.listdir(RAW_MEDIA_DIR):
@@ -143,31 +157,50 @@ def find_background_video(pillar: str = "news", topic_text: str = "", forced_cli
                 continue
             if f.lower().endswith((".mp4", ".mov", ".mkv")):
                 full_p = os.path.join(RAW_MEDIA_DIR, f)
-                if os.path.exists(full_p) and os.path.getsize(full_p) > 2 * 1024 * 1024:
+                if os.path.exists(full_p) and os.path.getsize(full_p) > 1024 * 1024:
                     gta6_clips.append(full_p)
 
-    # Filtrar solo clips que NO hayan sido usados recientemente
     fresh_clips = [c for c in gta6_clips if os.path.basename(c) not in used_clips]
-
     if fresh_clips:
         chosen = random.choice(fresh_clips)
         clip_downloader.mark_clip_as_used(chosen)
-        logger.info("✓ Usando clip local de gameplay fresco (no repetido): %s", chosen)
+        logger.info("✓ Usando clip dinámico previo no repetido: %s", chosen)
         return chosen
 
-    # 3. TERCER INTENTO: Si todos los clips locales ya se usaron, usar el gameplay base rotado con corte aleatorio
-    gta6_base = os.path.join("assets", "gameplay", "gta6_base_gameplay.mp4")
-    if os.path.exists(gta6_base):
-        logger.info("Fallback: usando gameplay real de GTA 6 de respaldo: %s", gta6_base)
-        return gta6_base
+    # 4. CUARTA PRIORIDAD: Búsqueda dinámica de emergencia en YouTube (mundo abierto sin trailer)
+    logger.info("Descarga dinámica de emergencia de mundo abierto de GTA 6...")
+    try:
+        emergency_queries = [
+            "GTA 6 free roam Vice City open world exploration -trailer -cutscene",
+            "GTA 6 funny streamer viral moments open world gameplay -trailer -cutscene",
+            "GTA 6 driving fast cars night Vice City cruise -trailer -cutscene",
+            "GTA 6 crazy police chase 5 stars gameplay -trailer -cutscene",
+        ]
+        emergency_query = random.choice(emergency_queries)
+        start_offset = random.choice([35, 65, 95, 135, 175])
+        em_downloaded = clip_downloader.search_and_download_clip(
+            query=emergency_query,
+            output_dir=RAW_MEDIA_DIR,
+            max_duration=600,
+            clip_duration=60,
+            start_offset=start_offset,
+            max_results=3,
+        )
+        if em_downloaded:
+            for ed in em_downloaded:
+                if os.path.exists(ed) and os.path.getsize(ed) > 1024 * 1024 and "trailer" not in os.path.basename(ed).lower():
+                    clip_downloader.mark_clip_as_used(ed)
+                    logger.info("✓ Clip de emergencia descargado con éxito: %s", ed)
+                    return ed
+    except Exception as em_err:
+        logger.error("Error en descarga dinámica de emergencia: %s", em_err)
 
-    # 4. Fallback final de emergencia
     if gta6_clips:
         chosen = random.choice(gta6_clips)
-        logger.info("Fallback: reutilizando clip local disponible: %s", chosen)
+        logger.info("Usando clip local disponible: %s", chosen)
         return chosen
 
-    raise FileNotFoundError("No se encontró ningún clip de gameplay para el fondo.")
+    raise FileNotFoundError("No se pudo descargar ningún clip dinámico de gameplay para el video.")
 
 
 def append_to_log(caption: str, media_path: str, credit: str = "Rockstar Games Official") -> None:
@@ -221,14 +254,15 @@ def run(
         f"INSPIRACIÓN ADICIONAL:\n{topic['context']}"
     )
 
-    # Guardar el clip_query del trending topic para usarlo como fondo
+    # Guardar el clip_query y video_url del trending topic para usarlo como fondo
     _today_clip_query = top_trend.get("clip_query", "")
+    _today_video_url = clip_url or top_trend.get("video_url", "")
 
     credit = "Rockstar Games Official"
     bg_video = None
     if clip_url:
         logger.info("Modo Clip Viral desde URL activo: %s", clip_url)
-        clip_data = clip_downloader.download_clip_by_url(clip_url)
+        clip_data = clip_downloader.download_clip_by_url(clip_url, output_dir=RAW_MEDIA_DIR)
         if clip_data:
             bg_video = clip_data["video_path"]
             credit = f"@{clip_data['creator']}"
@@ -280,6 +314,7 @@ def run(
             pillar=pillar,
             topic_text=f"{title} {script}",
             forced_clip_query=_today_clip_query,
+            video_url=_today_video_url,
         )
     final_video_path = os.path.join(EDITS_DIR, f"gta6_{pillar}_{timestamp}.mp4")
 

@@ -138,19 +138,14 @@ def find_ffmpeg() -> str:
 
 
 def _base_ytdlp_flags() -> List[str]:
-    """Flags comunes anti-429: cookies si existen, player web, delays y retries."""
+    """Flags comunes anti-429: extractor android/ios para evitar bloqueos en servidores y GitHub Actions."""
     flags = []
     
-    # 1. Cookies solo si existen explícitamente para no fallar en entornos sin Brave (como Linux CI)
+    # 1. Cookies solo si existen explícitamente en archivo (sin bloquear bases de datos de navegador)
     if os.path.exists("cookies.txt"):
         flags.extend(["--cookies", "cookies.txt"])
     elif os.path.exists(os.path.join("..", "cookies.txt")):
         flags.extend(["--cookies", os.path.join("..", "cookies.txt")])
-    elif os.name == "nt":
-        # En Windows local solo si el ejecutable de Brave existe
-        brave_path = os.path.expandvars(r"%LOCALAPPDATA%\BraveSoftware\Brave-Browser\Application\brave.exe")
-        if os.path.exists(brave_path):
-            flags.extend(["--cookies-from-browser", "brave"])
 
     # 2. JS runtime para resolver el challenge de YouTube
     node_bin = shutil.which("node")
@@ -168,8 +163,8 @@ def _base_ytdlp_flags() -> List[str]:
         pass
 
     flags.extend([
-        # Forzar player cliente web
-        "--extractor-args", "youtube:player_client=web,web_creator",
+        # Player cliente android/ios: NO requiere login ni es bloqueado por datacenter IPs en GitHub Actions
+        "--extractor-args", "youtube:player_client=android,ios,web",
         # Cabeceras de navegador real
         "--add-headers", "Accept-Language:en-US,en;q=0.9",
         "--user-agent", (
@@ -178,10 +173,9 @@ def _base_ytdlp_flags() -> List[str]:
             "Chrome/131.0.0.0 Safari/537.36"
         ),
         # Reintentos y delays anti-ratelimit
-        "--retries", "5",
-        "--sleep-interval", "2",
-        "--max-sleep-interval", "5",
-        "--sleep-requests", "1",
+        "--retries", "3",
+        "--sleep-interval", "1",
+        "--max-sleep-interval", "3",
     ])
     return flags
 
@@ -189,23 +183,15 @@ def _base_ytdlp_flags() -> List[str]:
 def search_and_download_clip(
     query: str,
     output_dir: str,
-    max_duration: int = 600,
+    max_duration: int = 900,
     clip_duration: int = 58,
     start_offset: int = 30,
     max_results: int = 3,
 ) -> List[str]:
-    """Busca un video en YouTube por query y descarga un segmento.
+    """Busca un video en YouTube por query y descarga un segmento dinámico y único.
 
-    Args:
-        query: Término de búsqueda (ej. "GTA 6 gameplay first look").
-        output_dir: Carpeta destino del clip descargado.
-        max_duration: Duración máxima del video a descargar (segundos).
-        clip_duration: Duración del segmento a extraer (máx 58s para Shorts).
-        start_offset: Segundo de inicio del segmento dentro del video.
-        max_results: Cuántos resultados buscar antes de elegir.
-
-    Returns:
-        Lista de rutas a los archivos descargados.
+    Usa --download-sections para descargar rápidamente SOLO los 55-60s necesarios,
+    garantizando que cada video use un fragmento diferente y relacionado al tema.
     """
     os.makedirs(output_dir, exist_ok=True)
     yt_dlp = find_yt_dlp()
@@ -213,11 +199,13 @@ def search_and_download_clip(
     safe_query = re.sub(r"[^\w\s-]", "", query).strip().replace(" ", "_")[:40]
     output_template = os.path.join(output_dir, f"raw_{safe_query}_{timestamp}.%(ext)s")
 
+    end_offset = start_offset + clip_duration
     cmd = [
         yt_dlp,
         f"ytsearch{max_results}:{query}",
         "--match-filter", f"duration < {max_duration}",
-        "-f", "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]/best",
+        f"--download-sections=*{start_offset}-{end_offset}",
+        "-f", "bestvideo[height<=720][ext=mp4]+bestaudio/best[height<=720][ext=mp4]/best",
         "--merge-output-format", "mp4",
         "--no-playlist",
         "--max-downloads", "1",
@@ -226,12 +214,25 @@ def search_and_download_clip(
         "--no-warnings",
     ] + _base_ytdlp_flags()
 
-    logger.info("Buscando y descargando: '%s'...", query)
+    logger.info("Buscando y descargando segmento dinámico (%ds-%ds): '%s'...", start_offset, end_offset, query)
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
         if result.returncode != 0:
-            logger.warning("yt-dlp error para '%s': %s", query, result.stderr[:300])
-            return []
+            logger.warning("yt-dlp sección rápida falló para '%s': %s", query, result.stderr[:200])
+            # Reintento sin download-sections con límite de resolución rápida
+            cmd_fallback = [
+                yt_dlp,
+                f"ytsearch{max_results}:{query}",
+                "--match-filter", "duration < 300",
+                "-f", "bestvideo[height<=480][ext=mp4]+bestaudio/best[height<=480][ext=mp4]/best",
+                "--merge-output-format", "mp4",
+                "--no-playlist",
+                "--max-downloads", "1",
+                "-o", output_template,
+                "--quiet",
+                "--no-warnings",
+            ] + _base_ytdlp_flags()
+            subprocess.run(cmd_fallback, capture_output=True, text=True, timeout=120)
     except subprocess.TimeoutExpired:
         logger.warning("Timeout al descargar '%s'", query)
         return []
@@ -250,7 +251,7 @@ def search_and_download_clip(
         logger.warning("No se descargó ningún archivo para '%s'", query)
         return []
 
-    logger.info("✓ Descargado: %s", downloaded[0])
+    logger.info("✓ Clip dinámico descargado con éxito: %s", downloaded[0])
     return downloaded
 
 
