@@ -182,7 +182,7 @@ def _base_ytdlp_flags() -> List[str]:
 
 
 def is_valid_gta6_title(title: str) -> bool:
-    """Valida estrictamente que el video sea de GTA 6 y NO de juegos antiguos o mods."""
+    """Valida estrictamente que el video sea de GTA 6 y NO de juegos antiguos, mods ni trailers repetitivos."""
     if not title:
         return False
     t = title.lower()
@@ -191,6 +191,7 @@ def is_valid_gta6_title(title: str) -> bool:
     if not has_gta6:
         return False
     # 2. Estrictamente prohibido contenido de juegos viejos de la saga (San Andreas, Vice City 2002, GTA 5, etc.)
+    # y trailers repetitivos, podcasts o videos que no sean gameplay puro.
     banned = [
         "san andreas", "gta sa", "gta: sa", "samp",
         "gta 5", "gta v", "gta online", "gta5",
@@ -200,7 +201,8 @@ def is_valid_gta6_title(title: str) -> bool:
         "definitive edition", "the definitive",
         "modding", "modded", "gta v mod", "gta 5 mod",
         "ps2", "ps3", "xbox 360", "2002", "2004", "2008", "2013",
-        "spiderman", "minecraft", "roblox", "lego"
+        "spiderman", "minecraft", "roblox", "lego",
+        "trailer", "fragman", "teaser", "podcast", "interview"
     ]
     if any(b in t for b in banned):
         return False
@@ -345,20 +347,22 @@ def search_and_download_clip(
     dm_urls = find_dailymotion_video_urls(query, max_results=max_results)
     if dm_urls:
         logger.info("Descargando gameplay alternativo de Dailymotion para '%s' (%d candidatos)...", query, len(dm_urls))
+        # Para videos de Dailymotion, fijar el inicio cerca del comienzo (<=15s) para videos cortos
+        dm_start = min(start_offset, 15)
+        dm_end = dm_start + clip_duration
         for dm_url in dm_urls:
             cmd_dm = [
                 yt_dlp,
                 dm_url,
-                f"--download-sections=*{start_offset}-{end_offset}",
-                "-f", "hls-720/hls-1080-0/best",
+                f"--download-sections=*{dm_start}-{dm_end}",
+                "-f", "bestvideo[height<=1080]+bestaudio/bestvideo+bestaudio/best",
                 "--merge-output-format", "mp4",
                 "--no-playlist",
                 "-o", output_template,
-                "--quiet",
                 "--no-warnings",
             ]
             try:
-                subprocess.run(cmd_dm, capture_output=True, text=True, timeout=90)
+                res = subprocess.run(cmd_dm, capture_output=True, text=True, timeout=90)
                 downloaded = [
                     os.path.join(output_dir, f)
                     for f in os.listdir(output_dir)
@@ -367,6 +371,27 @@ def search_and_download_clip(
                 if downloaded:
                     logger.info("✓ Clip dinámico de Dailymotion descargado con éxito: %s", downloaded[0])
                     return downloaded
+                else:
+                    logger.warning("yt-dlp sección falló para %s (rc=%d): %s", dm_url, res.returncode, (res.stderr or "")[:150])
+                    # Reintento sin download-sections si la sección falló
+                    cmd_dm_full = [
+                        yt_dlp,
+                        dm_url,
+                        "-f", "bestvideo[height<=1080]+bestaudio/bestvideo+bestaudio/best",
+                        "--merge-output-format", "mp4",
+                        "--no-playlist",
+                        "-o", output_template,
+                        "--no-warnings",
+                    ]
+                    res_full = subprocess.run(cmd_dm_full, capture_output=True, text=True, timeout=90)
+                    downloaded = [
+                        os.path.join(output_dir, f)
+                        for f in os.listdir(output_dir)
+                        if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
+                    ]
+                    if downloaded:
+                        logger.info("✓ Clip completo de Dailymotion descargado con éxito: %s", downloaded[0])
+                        return downloaded
             except Exception as e:
                 logger.warning("Aviso al descargar candidato Dailymotion %s: %s", dm_url, e)
 

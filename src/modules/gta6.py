@@ -123,11 +123,31 @@ def find_background_video(
         except Exception as v_err:
             logger.warning("No se pudo descargar el clip viral por URL: %s", v_err)
 
-    # 2. SEGUNDA PRIORIDAD: Descargar gameplay dinámico de YouTube para el tema de HOY
+    # 2. SEGUNDA PRIORIDAD: Usar clips locales descargados previamente que no hayan sido usados
+    gta6_clips = []
+    if os.path.exists(RAW_MEDIA_DIR):
+        for f in os.listdir(RAW_MEDIA_DIR):
+            if ".f" in f or f.endswith(".json") or f.endswith(".txt") or "trailer" in f.lower():
+                continue
+            if any(b in f.lower() for b in ["san_andreas", "sanandreas", "gta_sa", "gta4", "gta_iv", "gta5", "gta_v", "gta3"]):
+                continue
+            if f.lower().endswith((".mp4", ".mov", ".mkv")):
+                full_p = os.path.join(RAW_MEDIA_DIR, f)
+                if os.path.exists(full_p) and os.path.getsize(full_p) > 1024 * 1024:
+                    gta6_clips.append(full_p)
+
+    fresh_clips = [c for c in gta6_clips if os.path.basename(c) not in used_clips]
+    if fresh_clips:
+        chosen = random.choice(fresh_clips)
+        clip_downloader.mark_clip_as_used(chosen)
+        logger.info("✓ Usando clip dinámico previo no repetido: %s", chosen)
+        return chosen
+
+    # 3. TERCERA PRIORIDAD: Descargar gameplay dinámico para el tema de HOY
     topic_query = forced_clip_query or clip_downloader.get_topic_query(topic_text)
     logger.info("Buscando y descargando gameplay dinámico de GTA 6 para el tema: '%s'...", topic_query)
     try:
-        start_offset = random.choice([30, 55, 80, 115, 145, 180, 220])
+        start_offset = random.choice([10, 25, 40, 60])
         downloaded = clip_downloader.search_and_download_clip(
             query=topic_query,
             output_dir=RAW_MEDIA_DIR,
@@ -149,26 +169,6 @@ def find_background_video(
     except Exception as dl_err:
         logger.warning("Aviso en descarga dinámica de gameplay: %s", dl_err)
 
-    # 3. TERCERA PRIORIDAD: Usar clips locales descargados previamente que no hayan sido usados
-    gta6_clips = []
-    if os.path.exists(RAW_MEDIA_DIR):
-        for f in os.listdir(RAW_MEDIA_DIR):
-            if ".f" in f or f.endswith(".json") or f.endswith(".txt") or "trailer" in f.lower():
-                continue
-            if any(b in f.lower() for b in ["san_andreas", "sanandreas", "gta_sa", "gta4", "gta_iv", "gta5", "gta_v", "gta3"]):
-                continue
-            if f.lower().endswith((".mp4", ".mov", ".mkv")):
-                full_p = os.path.join(RAW_MEDIA_DIR, f)
-                if os.path.exists(full_p) and os.path.getsize(full_p) > 1024 * 1024:
-                    gta6_clips.append(full_p)
-
-    fresh_clips = [c for c in gta6_clips if os.path.basename(c) not in used_clips]
-    if fresh_clips:
-        chosen = random.choice(fresh_clips)
-        clip_downloader.mark_clip_as_used(chosen)
-        logger.info("✓ Usando clip dinámico previo no repetido: %s", chosen)
-        return chosen
-
     # 4. CUARTA PRIORIDAD: Búsqueda dinámica de emergencia de GTA 6 en PS5 / Next Gen
     logger.info("Descarga dinámica de emergencia de mundo abierto de GTA 6...")
     try:
@@ -179,7 +179,7 @@ def find_background_video(
             "GTA 6 PS5 supercar driving gameplay 4k -trailer -cutscene",
         ]
         emergency_query = random.choice(emergency_queries)
-        start_offset = random.choice([25, 45, 65, 85, 115])
+        start_offset = random.choice([10, 20, 30, 45])
         em_downloaded = clip_downloader.search_and_download_clip(
             query=emergency_query,
             output_dir=RAW_MEDIA_DIR,

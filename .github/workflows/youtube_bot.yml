@@ -206,18 +206,34 @@ jobs:
                       cmd_dm = [
                           "yt-dlp",
                           dm_target,
-                          f"--download-sections=*{start_sec}-{end_sec}",
-                          "-f", "hls-720/hls-1080-0/best",
+                          f"--download-sections=*{min(start_sec, 15)}-{min(start_sec, 15) + 58}",
+                          "-f", "bestvideo[height<=1080]+bestaudio/bestvideo+bestaudio/best",
                           "--merge-output-format", "mp4",
                           "--no-playlist",
                           "-o", out,
-                          "--quiet",
+                          "--no-warnings",
                       ]
-                      subprocess.run(cmd_dm, capture_output=True, text=True, timeout=90)
+                      res_dm = subprocess.run(cmd_dm, capture_output=True, text=True, timeout=90)
                       if any(f.startswith(f"trend_{safe}_{ts}") for f in os.listdir("gta6/media/raw")):
                           print(f"  ✓ Clip dinámico descargado de Dailymotion con éxito")
                           downloaded_ok = True
                           break
+                      else:
+                          print(f"  ⚠ Dailymotion sección falló, reintentando clip completo...")
+                          cmd_dm_full = [
+                              "yt-dlp",
+                              dm_target,
+                              "-f", "bestvideo[height<=1080]+bestaudio/bestvideo+bestaudio/best",
+                              "--merge-output-format", "mp4",
+                              "--no-playlist",
+                              "-o", out,
+                              "--no-warnings",
+                          ]
+                          subprocess.run(cmd_dm_full, capture_output=True, text=True, timeout=90)
+                          if any(f.startswith(f"trend_{safe}_{ts}") for f in os.listdir("gta6/media/raw")):
+                              print(f"  ✓ Clip completo descargado de Dailymotion con éxito")
+                              downloaded_ok = True
+                              break
               if not downloaded_ok:
                   print(f"  ⚠ No se pudo descargar ningún candidato para {item['title']}")
 
@@ -237,14 +253,22 @@ jobs:
               print(f"  • {c} ({size:.1f} MB)")
           EOF
 
-      - name: Commit tendencias y clips del día
+      - name: Commit tendencias del día
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "🔥 Auto-update: Tendencias del día + clips relacionados GTA 6 [skip ci]"
+          commit_message: "🔥 Auto-update: Tendencias del día GTA 6 [skip ci]"
           file_pattern: |
             gta6/facts.md
             gta6/today_trends.json
-            gta6/media/raw/*.mp4
+
+      - name: Guardar clips del día como artefacto
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gta6-daily-clips
+          path: gta6/media/raw/*.mp4
+          retention-days: 1
+          if-no-files-found: ignore
 
   # ═══════════════════════════════════════════════════════════════════════════
   # JOB 2: Generar video y publicar en YouTube Shorts + TikTok
@@ -254,12 +278,23 @@ jobs:
     timeout-minutes: 25
     permissions:
       contents: write
-    if: github.event.schedule != '0 9 * * *' || github.event_name == 'workflow_dispatch'
+    needs: [refresh-trends-and-clips]
+    if: |
+      always() &&
+      (github.event.schedule != '0 9 * * *' || github.event_name == 'workflow_dispatch') &&
+      (needs.refresh-trends-and-clips.result == 'success' || needs.refresh-trends-and-clips.result == 'skipped')
 
     steps:
       # ── 1. Checkout ─────────────────────────────────────────────────────────
       - name: Checkout del repositorio
         uses: actions/checkout@v4
+
+      - name: Descargar clips del día (si existen)
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: gta6-daily-clips
+          path: gta6/media/raw
 
       # ── 2. Python ───────────────────────────────────────────────────────────
       - name: Configurar Python 3.11
