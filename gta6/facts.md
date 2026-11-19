@@ -31,3 +31,11 @@
 7. **LA FÍSICA INESPERADA DEL AGUA Y LOS CAIMANES:**
    - Jugadores intentando alimentar o torear caimanes en los pantanos y siendo emboscados en medio segundo.
    - Lanchas saltando olas de tormenta y volcando con físicas de destrucción nunca antes vistas en la saga.
+
+
+## Tendencias Virales — 2026-11-19
+- [Google News] GTA 6: Jason and Lucia's unique abilities explained - Red Bull — <a href="https://news.google.com/rss/articles/CBMidkFVX3lxTE4yZWpBQnRFdjlfUkFzNE5Yc2ZDX1dtcEtwTjhtWk
+- [Google News] 'GTA 6' on Xbox Series S: How well it actually runs - Mashable — <a href="https://news.google.com/rss/articles/CBMidEFVX3lxTE5tTTVvM0JOMzF6MGFJOXNUa2lwOE5GWVQtRmU2TU
+- [Google News] GTA 6 Becomes Biggest Entertainment Launch in History - Hungarian Conservative — <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxQU05LdVg1WDBtYnJsX013SUJ5SURoODJ3T3hBdD
+- [Google News] Will GTA 6 really cost the U.S. economy $1 billion in lost productivity? - Poynter — <a href="https://news.google.com/rss/articles/CBMimgFBVV95cUxPT3EzTm9GbEFiY0pXZEZJSV9uSlp6VWxsZkdzeW
+- [Google News] This couple’s GTA 6 contract has one rule that’s raising eyebrows - Cleveland.com — <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxNZzFMRGlIM2hPOE9nRWQ1dFJ0Sm5Wc3hzOE5OdX
