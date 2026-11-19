@@ -119,7 +119,7 @@ jobs:
               print("No hay today_trends.json, saltando descarga de clips.")
               sys.exit(0)
 
-          with open(trends_file, "r", encoding="utf-8") as f:
+          with open(trends_file, "r", encoding="utf-8-sig") as f:
               topics = json.load(f)
 
           # Tomar las top 3 clip_queries únicas del día
@@ -253,7 +253,7 @@ jobs:
             echo "=== Tendencias del día precargadas ==="
             python - <<'EOF'
           import json
-          with open("gta6/today_trends.json") as f:
+          with open("gta6/today_trends.json", encoding="utf-8-sig") as f:
               topics = json.load(f)
           for i, t in enumerate(topics[:5], 1):
               print(f"{i}. [{t.get('source','?')}] {t['title']}")

@@ -374,7 +374,7 @@ def save_facts_update(topics: List[Dict], facts_path: str = "gta6/facts.md") -> 
 
         existing = ""
         if os.path.exists(facts_path):
-            with open(facts_path, "r", encoding="utf-8") as f:
+            with open(facts_path, "r", encoding="utf-8-sig") as f:
                 existing = f.read()
 
         if date_header in existing:
