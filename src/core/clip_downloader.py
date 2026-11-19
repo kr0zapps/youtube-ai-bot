@@ -138,14 +138,19 @@ def find_ffmpeg() -> str:
 
 
 def _base_ytdlp_flags() -> List[str]:
-    """Flags comunes anti-429: extractor android/ios para evitar bloqueos en servidores y GitHub Actions."""
+    """Flags comunes: cookies de sesión si existen (web), o cliente android si no hay cookies."""
     flags = []
     
-    # 1. Cookies solo si existen explícitamente en archivo (sin bloquear bases de datos de navegador)
-    if os.path.exists("cookies.txt"):
-        flags.extend(["--cookies", "cookies.txt"])
-    elif os.path.exists(os.path.join("..", "cookies.txt")):
-        flags.extend(["--cookies", os.path.join("..", "cookies.txt")])
+    # 1. Cookies si existen (las cookies exportadas del navegador son de tipo web)
+    has_cookies = False
+    if os.path.exists("cookies.txt") and os.path.getsize("cookies.txt") > 50:
+        flags.extend(["--cookies", "cookies.txt", "--extractor-args", "youtube:player_client=web,mweb"])
+        has_cookies = True
+    elif os.path.exists(os.path.join("..", "cookies.txt")) and os.path.getsize(os.path.join("..", "cookies.txt")) > 50:
+        flags.extend(["--cookies", os.path.join("..", "cookies.txt"), "--extractor-args", "youtube:player_client=web,mweb"])
+        has_cookies = True
+    else:
+        flags.extend(["--extractor-args", "youtube:player_client=android,ios,web"])
 
     # 2. JS runtime para resolver el challenge de YouTube
     node_bin = shutil.which("node")
@@ -163,8 +168,6 @@ def _base_ytdlp_flags() -> List[str]:
         pass
 
     flags.extend([
-        # Player cliente android/ios: NO requiere login ni es bloqueado por datacenter IPs en GitHub Actions
-        "--extractor-args", "youtube:player_client=android,ios,web",
         # Cabeceras de navegador real
         "--add-headers", "Accept-Language:en-US,en;q=0.9",
         "--user-agent", (
@@ -207,7 +210,7 @@ def search_and_download_clip(
         f"ytsearch{max_results}:{query}",
         "--match-filter", match_filter,
         f"--download-sections=*{start_offset}-{end_offset}",
-        "-f", "best[ext=mp4][height<=720]/bestvideo[height<=720]+bestaudio/best[height<=720]/best",
+        "-f", "bestvideo[height<=1080]+bestaudio/best[height<=1080]/best",
         "--merge-output-format", "mp4",
         "--no-playlist",
         "--max-downloads", "1",
@@ -226,7 +229,7 @@ def search_and_download_clip(
                 yt_dlp,
                 f"ytsearch{max_results}:{query}",
                 "--match-filter", "!is_live & !was_live & duration < 600 & duration > 25",
-                "-f", "best[ext=mp4][height<=480]/best[height<=480]/worst",
+                "-f", "bestvideo[height<=720]+bestaudio/best[height<=720]/best",
                 "--merge-output-format", "mp4",
                 "--no-playlist",
                 "--max-downloads", "1",
@@ -389,7 +392,7 @@ def download_clip_by_url(url: str, output_dir: str = RAW_DIR) -> Optional[Dict[s
     cmd_down = [
         yt_dlp,
         url,
-        "-f", "best[ext=mp4][height<=1080]/bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]/best",
+        "-f", "bestvideo[height<=1080]+bestaudio/best[height<=1080]/best",
         "--merge-output-format", "mp4",
         "-o", out_template,
         "--no-playlist",
