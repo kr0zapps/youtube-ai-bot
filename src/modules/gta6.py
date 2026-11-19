@@ -281,6 +281,8 @@ def run(
     )
     script = res["script"]
     title = res["title"]
+    if len(script.split()) < 50 or gemini._is_refusal(script):
+        raise ValueError(f"El guión generado es inválido o una negativa ({len(script.split())} palabras): '{script}'")
     logger.info("✓ Guión auditado y aprobado: '%s' (%d palabras)", title, len(script.split()))
 
     # 3. Síntesis de voz con Edge-TTS

@@ -442,25 +442,27 @@ def _parse_auditor_response(raw: str, default_title: str) -> Dict[str, Any]:
     }
 
 
-def _call_llm(client: Groq, system_msg: str, user_msg: str, temperature: float = 0.8, max_tokens: int = 750) -> str:
-    """Invoca LLM probando primero los modelos mÃ¡s avanzados (Gemini 2.5 Flash y GPT-OSS-120B)."""
-    # 1. Prioridad: Modelos actuales de Gemini
-    gemini_models = ["gemini-2.5-flash", "gemini-2.0-flash"]
-    for g_model in gemini_models:
-        try:
-            gemini_c = _get_gemini_client()
-            res = gemini_c.models.generate_content(
-                model=g_model,
-                contents=f"{system_msg}\n\n{user_msg}",
-            )
-            if res.text and len(res.text.strip()) > 30:
-                logger.info("âœ“ Historia/AuditorÃ­a generada con Ã©xito usando %s", g_model)
-                return _clean(res.text)
-        except Exception as eg:
-            logger.warning("Aviso en modelo Gemini %s: %s. Probando alternativa...", g_model, str(eg)[:120])
+REFUSAL_PHRASES = [
+    "i'm sorry", "i am sorry", "i cannot", "i can't",
+    "cannot fulfill", "cannot comply", "unable to comply",
+    "as an ai", "as a language model", "lo siento",
+    "no puedo cumplir", "no puedo generar", "no puedo completar",
+    "i am unable to", "against my safety", "violates my"
+]
 
-    # 2. Fallback resiliente a modelos de alto nivel en Groq (GPT-OSS-120B y Qwen-27B)
-    groq_models = ["openai/gpt-oss-120b", "qwen/qwen3.8-27b", "openai/gpt-oss-20b"]
+
+def _is_refusal(text: str) -> bool:
+    """Detecta si la respuesta del LLM es una negativa de censura o un mensaje genérico de error."""
+    if not text:
+        return True
+    lower = text.lower()
+    return any(p in lower for p in REFUSAL_PHRASES)
+
+
+def _call_llm(client: Groq, system_msg: str, user_msg: str, temperature: float = 0.8, max_tokens: int = 750) -> str:
+    """Invoca LLM probando primero los modelos más estables y rápidos en Groq, con fallback a Gemini."""
+    # 1. Prioridad: Groq (Qwen primero por su velocidad de 1s, fluidez en español y cero negativas de censura)
+    groq_models = ["qwen/qwen3.8-27b", "openai/gpt-oss-120b", "openai/gpt-oss-20b"]
     for model_name in groq_models:
         try:
             r = client.chat.completions.create(
@@ -474,12 +476,31 @@ def _call_llm(client: Groq, system_msg: str, user_msg: str, temperature: float =
             )
             content = r.choices[0].message.content
             if content and len(content.strip()) > 30:
-                logger.info("âœ“ Historia/AuditorÃ­a generada con Ã©xito usando Groq (%s)", model_name)
-                return _clean(content)
+                if not _is_refusal(content):
+                    logger.info("✓ Generación con éxito usando Groq (%s)", model_name)
+                    return _clean(content)
+                else:
+                    logger.warning("Aviso: Modelo Groq %s devolvió una negativa/refusal. Probando siguiente...", model_name)
         except Exception as e:
             logger.warning("Aviso en modelo Groq %s: %s. Probando alternativa...", model_name, str(e)[:120])
 
-    raise RuntimeError("Todos los motores de IA fallaron al generar respuesta.")
+    # 2. Fallback: Gemini
+    gemini_models = ["gemini-3.8-flash", "gemini-2.5-flash", "gemini-2.0-flash"]
+    for g_model in gemini_models:
+        try:
+            gemini_c = _get_gemini_client()
+            res = gemini_c.models.generate_content(
+                model=g_model,
+                contents=f"{system_msg}\n\n{user_msg}",
+            )
+            if res.text and len(res.text.strip()) > 30:
+                if not _is_refusal(res.text):
+                    logger.info("✓ Generación con éxito usando %s", g_model)
+                    return _clean(res.text)
+        except Exception as eg:
+            logger.warning("Aviso en modelo Gemini %s: %s. Probando alternativa...", g_model, str(eg)[:120])
+
+    raise RuntimeError("Todos los motores de IA fallaron al generar respuesta válida.")
 
 
 def _audit_and_evaluate_draft(
@@ -636,6 +657,34 @@ def generate_script(
         _last = max(_t.rfind('.'), _t.rfind('!'), _t.rfind('?'))
         final_script = _t[:_last + 1] if _last > len(_t) * 0.5 else _t + '.'
         logger.info('Script truncado a %d palabras.', len(final_script.split()))
+
+    # Verificación estricta: Si el script quedó corto (<60 palabras) o contiene una negativa, generar un reemplazo impecable
+    if len(final_script.split()) < 60 or _is_refusal(final_script):
+        logger.warning("Script final inválido o negativa detectada (%d palabras). Generando reemplazo de emergencia...", len(final_script.split()))
+        fallback_prompt = (
+            "Escribe un guión de 95 palabras sobre GTA 6 en el estado de Leonida para un Short de YouTube. "
+            "Describe con asombro los detalles de Vice City, los caimanes gigantes en los pantanos y la inteligencia de la policía. "
+            "Empieza con un gancho fuerte y termina en loop infinito. Prosa en español, sin emojis ni introducciones. "
+            "Al final añade: TITULO: [Título impactante]"
+        )
+        try:
+            r_fb = client.chat.completions.create(
+                model="qwen/qwen3.8-27b",
+                messages=[
+                    {"role": "system", "content": "Eres un narrador viral experto en videojuegos."},
+                    {"role": "user", "content": fallback_prompt},
+                ],
+                temperature=0.7,
+                max_tokens=400,
+            )
+            content_fb = r_fb.choices[0].message.content
+            if content_fb and not _is_refusal(content_fb):
+                s_fb, t_fb = _parse_script_and_title(content_fb, default_title="El realismo brutal de GTA 6")
+                if len(s_fb.split()) >= 60:
+                    final_script = s_fb
+                    final_title = t_fb
+        except Exception as e_fb:
+            logger.error("Error al generar reemplazo de emergencia: %s", e_fb)
 
     logger.info(
         "=== [DUAL-AI Ã‰XITO] GuiÃ³n verificado y aprobado: %d palabras | TÃ­tulo: '%s' ===",
