@@ -200,12 +200,14 @@ def search_and_download_clip(
     output_template = os.path.join(output_dir, f"raw_{safe_query}_{timestamp}.%(ext)s")
 
     end_offset = start_offset + clip_duration
+    # Filtrar estrictamente transmisiones en vivo (!is_live & !was_live) que causan bloqueos de bot y SABR
+    match_filter = f"!is_live & !was_live & duration < {max_duration} & duration > 25"
     cmd = [
         yt_dlp,
         f"ytsearch{max_results}:{query}",
-        "--match-filter", f"duration < {max_duration}",
+        "--match-filter", match_filter,
         f"--download-sections=*{start_offset}-{end_offset}",
-        "-f", "bestvideo[height<=720][ext=mp4]+bestaudio/best[height<=720][ext=mp4]/best",
+        "-f", "best[ext=mp4][height<=720]/bestvideo[height<=720]+bestaudio/best[height<=720]/best",
         "--merge-output-format", "mp4",
         "--no-playlist",
         "--max-downloads", "1",
@@ -219,12 +221,12 @@ def search_and_download_clip(
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
         if result.returncode != 0:
             logger.warning("yt-dlp sección rápida falló para '%s': %s", query, result.stderr[:200])
-            # Reintento sin download-sections con límite de resolución rápida
+            # Reintento con formato simple compatible sin streams en vivo
             cmd_fallback = [
                 yt_dlp,
                 f"ytsearch{max_results}:{query}",
-                "--match-filter", "duration < 300",
-                "-f", "bestvideo[height<=480][ext=mp4]+bestaudio/best[height<=480][ext=mp4]/best",
+                "--match-filter", "!is_live & !was_live & duration < 600 & duration > 25",
+                "-f", "best[ext=mp4][height<=480]/best[height<=480]/worst",
                 "--merge-output-format", "mp4",
                 "--no-playlist",
                 "--max-downloads", "1",
@@ -387,7 +389,7 @@ def download_clip_by_url(url: str, output_dir: str = RAW_DIR) -> Optional[Dict[s
     cmd_down = [
         yt_dlp,
         url,
-        "-f", "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]/best",
+        "-f", "best[ext=mp4][height<=1080]/bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]/best",
         "--merge-output-format", "mp4",
         "-o", out_template,
         "--no-playlist",
