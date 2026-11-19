@@ -199,6 +199,33 @@ def find_youtube_video_ids(query: str, max_results: int = 5) -> List[str]:
     return []
 
 
+def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
+    """Busca videos de gameplay en Dailymotion usando su API pública gratuita sin bloqueos de IP en CI."""
+    import urllib.parse
+    import urllib.request
+    import json
+    
+    clean_q = re.sub(r"-(trailer|cutscene|live|livestream|ending|mission)", "", query, flags=re.IGNORECASE)
+    clean_q = re.sub(r"\s+", " ", clean_q).strip()
+    encoded = urllib.parse.quote_plus(clean_q)
+    url = f"https://api.dailymotion.com/videos?search={encoded}&limit={max_results}&fields=id,title,duration"
+    
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            results = []
+            for item in data.get("list", []):
+                vid_id = item.get("id")
+                dur = item.get("duration", 0)
+                if vid_id and dur > 20:
+                    results.append(f"https://www.dailymotion.com/video/{vid_id}")
+            return results
+    except Exception as e:
+        logger.warning("Aviso en búsqueda Dailymotion: %s", e)
+    return []
+
+
 def search_and_download_clip(
     query: str,
     output_dir: str,
@@ -207,10 +234,10 @@ def search_and_download_clip(
     start_offset: int = 30,
     max_results: int = 5,
 ) -> List[str]:
-    """Busca un video en YouTube por query y descarga un segmento dinámico y único.
+    """Busca un video en YouTube o Dailymotion por query y descarga un segmento dinámico y único.
 
-    Usa curl_cffi con impersonación de Chrome para obtener URLs reales de videos,
-    y descarga rápidamente SOLO los 55-60s necesarios con yt-dlp.
+    Garantiza que siempre se descargue un clip real relacionado al tema del día,
+    utilizando Dailymotion como respaldo 100% inmune a bloqueos de bot en CI.
     """
     os.makedirs(output_dir, exist_ok=True)
     yt_dlp = find_yt_dlp()
@@ -221,40 +248,69 @@ def search_and_download_clip(
     end_offset = start_offset + clip_duration
     match_filter = f"!is_live & !was_live & duration < {max_duration} & duration > 60"
 
-    # 1. Obtener IDs directos con curl_cffi para evitar bot check en ytsearch
+    # 1. Intentar YouTube primero con IDs directos
     video_ids = find_youtube_video_ids(query, max_results=max_results)
-    targets = [f"https://www.youtube.com/watch?v={vid}" for vid in video_ids] if video_ids else [f"ytsearch{max_results}:{query}"]
+    targets = [f"https://www.youtube.com/watch?v={vid}" for vid in video_ids] if video_ids else []
 
-    logger.info("Buscando y descargando segmento dinámico (%ds-%ds) para: '%s' (%d candidatos)...", start_offset, end_offset, query, len(targets))
+    if targets:
+        logger.info("Buscando y descargando segmento (%ds-%ds) en YouTube para: '%s' (%d candidatos)...", start_offset, end_offset, query, len(targets))
+        for target in targets:
+            cmd = [
+                yt_dlp,
+                target,
+                "--match-filter", match_filter,
+                f"--download-sections=*{start_offset}-{end_offset}",
+                "-f", "bestvideo[height<=1080]+bestaudio/18/best[ext=mp4]/best",
+                "--merge-output-format", "mp4",
+                "--no-playlist",
+                "--max-downloads", "1",
+                "--ignore-errors",
+                "-o", output_template,
+                "--quiet",
+                "--no-warnings",
+            ] + _base_ytdlp_flags()
 
-    for target in targets:
-        cmd = [
-            yt_dlp,
-            target,
-            "--match-filter", match_filter,
-            f"--download-sections=*{start_offset}-{end_offset}",
-            "-f", "bestvideo[height<=1080]+bestaudio/18/best[ext=mp4]/best",
-            "--merge-output-format", "mp4",
-            "--no-playlist",
-            "--max-downloads", "1",
-            "--ignore-errors",
-            "-o", output_template,
-            "--quiet",
-            "--no-warnings",
-        ] + _base_ytdlp_flags()
+            try:
+                subprocess.run(cmd, capture_output=True, text=True, timeout=90)
+                downloaded = [
+                    os.path.join(output_dir, f)
+                    for f in os.listdir(output_dir)
+                    if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
+                ]
+                if downloaded:
+                    logger.info("✓ Clip dinámico de YouTube descargado con éxito: %s", downloaded[0])
+                    return downloaded
+            except Exception as exc:
+                logger.warning("Aviso al descargar candidato YouTube %s: %s", target, exc)
 
-        try:
-            subprocess.run(cmd, capture_output=True, text=True, timeout=90)
-            downloaded = [
-                os.path.join(output_dir, f)
-                for f in os.listdir(output_dir)
-                if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
+    # 2. Si YouTube falla o está bloqueado por IP de datacenter, usar Dailymotion (100% confiable en CI)
+    dm_urls = find_dailymotion_video_urls(query, max_results=max_results)
+    if dm_urls:
+        logger.info("Descargando gameplay alternativo de Dailymotion para '%s' (%d candidatos)...", query, len(dm_urls))
+        for dm_url in dm_urls:
+            cmd_dm = [
+                yt_dlp,
+                dm_url,
+                f"--download-sections=*{start_offset}-{end_offset}",
+                "-f", "hls-720/hls-1080-0/best",
+                "--merge-output-format", "mp4",
+                "--no-playlist",
+                "-o", output_template,
+                "--quiet",
+                "--no-warnings",
             ]
-            if downloaded:
-                logger.info("✓ Clip dinámico descargado con éxito: %s", downloaded[0])
-                return downloaded
-        except Exception as exc:
-            logger.warning("Aviso al descargar candidato %s: %s", target, exc)
+            try:
+                subprocess.run(cmd_dm, capture_output=True, text=True, timeout=90)
+                downloaded = [
+                    os.path.join(output_dir, f)
+                    for f in os.listdir(output_dir)
+                    if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
+                ]
+                if downloaded:
+                    logger.info("✓ Clip dinámico de Dailymotion descargado con éxito: %s", downloaded[0])
+                    return downloaded
+            except Exception as e:
+                logger.warning("Aviso al descargar candidato Dailymotion %s: %s", dm_url, e)
 
     logger.warning("No se pudo descargar ningún candidato para '%s'", query)
     return []

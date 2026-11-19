@@ -198,6 +198,27 @@ jobs:
                   else:
                       print(f"  ⚠ Falló candidato {target}: {result.stderr[:150]}")
               if not downloaded_ok:
+                  # Respaldo en Dailymotion si YouTube está bloqueado por IP en GitHub Actions
+                  from src.core.clip_downloader import find_dailymotion_video_urls
+                  dm_targets = find_dailymotion_video_urls(q, max_results=3)
+                  for dm_target in dm_targets:
+                      print(f"  Intentando Dailymotion: {dm_target}")
+                      cmd_dm = [
+                          "yt-dlp",
+                          dm_target,
+                          f"--download-sections=*{start_sec}-{end_sec}",
+                          "-f", "hls-720/hls-1080-0/best",
+                          "--merge-output-format", "mp4",
+                          "--no-playlist",
+                          "-o", out,
+                          "--quiet",
+                      ]
+                      subprocess.run(cmd_dm, capture_output=True, text=True, timeout=90)
+                      if any(f.startswith(f"trend_{safe}_{ts}") for f in os.listdir("gta6/media/raw")):
+                          print(f"  ✓ Clip dinámico descargado de Dailymotion con éxito")
+                          downloaded_ok = True
+                          break
+              if not downloaded_ok:
                   print(f"  ⚠ No se pudo descargar ningún candidato para {item['title']}")
 
           # Listar clips disponibles
