@@ -252,13 +252,23 @@ jobs:
           echo "GEMINI_API_KEY=$GEMINI_API_KEY"                    >> .env
           echo "GROQ_API_KEY=$GROQ_API_KEY"                        >> .env
           echo "YOUTUBE_CLIENT_SECRETS_FILE=client_secrets.json"   >> .env
-          [ -n "$TIKTOK_SESSION_ID" ] && echo "TIKTOK_SESSION_ID=$TIKTOK_SESSION_ID" >> .env
+          if [ -n "$TIKTOK_SESSION_ID" ]; then
+            echo "TIKTOK_SESSION_ID=$TIKTOK_SESSION_ID" >> .env
+          fi
 
-          echo "$YOUTUBE_CLIENT_SECRETS_JSON" > client_secrets.json
-          echo "$YOUTUBE_TOKEN_JSON"           > token.json
+          if [ -n "$YOUTUBE_CLIENT_SECRETS_JSON" ]; then
+            echo "$YOUTUBE_CLIENT_SECRETS_JSON" > client_secrets.json
+          fi
+          if [ -n "$YOUTUBE_TOKEN_JSON" ]; then
+            echo "$YOUTUBE_TOKEN_JSON" > token.json
+          fi
 
-          [ -n "$TIKTOK_COOKIES_TXT" ] && echo "$TIKTOK_COOKIES_TXT" > tiktok_cookies.txt
-          [ -n "$YOUTUBE_COOKIES_TXT" ] && echo "$YOUTUBE_COOKIES_TXT" > cookies.txt
+          if [ -n "$TIKTOK_COOKIES_TXT" ]; then
+            echo "$TIKTOK_COOKIES_TXT" > tiktok_cookies.txt
+          fi
+          if [ -n "$YOUTUBE_COOKIES_TXT" ]; then
+            echo "$YOUTUBE_COOKIES_TXT" > cookies.txt
+          fi
 
       # ── 6. Mostrar tendencias del día (si están pre-generadas) ─────────────
       - name: Mostrar tendencias del día
