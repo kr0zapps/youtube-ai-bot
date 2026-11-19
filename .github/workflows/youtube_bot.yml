@@ -167,13 +167,14 @@ jobs:
                   target,
                   "--match-filter", "!is_live & !was_live & duration < 900 & duration > 60",
                   f"--download-sections=*{start_sec}-{end_sec}",
-                  "-f", "bestvideo[height<=1080]+bestaudio/best[height<=1080]/best",
+                  "-f", "bestvideo[height<=1080]+bestaudio/18/best[ext=mp4]/best",
                   "--merge-output-format", "mp4",
                   "--no-playlist",
                   "--max-downloads", "1",
                   "--ignore-errors",
                   "-o", out,
                   "--no-overwrites",
+                  "--extractor-args", "youtube:player_client=android,ios",
                   "--add-headers", "Accept-Language:en-US,en;q=0.9",
                   "--retries", "3",
                   "--sleep-interval", "1",
@@ -181,9 +182,7 @@ jobs:
                   "--no-warnings",
               ]
               if os.path.exists("cookies.txt") and os.path.getsize("cookies.txt") > 50:
-                  cmd.extend(["--cookies", "cookies.txt", "--extractor-args", "youtube:player_client=web,mweb"])
-              else:
-                  cmd.extend(["--extractor-args", "youtube:player_client=android,ios,web"])
+                  cmd.extend(["--cookies", "cookies.txt"])
               result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
               if result.returncode == 0:
                   print(f"  ✓ Clip dinámico descargado con éxito")

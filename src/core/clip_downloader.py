@@ -138,19 +138,17 @@ def find_ffmpeg() -> str:
 
 
 def _base_ytdlp_flags() -> List[str]:
-    """Flags comunes: cookies de sesión si existen (web), o cliente android si no hay cookies."""
-    flags = []
+    """Flags comunes optimizados: cliente android e ios para evitar bloqueos de bot y SABR."""
+    flags = [
+        # Clientes android e ios no requieren inicio de sesión ni sufren bloqueos de bot en centros de datos
+        "--extractor-args", "youtube:player_client=android,ios",
+    ]
     
-    # 1. Cookies si existen (las cookies exportadas del navegador son de tipo web)
-    has_cookies = False
+    # Cookies si existen
     if os.path.exists("cookies.txt") and os.path.getsize("cookies.txt") > 50:
-        flags.extend(["--cookies", "cookies.txt", "--extractor-args", "youtube:player_client=web,mweb"])
-        has_cookies = True
+        flags.extend(["--cookies", "cookies.txt"])
     elif os.path.exists(os.path.join("..", "cookies.txt")) and os.path.getsize(os.path.join("..", "cookies.txt")) > 50:
-        flags.extend(["--cookies", os.path.join("..", "cookies.txt"), "--extractor-args", "youtube:player_client=web,mweb"])
-        has_cookies = True
-    else:
-        flags.extend(["--extractor-args", "youtube:player_client=android,ios,web"])
+        flags.extend(["--cookies", os.path.join("..", "cookies.txt")])
 
     # 2. JS runtime para resolver el challenge de YouTube
     node_bin = shutil.which("node")
@@ -211,7 +209,7 @@ def search_and_download_clip(
         f"ytsearch{max_results}:{query}",
         "--match-filter", match_filter,
         f"--download-sections=*{start_offset}-{end_offset}",
-        "-f", "bestvideo[height<=1080]+bestaudio/best[height<=1080]/best",
+        "-f", "bestvideo[height<=1080]+bestaudio/18/best[ext=mp4]/best",
         "--merge-output-format", "mp4",
         "--no-playlist",
         "--max-downloads", "1",
@@ -224,7 +222,13 @@ def search_and_download_clip(
     logger.info("Buscando y descargando segmento dinámico (%ds-%ds): '%s'...", start_offset, end_offset, query)
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
-        if result.returncode != 0:
+        # Buscar primero si se descargó
+        downloaded = [
+            os.path.join(output_dir, f)
+            for f in os.listdir(output_dir)
+            if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
+        ]
+        if not downloaded:
             logger.warning("yt-dlp sección rápida falló para '%s': %s", query, result.stderr[:200])
             # Reintento con formato simple compatible sin streams en vivo
             cmd_fallback = [
@@ -232,7 +236,7 @@ def search_and_download_clip(
                 f"ytsearch{max_results}:{query}",
                 "--match-filter", f"!is_live & !was_live & duration < {max_duration} & duration > 60",
                 f"--download-sections=*{start_offset}-{end_offset}",
-                "-f", "bestvideo[height<=720]+bestaudio/best[height<=720]/best",
+                "-f", "18/best[ext=mp4]/best",
                 "--merge-output-format", "mp4",
                 "--no-playlist",
                 "--max-downloads", "1",
@@ -396,7 +400,7 @@ def download_clip_by_url(url: str, output_dir: str = RAW_DIR) -> Optional[Dict[s
     cmd_down = [
         yt_dlp,
         url,
-        "-f", "bestvideo[height<=1080]+bestaudio/best[height<=1080]/best",
+        "-f", "bestvideo[height<=1080]+bestaudio/18/best[ext=mp4]/best",
         "--merge-output-format", "mp4",
         "-o", out_template,
         "--no-playlist",
