@@ -17,7 +17,7 @@ import asyncio
 from datetime import datetime
 from typing import Dict, Any, Optional, List
 
-from src.core import gemini, voice, subtitles, video, uploader, tiktok, clip_downloader
+from src.core import gemini, voice, subtitles, video, uploader, tiktok, clip_downloader, trend_fetcher
 from src.core import scoreboard, buffer_uploader
 
 logger = logging.getLogger(__name__)
@@ -183,12 +183,17 @@ def run(
     logger.info("=== Iniciando pipeline GTA 6 — Pilar: %s ===", pillar.upper())
     os.makedirs(EDITS_DIR, exist_ok=True)
 
-    # 1. Cargar fuentes oficiales y borrador seleccionado
+    # 1. Cargar tendencias en vivo de las últimas 24 horas, hechos y borrador base
     facts_context = load_verified_facts()
     topic = select_topic_from_bank(pillar)
+    live_trends = trend_fetcher.get_live_context_for_prompt()
+    if live_trends:
+        logger.info("Tendencias en vivo recolectadas exitosamente para la IA.")
+
     extra_context = (
-        f"HECHOS VERIFICADOS OFICIALES (FACTS.MD):\n{facts_context[:1000]}\n\n"
-        f"TEMA SELECCIONADO:\n{topic['context']}"
+        f"{live_trends}\n\n"
+        f"HECHOS BASE (FACTS.MD):\n{facts_context[:600]}\n\n"
+        f"INSPIRACIÓN ADICIONAL:\n{topic['context']}"
     )
 
     credit = "Rockstar Games Official"
