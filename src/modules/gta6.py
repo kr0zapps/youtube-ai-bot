@@ -94,109 +94,70 @@ def select_topic_from_bank(pillar: str) -> Dict[str, str]:
 
 
 def find_background_video(pillar: str = "news", topic_text: str = "") -> str:
-    """Selecciona o descarga un clip de GTA 6 relevante al tema, sin spoilers y rotando sin repetir."""
+    """Selecciona o descarga un clip de GTA 6 relevante al tema, sin spoilers y NUNCA el tráiler oficial."""
     used_clips = clip_downloader.load_used_clips()
     topic_query = clip_downloader.get_topic_query(topic_text)
 
-    # 1. Recopilar todos los clips válidos existentes (>2MB)
-    gta6_clips = []
-    for search_dir in [RAW_MEDIA_DIR, OFFICIAL_MEDIA_DIR]:
-        if os.path.exists(search_dir):
-            for f in os.listdir(search_dir):
-                if ".f" in f or f.endswith(".json") or f.endswith(".txt"):
-                    continue
-                if f.lower().endswith((".mp4", ".mov", ".mkv")):
-                    full_p = os.path.join(search_dir, f)
-                    if os.path.exists(full_p) and os.path.getsize(full_p) > 2 * 1024 * 1024:
-                        gta6_clips.append(full_p)
-
-    # Filtrar solo clips que NO hayan sido usados recientemente
-    fresh_clips = [c for c in gta6_clips if os.path.basename(c) not in used_clips]
-
-    # A) Buscar clips frescos locales que coincidan con las palabras clave del tema
-    if fresh_clips:
-        # Palabras clave del tema
-        keywords = [w for w in re.findall(r"\w+", topic_query.lower()) if len(w) > 3 and not w.startswith("-")]
-        matching = [c for c in fresh_clips if any(kw in os.path.basename(c).lower() for kw in keywords)]
-
-        if matching:
-            chosen = random.choice(matching)
-            clip_downloader.mark_clip_as_used(chosen)
-            logger.info("✓ Usando clip local temático sin repetir [%s]: %s", pillar, chosen)
-            return chosen
-
-        # Si el pilar es clip/tips, preferir clips raw/gameplay no repetidos
-        if pillar in ("clip", "tips"):
-            raw_fresh = [c for c in fresh_clips if "raw" in c or "gameplay" in c]
-            if raw_fresh:
-                chosen = random.choice(raw_fresh)
-                clip_downloader.mark_clip_as_used(chosen)
-                logger.info("✓ Usando clip de gameplay fresco sin repetir [%s]: %s", pillar, chosen)
-                return chosen
-
-        chosen = random.choice(fresh_clips)
-        clip_downloader.mark_clip_as_used(chosen)
-        logger.info("✓ Usando clip local fresco sin repetir [%s]: %s", pillar, chosen)
-        return chosen
-
-    # B) Si no hay clips frescos o se requiere variedad temática: descargar clip nuevo y específico sin spoilers
-    logger.info("Buscando y descargando nuevo clip temático de GTA 6: '%s'...", topic_query)
+    # 1. INTENTO PRIORITARIO: Descargar SIEMPRE un clip fresco y único de YouTube de la temática de hoy
+    logger.info("Buscando y descargando gameplay fresco y diferente de GTA 6: '%s'...", topic_query)
     try:
-        # Variar el segundo de inicio para que los clips nunca se vean idénticos
-        start_offset = random.choice([20, 40, 60, 85, 110])
+        # Variar ampliamente el segundo de inicio (entre 30s y 240s) para que NUNCA sea el mismo fragmento
+        start_offset = random.choice([35, 65, 95, 130, 170, 210])
         downloaded = clip_downloader.search_and_download_clip(
             query=topic_query,
             output_dir=RAW_MEDIA_DIR,
-            max_duration=600,
+            max_duration=900,
             clip_duration=60,
             start_offset=start_offset,
             max_results=5,
         )
         if downloaded:
             for d in downloaded:
-                if os.path.exists(d) and os.path.getsize(d) > 2 * 1024 * 1024:
+                # Validar que exista, no sea el tráiler y tenga tamaño real
+                if (
+                    os.path.exists(d)
+                    and os.path.getsize(d) > 2 * 1024 * 1024
+                    and "trailer" not in os.path.basename(d).lower()
+                ):
                     clip_downloader.mark_clip_as_used(d)
-                    logger.info("✓ Nuevo clip temático sin spoilers descargado: %s", d)
+                    logger.info("✓ Clip de gameplay nuevo y único descargado con éxito: %s", d)
                     return d
     except Exception as dl_err:
-        logger.warning("Aviso en descarga de gameplay temático: %s", dl_err)
+        logger.warning("Aviso en descarga de gameplay en vivo: %s", dl_err)
 
-    # C) Fallback 1: Si falló la descarga, reutilizar el clip menos reciente si existe
-    if gta6_clips:
-        chosen = random.choice(gta6_clips)
+    # 2. SEGUNDO INTENTO: Recopilar clips locales existentes en RAW_MEDIA_DIR (PROHIBIDO el tráiler)
+    gta6_clips = []
+    if os.path.exists(RAW_MEDIA_DIR):
+        for f in os.listdir(RAW_MEDIA_DIR):
+            if ".f" in f or f.endswith(".json") or f.endswith(".txt") or "trailer" in f.lower():
+                continue
+            if f.lower().endswith((".mp4", ".mov", ".mkv")):
+                full_p = os.path.join(RAW_MEDIA_DIR, f)
+                if os.path.exists(full_p) and os.path.getsize(full_p) > 2 * 1024 * 1024:
+                    gta6_clips.append(full_p)
+
+    # Filtrar solo clips que NO hayan sido usados recientemente
+    fresh_clips = [c for c in gta6_clips if os.path.basename(c) not in used_clips]
+
+    if fresh_clips:
+        chosen = random.choice(fresh_clips)
         clip_downloader.mark_clip_as_used(chosen)
-        logger.info("Fallback: reutilizando clip local de GTA 6: %s", chosen)
+        logger.info("✓ Usando clip local de gameplay fresco (no repetido): %s", chosen)
         return chosen
 
-    # D) Fallback 2: Intentar descargar el trailer oficial de GTA 6
-    logger.info("Fallback: Intentando descargar trailer oficial de GTA 6...")
-    try:
-        official_trailer = clip_downloader.download_official_trailer()
-        if official_trailer and os.path.exists(official_trailer):
-            return official_trailer
-    except Exception as t_err:
-        logger.warning("Aviso en trailer oficial: %s", t_err)
-
-    # E) Fallback 3: Usar el gameplay base de GTA 6 incluido en el repositorio
+    # 3. TERCER INTENTO: Si todos los clips locales ya se usaron, usar el gameplay base rotado con corte aleatorio
     gta6_base = os.path.join("assets", "gameplay", "gta6_base_gameplay.mp4")
     if os.path.exists(gta6_base):
-        logger.info("Fallback garantizado: usando gta6_base_gameplay.mp4 del repositorio")
+        logger.info("Fallback: usando gameplay real de GTA 6 de respaldo: %s", gta6_base)
         return gta6_base
 
-    # F) Fallback 4: Cualquier gameplay disponible en assets/gameplay/
-    gameplay_dir = os.path.join("assets", "gameplay")
-    if os.path.exists(gameplay_dir):
-        all_clips = [
-            os.path.join(gameplay_dir, f)
-            for f in os.listdir(gameplay_dir)
-            if f.lower().endswith((".mp4", ".mov"))
-        ]
-        if all_clips:
-            fallback_chosen = random.choice(all_clips)
-            logger.info("Fallback de emergencia: usando %s", fallback_chosen)
-            return fallback_chosen
+    # 4. Fallback final de emergencia
+    if gta6_clips:
+        chosen = random.choice(gta6_clips)
+        logger.info("Fallback: reutilizando clip local disponible: %s", chosen)
+        return chosen
 
-    raise FileNotFoundError("No se encontró ningún clip de GTA 6 para el fondo.")
+    raise FileNotFoundError("No se encontró ningún clip de gameplay para el fondo.")
 
 
 def append_to_log(caption: str, media_path: str, credit: str = "Rockstar Games Official") -> None:

@@ -68,34 +68,50 @@ def mark_clip_as_used(clip_path: str) -> None:
 
 
 def get_topic_query(text: str) -> str:
-    """Genera una búsqueda de YouTube contextual al tema del guión, 100% libre de spoilers.
+    """Genera una búsqueda de YouTube contextual al tema del guión, 100% libre de spoilers y del tráiler.
     
-    Filtra estrictamente cinemáticas de historia, muertes, finales y misiones clave.
+    Filtra estrictamente cinemáticas de historia, muertes, finales y el tráiler oficial repetitivo.
     """
+    import random
     t = text.lower() if text else ""
 
-    # 1. Físicas de agua, caimanes, pantanos, tormentas, naturaleza
-    if any(k in t for k in ["agua", "caimán", "caiman", "caimanes", "física", "fisica", "mar", "playa", "tormenta", "rio", "río", "pantano", "bote"]):
-        return "GTA 6 water physics alligator ocean boat free roam -spoiler -ending -cutscene -mission"
+    # 1. Trucos bloqueados, trampas, armas, Tanques
+    if any(k in t for k in ["truco", "trucos", "trampa", "trampas", "cheat", "cheats", "bloqueado", "bloqueados", "armas"]):
+        return "GTA 6 funny gameplay weapons chaos free roam -trailer -ending -cutscene -mission"
 
-    # 2. Policía, persecuciones, sistema táctico, estrellas
-    if any(k in t for k in ["policía", "policia", "policías", "estrellas", "persecución", "persecucion", "arresto", "escape", "patrulla", "sirena"]):
-        return "GTA 6 police chase 5 stars escape free roam gameplay -spoiler -ending -cutscene -mission"
+    # 2. Memes, Calamardo, PC vs Consolas, tendencias de internet
+    if any(k in t for k in ["meme", "memes", "calamardo", "pc", "internet", "redes", "tiktok", "twitter", "funeral"]):
+        return "GTA 6 funny streamer moments viral clips gameplay -trailer -ending -cutscene"
 
-    # 3. Autos, superdeportivos, conducción nocturna, autopistas
-    if any(k in t for k in ["auto", "autos", "coche", "coches", "conducción", "conduccion", "conducir", "conduciendo", "manejar", "manejando", "velocidad", "tráfico", "trafico", "autopista", "deportivo", "superdeportivo", "carrera", "carreras"]):
-        return "GTA 6 driving supercar Vice City night cruise free roam -spoiler -ending -cutscene"
+    # 3. Realismo, Miami real vs Vice City, gráficos, iluminación
+    if any(k in t for k in ["miami", "real", "realidad", "vida real", "iluminación", "luces", "gráfico", "grafico", "ps5"]):
+        return "GTA 6 realistic driving Vice City night cruise 4k -trailer -cutscene"
 
-    # 4. Protagonistas (Lucía / Jason), exploración a pie, NPCs, ciudad
-    if any(k in t for k in ["lucía", "lucia", "jason", "ciudad", "npcs", "gente", "vice city", "exploración", "exploracion"]):
-        return "GTA 6 Vice City open world exploration walking free roam -spoiler -ending -cutscene"
+    # 4. NPCs dementes, peatones, situaciones absurdas en la ciudad
+    if any(k in t for k in ["npc", "npcs", "peatón", "peaton", "peatones", "gente", "dementes", "locura", "tienda", "florida"]):
+        return "GTA 6 crazy npc moments open world funny -trailer -ending -cutscene"
 
-    # 5. Rendimiento, gráficos, 60 FPS vs 30 FPS, resolución, PS5 / Xbox
-    if any(k in t for k in ["60 fps", "30 fps", "fps", "gráficos", "graficos", "rendimiento", "ps5", "xbox", "parche", "4k", "ray tracing"]):
-        return "GTA 6 PS5 4K graphics visual showcase free roam -spoiler -ending -cutscene"
+    # 5. Físicas de agua, caimanes, pantanos, tormentas, lanchas
+    if any(k in t for k in ["agua", "caimán", "caiman", "caimanes", "mar", "playa", "tormenta", "rio", "río", "pantano", "bote", "lancha"]):
+        return "GTA 6 water physics boat alligator swamp gameplay -trailer -ending -cutscene"
 
-    # Default: gameplay de libre exploración en mundo abierto sin comentarios
-    return "GTA 6 open world free roam gameplay no commentary -spoiler -ending -cutscene -mission"
+    # 6. Policía, persecuciones, sistema táctico, 5 estrellas
+    if any(k in t for k in ["policía", "policia", "policías", "estrellas", "persecución", "persecucion", "arresto", "escape", "patrulla"]):
+        return "GTA 6 police chase 5 stars escape gameplay -trailer -ending -cutscene"
+
+    # 7. Autos, superdeportivos, conducción nocturna, carreras
+    if any(k in t for k in ["auto", "autos", "coche", "coches", "conducción", "conduccion", "manejar", "manejando", "velocidad", "superdeportivo"]):
+        return "GTA 6 driving supercar Vice City night cruise -trailer -ending -cutscene"
+
+    # Default rotativo: variedad total de momentos virales de mundo abierto (NUNCA el tráiler)
+    viral_queries = [
+        "GTA 6 funny moments streamer gameplay open world -trailer -cutscene",
+        "GTA 6 police chase chaos action free roam -trailer -cutscene",
+        "GTA 6 driving sports car Vice City night stunts -trailer -cutscene",
+        "GTA 6 crazy open world moments funny -trailer -cutscene",
+        "GTA 6 free roam exploration Vice City beach 4k -trailer -cutscene",
+    ]
+    return random.choice(viral_queries)
 
 # Creadores del watchlist — canales de YouTube a monitorear
 WATCHLIST_CHANNELS = [
