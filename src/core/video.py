@@ -332,7 +332,7 @@ def assemble_video(
         "-t", f"{audio_duration:.2f}",
         "-c:v", "libx264", "-preset", "medium", "-crf", "18",
         "-pix_fmt", "yuv420p",
-        "-c:a", "libmp3lame", "-b:a", "256k", "-ar", "44100", "-ac", "2",
+        "-c:a", "aac", "-b:a", "320k", "-ar", "48000", "-ac", "2",
         "-movflags", "+faststart",
         output_path,
     ]
@@ -432,12 +432,12 @@ def _assemble_with_gameplay(
 
     filter_parts = []
 
-    # Video: escalar gameplay a 1080x1920 con máxima nitidez, colores vivos y filtro unsharp
+    # Video: escalar gameplay a 1080x1920 con máxima nitidez usando lanczos, colores vivos y filtro unsharp
     vf_base = (
-        f"[0:v]scale={width}:{height}:force_original_aspect_ratio=increase,"
+        f"[0:v]scale={width}:{height}:force_original_aspect_ratio=increase:flags=lanczos,"
         f"crop={width}:{height},"
-        f"eq=brightness=0.01:saturation=1.12,"
-        f"unsharp=5:5:0.6:5:5:0.0[vbg]"
+        f"eq=brightness=0.01:saturation=1.15:contrast=1.05,"
+        f"unsharp=5:5:0.8:5:5:0.0[vbg]"
     )
     filter_parts.append(vf_base)
     last_v = "vbg"
@@ -459,25 +459,25 @@ def _assemble_with_gameplay(
     else:
         filter_parts.append(f"[{last_v}]null[vout]")
 
-    # Audio: voz destacada + música de fondo + efecto whoosh de entrada (44.1kHz estéreo estandarizado para TikTok y YouTube)
-    audio_inputs = ["[1:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=1.4[avoice]"]
+    # Audio: voz destacada + música de fondo + efecto whoosh de entrada (48kHz estéreo estandarizado para TikTok y YouTube)
+    audio_inputs = ["[1:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=1.4[avoice]"]
     mix_sources = ["[avoice]"]
 
     if has_music:
-        audio_inputs.append(f"[{music_idx}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.20[amusic]")
+        audio_inputs.append(f"[{music_idx}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=0.20[amusic]")
         mix_sources.append("[amusic]")
 
     if has_whoosh:
-        audio_inputs.append(f"[{whoosh_idx}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.85[awhoosh]")
+        audio_inputs.append(f"[{whoosh_idx}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=0.85[awhoosh]")
         mix_sources.append("[awhoosh]")
 
     if len(mix_sources) > 1:
         filter_parts.extend(audio_inputs)
         filter_parts.append(
-            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=0:normalize=0,aformat=sample_rates=44100:channel_layouts=stereo[aout]"
+            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=0:normalize=0,aformat=sample_rates=48000:channel_layouts=stereo[aout]"
         )
     else:
-        filter_parts.append("[1:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=1.0[aout]")
+        filter_parts.append("[1:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=1.0[aout]")
 
     cmd = [
         ffmpeg_bin, "-y",
@@ -487,9 +487,9 @@ def _assemble_with_gameplay(
         "-t", f"{audio_duration:.2f}",
         "-r", str(fps),
         "-c:v", "libx264", "-preset", "slow", "-crf", "15",
-        "-maxrate", "25M", "-bufsize", "50M",
+        "-maxrate", "30M", "-bufsize", "60M",
         "-pix_fmt", "yuv420p",
-        "-c:a", "libmp3lame", "-b:a", "256k", "-ar", "44100", "-ac", "2",
+        "-c:a", "aac", "-b:a", "320k", "-ar", "48000", "-ac", "2",
         "-movflags", "+faststart",
         output_path,
     ]
@@ -508,11 +508,11 @@ def _assemble_with_gameplay(
             cmd_nosub = [
                 ffmpeg_bin, "-y",
                 "-stream_loop", "-1", "-i", gameplay_path, "-i", audio_path,
-                "-vf", f"scale={width*2}:{height*2}:force_original_aspect_ratio=increase,crop={width}:{height}",
+                "-vf", f"scale={width*2}:{height*2}:force_original_aspect_ratio=increase:flags=lanczos,crop={width}:{height}",
                 "-map", "0:v", "-map", "1:a",
                 "-t", f"{audio_duration:.2f}",
-                "-c:v", "libx264", "-preset", "medium", "-crf", "18",
-                "-pix_fmt", "yuv420p", "-c:a", "libmp3lame", "-b:a", "256k",
+                "-c:v", "libx264", "-preset", "medium", "-crf", "17",
+                "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "320k", "-ar", "48000",
                 "-movflags", "+faststart",
                 output_path,
             ]
@@ -623,25 +623,25 @@ def _assemble_with_dopamine_2x2(
     else:
         filter_parts.append(f"[{last_v}]null[vout]")
 
-    # Audio mixing: normalizar siempre a 44100Hz estéreo para compatibilidad absoluta con TikTok y YouTube
-    audio_inputs = ["[4:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=1.4[avoice]"]
+    # Audio mixing: normalizar siempre a 48kHz estéreo para máxima compatibilidad con TikTok y YouTube
+    audio_inputs = ["[4:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=1.4[avoice]"]
     mix_sources = ["[avoice]"]
 
     if has_music:
-        audio_inputs.append(f"[{music_idx}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.20[amusic]")
+        audio_inputs.append(f"[{music_idx}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=0.20[amusic]")
         mix_sources.append("[amusic]")
 
     if has_whoosh:
-        audio_inputs.append(f"[{whoosh_idx}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.85[awhoosh]")
+        audio_inputs.append(f"[{whoosh_idx}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=0.85[awhoosh]")
         mix_sources.append("[awhoosh]")
 
     if len(mix_sources) > 1:
         filter_parts.extend(audio_inputs)
         filter_parts.append(
-            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=0:normalize=0,aformat=sample_rates=44100:channel_layouts=stereo[aout]"
+            f"{''.join(mix_sources)}amix=inputs={len(mix_sources)}:duration=first:dropout_transition=0:normalize=0,aformat=sample_rates=48000:channel_layouts=stereo[aout]"
         )
     else:
-        filter_parts.append("[4:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=1.0[aout]")
+        filter_parts.append("[4:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=1.0[aout]")
 
     cmd = [
         ffmpeg_bin, "-y",
@@ -650,9 +650,10 @@ def _assemble_with_dopamine_2x2(
         "-map", "[vout]", "-map", "[aout]",
         "-t", f"{audio_duration:.2f}",
         "-r", str(fps),
-        "-c:v", "libx264", "-preset", "medium", "-crf", "18",
+        "-c:v", "libx264", "-preset", "slow", "-crf", "15",
+        "-maxrate", "30M", "-bufsize", "60M",
         "-pix_fmt", "yuv420p",
-        "-c:a", "libmp3lame", "-b:a", "256k", "-ar", "44100", "-ac", "2",
+        "-c:a", "aac", "-b:a", "320k", "-ar", "48000", "-ac", "2",
         "-movflags", "+faststart",
         output_path,
     ]
