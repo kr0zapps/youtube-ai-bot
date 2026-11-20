@@ -39,3 +39,11 @@
 - [Google News] GTA 6 Becomes Biggest Entertainment Launch in History - Hungarian Conservative — <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxQU05LdVg1WDBtYnJsX013SUJ5SURoODJ3T3hBdD
 - [Google News] Will GTA 6 really cost the U.S. economy $1 billion in lost productivity? - Poynter — <a href="https://news.google.com/rss/articles/CBMimgFBVV95cUxPT3EzTm9GbEFiY0pXZEZJSV9uSlp6VWxsZkdzeW
 - [Google News] This couple’s GTA 6 contract has one rule that’s raising eyebrows - Cleveland.com — <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxNZzFMRGlIM2hPOE9nRWQ1dFJ0Sm5Wc3hzOE5OdX
+
+
+## Tendencias Virales — 2026-11-20
+- [Google News] Cyberleek build got out for GTA 6 - Reddit — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxOWEdGLW1CcW1uSzF2dkRXNHlIQy02Wk84WEhsbX
+- [Google News] Cyberleek just dropped a GTA 6 Xbox Build without the game's executable - Reddit — <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxNdm1naUh4LTVPTjVrMlhzODhwWVkxSWFsempfMn
+- [Google News] GTA 6 vs GTA 4 car crash 18 years apart - Reddit — <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxPZy12bHZ4d0Z3Z090eEtISlVPTkw0ZWg3bnFqM3
+- [Google News] Briefly pausing my GTA 6 marathon to share my Max Weight, Low Muscle Jason. - Reddit — <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxORXFVaWdwTWNNdURyZUI2ZUdIYlVTTWxHLWhsQW
+- [Google News] Bugs found in GTA 6 just 3hrs after it's release :( - Reddit — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxQY1c1TUd2eGE0VW1fUmhVcGJoZG83NXltSEdCLX
