@@ -47,3 +47,11 @@
 - [Google News] GTA 6 vs GTA 4 car crash 18 years apart - Reddit — <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxPZy12bHZ4d0Z3Z090eEtISlVPTkw0ZWg3bnFqM3
 - [Google News] Briefly pausing my GTA 6 marathon to share my Max Weight, Low Muscle Jason. - Reddit — <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxORXFVaWdwTWNNdURyZUI2ZUdIYlVTTWxHLWhsQW
 - [Google News] Bugs found in GTA 6 just 3hrs after it's release :( - Reddit — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxQY1c1TUd2eGE0VW1fUmhVcGJoZG83NXltSEdCLX
+
+
+## Tendencias Virales — 2026-11-21
+- [Google News] Rockstar actually hired Florida Joker to play his character in GTA 6, and he’s included in the credits. He’s part of the local population in the game and can be seen fighting another NPC in a social media clip, which led to his arrest. - X — <a href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBFOVJsWWdWdk0xNTVfRzhheDNjOTlGYzFXbEpXX0
+- [Google News] This is the most valid GTA crash out I’ve ever seen out of CaseOh 😭 - X — <a href="https://news.google.com/rss/articles/CBMiX0FVX3lxTFBQNExjMUtVbHdTdnRPQTlKaHRlVlpJNHlSWkxUWW
+- [Google News] A viral GTA 6 clip shows a unique animation that kicks in when you park too close to another car and try to get out. It's the little things that make Grand Theft Auto 6 feel so real. 🎥: neoxEFT / Reddit - X — <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE9FM1BOelRmNVZtVHNuQlNPMkFjTVl3M0xKck92UT
+- [Google News] CaseOh been my favorite GTA 6 streamer so far and it might not be close - X — <a href="https://news.google.com/rss/articles/CBMiX0FVX3lxTE5SZWotX0xKcVN3TWUxSlEyWmR3UlM5NEczMWxKTE
+- [Google News] Those viral GTA 6 clips of planes bouncing off skyscrapers aren't a bug. That's Reduced Vehicle Damage, an optional setting that's off by default. It sits next to Accessible Combat so tired, newer, and disabled players can get through the story. So the setting pe - X — <a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE4xaEE0YUIxN0o3QTBFQ3NXS2NpSkhzOGRkbzM5d2
