@@ -239,8 +239,9 @@ def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
     clean_q = re.sub(r"-(trailer|cutscene|live|livestream|ending|mission)", "", query, flags=re.IGNORECASE)
     clean_q = re.sub(r"\s+", " ", clean_q).strip()
     encoded = urllib.parse.quote_plus(clean_q)
-    url = f"https://api.dailymotion.com/videos?search={encoded}&limit=15&fields=id,title,duration"
-    
+    # Pedir max_height para filtrar solo videos HD (>=720p)
+    url = f"https://api.dailymotion.com/videos?search={encoded}&limit=20&fields=id,title,duration,max_height"
+
     results = []
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
@@ -250,22 +251,25 @@ def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
                 vid_id = item.get("id")
                 title = item.get("title", "")
                 dur = item.get("duration", 0)
-                if vid_id and dur >= 25 and is_valid_gta6_title(title):
+                max_h = item.get("max_height", 0) or 0
+                # Solo aceptar HD: mínimo 720p verificado por la API
+                if vid_id and dur >= 25 and max_h >= 720 and is_valid_gta6_title(title):
+                    logger.info("Dailymotion HD candidato: %s (%dp, %ds)", title[:60], max_h, dur)
                     results.append(f"https://www.dailymotion.com/video/{vid_id}")
     except Exception as e:
         logger.warning("Aviso en búsqueda Dailymotion: %s", e)
 
-    # Si la query específica no devolvió videos que pasen el filtro estricto de GTA 6,
-    # consultar el catálogo verificado de gameplay next-gen de GTA 6
+    # Si la query específica no devolvió videos HD de GTA 6, usar fallbacks 4K/HD
     if not results:
         fallback_queries = [
-            "GTA 6 PS5 4K HDR Gameplay",
-            "Grand Theft Auto VI Gameplay",
-            "GTA 6 Lucia Jason gameplay",
-            "GTA 6 next gen gameplay 4k"
+            "GTA 6 PS5 4K HDR Gameplay 1080p",
+            "Grand Theft Auto VI 1080p Gameplay",
+            "GTA 6 Lucia Jason 4k gameplay",
+            "GTA 6 next gen gameplay 4k 60fps",
+            "GTA VI Vice City HD gameplay"
         ]
         for fq in fallback_queries:
-            f_url = f"https://api.dailymotion.com/videos?search={urllib.parse.quote_plus(fq)}&limit=10&fields=id,title,duration"
+            f_url = f"https://api.dailymotion.com/videos?search={urllib.parse.quote_plus(fq)}&limit=15&fields=id,title,duration,max_height"
             try:
                 req = urllib.request.Request(f_url, headers={"User-Agent": "Mozilla/5.0"})
                 with urllib.request.urlopen(req, timeout=10) as resp:
@@ -274,7 +278,8 @@ def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
                         vid_id = item.get("id")
                         title = item.get("title", "")
                         dur = item.get("duration", 0)
-                        if vid_id and dur >= 25 and is_valid_gta6_title(title):
+                        max_h = item.get("max_height", 0) or 0
+                        if vid_id and dur >= 25 and max_h >= 720 and is_valid_gta6_title(title):
                             results.append(f"https://www.dailymotion.com/video/{vid_id}")
                         if len(results) >= max_results:
                             break
@@ -282,6 +287,25 @@ def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
                 pass
             if results:
                 break
+
+    # Último recurso: aceptar cualquier resolución si no hay nada HD
+    if not results:
+        logger.warning("No se encontraron videos HD en Dailymotion, bajando filtro a cualquier resolución")
+        any_q = f"https://api.dailymotion.com/videos?search={encoded}&limit=15&fields=id,title,duration,max_height"
+        try:
+            req = urllib.request.Request(any_q, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                for item in data.get("list", []):
+                    vid_id = item.get("id")
+                    title = item.get("title", "")
+                    dur = item.get("duration", 0)
+                    max_h = item.get("max_height", 0) or 0
+                    if vid_id and dur >= 25 and is_valid_gta6_title(title):
+                        logger.warning("Aceptando video SD (%dp): %s", max_h, title[:60])
+                        results.append(f"https://www.dailymotion.com/video/{vid_id}")
+        except Exception:
+            pass
 
     return results[:max_results]
 
@@ -346,51 +370,60 @@ def search_and_download_clip(
     # 2. Si YouTube falla o está bloqueado por IP de datacenter, usar Dailymotion (100% confiable en CI)
     dm_urls = find_dailymotion_video_urls(query, max_results=max_results)
     if dm_urls:
-        logger.info("Descargando gameplay alternativo de Dailymotion para '%s' (%d candidatos)...", query, len(dm_urls))
+        logger.info("Descargando gameplay HD de Dailymotion para '%s' (%d candidatos HD)...", query, len(dm_urls))
         # Para videos de Dailymotion, fijar el inicio cerca del comienzo (<=15s) para videos cortos
         dm_start = min(start_offset, 15)
         dm_end = dm_start + clip_duration
         for dm_url in dm_urls:
+            # Formato: preferir 1080p, luego 720p, nunca menos
+            fmt = "bestvideo[height=1080]+bestaudio/bestvideo[height=720]+bestaudio/bestvideo[height>=720]+bestaudio/best[height>=720]/best"
             cmd_dm = [
                 yt_dlp,
                 dm_url,
                 f"--download-sections=*{dm_start}-{dm_end}",
-                "-f", "bestvideo[height>=720][height<=1080]+bestaudio/bestvideo[height<=1080]+bestaudio/bestvideo+bestaudio/best",
+                "-f", fmt,
                 "--merge-output-format", "mp4",
                 "--no-playlist",
                 "-o", output_template,
+                "--print", "%(width)sx%(height)s %(format_id)s",
                 "--no-warnings",
             ]
             try:
-                res = subprocess.run(cmd_dm, capture_output=True, text=True, timeout=90)
+                res = subprocess.run(cmd_dm, capture_output=True, text=True, timeout=120)
+                # Loguear resolución real descargada
+                if res.stdout.strip():
+                    logger.info("Dailymotion formato descargado: %s", res.stdout.strip().split('\n')[0])
                 downloaded = [
                     os.path.join(output_dir, f)
                     for f in os.listdir(output_dir)
                     if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
                 ]
                 if downloaded:
-                    logger.info("✓ Clip dinámico de Dailymotion descargado con éxito: %s", downloaded[0])
+                    logger.info("✓ Clip HD de Dailymotion descargado: %s", downloaded[0])
                     return downloaded
                 else:
-                    logger.warning("yt-dlp sección falló para %s (rc=%d): %s", dm_url, res.returncode, (res.stderr or "")[:150])
-                    # Reintento sin download-sections si la sección falló
+                    logger.warning("yt-dlp sección falló para %s (rc=%d): %s", dm_url, res.returncode, (res.stderr or "")[:200])
+                    # Reintento sin download-sections (descarga completa)
                     cmd_dm_full = [
                         yt_dlp,
                         dm_url,
-                        "-f", "bestvideo[height>=720][height<=1080]+bestaudio/bestvideo[height<=1080]+bestaudio/bestvideo+bestaudio/best",
+                        "-f", fmt,
                         "--merge-output-format", "mp4",
                         "--no-playlist",
                         "-o", output_template,
+                        "--print", "%(width)sx%(height)s %(format_id)s",
                         "--no-warnings",
                     ]
-                    res_full = subprocess.run(cmd_dm_full, capture_output=True, text=True, timeout=90)
+                    res_full = subprocess.run(cmd_dm_full, capture_output=True, text=True, timeout=120)
+                    if res_full.stdout.strip():
+                        logger.info("Dailymotion full formato: %s", res_full.stdout.strip().split('\n')[0])
                     downloaded = [
                         os.path.join(output_dir, f)
                         for f in os.listdir(output_dir)
                         if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
                     ]
                     if downloaded:
-                        logger.info("✓ Clip completo de Dailymotion descargado con éxito: %s", downloaded[0])
+                        logger.info("✓ Clip completo HD de Dailymotion descargado: %s", downloaded[0])
                         return downloaded
             except Exception as e:
                 logger.warning("Aviso al descargar candidato Dailymotion %s: %s", dm_url, e)
