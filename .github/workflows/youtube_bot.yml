@@ -207,16 +207,13 @@ jobs:
                           "yt-dlp",
                           dm_target,
                           f"--download-sections=*{min(start_sec, 15)}-{min(start_sec, 15) + 58}",
-                          "-f", "bestvideo[height=1080]+bestaudio/bestvideo[height=720]+bestaudio/bestvideo[height>=720]+bestaudio/best[height>=720]/best",
+                          "-f", "bestvideo+bestaudio/best",
                           "--merge-output-format", "mp4",
                           "--no-playlist",
                           "-o", out,
-                          "--print", "%(width)sx%(height)s",
                           "--no-warnings",
                       ]
                       res_dm = subprocess.run(cmd_dm, capture_output=True, text=True, timeout=120)
-                      if res_dm.stdout.strip():
-                          print(f"  Dailymotion formato: {res_dm.stdout.strip().split(chr(10))[0]}")
                       if any(f.startswith(f"trend_{safe}_{ts}") for f in os.listdir("gta6/media/raw")):
                           print(f"  ✓ Clip dinámico descargado de Dailymotion con éxito")
                           downloaded_ok = True
@@ -226,17 +223,13 @@ jobs:
                           cmd_dm_full = [
                               "yt-dlp",
                               dm_target,
-                              "-f", "bestvideo[height=1080]+bestaudio/bestvideo[height=720]+bestaudio/bestvideo[height>=720]+bestaudio/best[height>=720]/best",
+                              "-f", "bestvideo+bestaudio/best",
                               "--merge-output-format", "mp4",
                               "--no-playlist",
                               "-o", out,
-                              "--print", "%(width)sx%(height)s",
                               "--no-warnings",
                           ]
                           r2 = subprocess.run(cmd_dm_full, capture_output=True, text=True, timeout=120)
-                          if r2.stdout.strip():
-                              print(f"  Dailymotion full formato: {r2.stdout.strip().split(chr(10))[0]}")
-                          subprocess.run(cmd_dm_full, capture_output=True, text=True, timeout=120)
                           if any(f.startswith(f"trend_{safe}_{ts}") for f in os.listdir("gta6/media/raw")):
                               print(f"  ✓ Clip completo descargado de Dailymotion con éxito")
                               downloaded_ok = True

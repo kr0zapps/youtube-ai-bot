@@ -350,8 +350,8 @@ def search_and_download_clip(
         dm_start = min(start_offset, 15)
         dm_end = dm_start + clip_duration
         for dm_url in dm_urls:
-            # Formato: preferir 1080p, luego 720p, nunca menos
-            fmt = "bestvideo[height=1080]+bestaudio/bestvideo[height=720]+bestaudio/bestvideo[height>=720]+bestaudio/best[height>=720]/best"
+            # Formato: mejor calidad disponible (1080p/720p HD nativo)
+            fmt = "bestvideo+bestaudio/best"
             cmd_dm = [
                 yt_dlp,
                 dm_url,
@@ -360,21 +360,17 @@ def search_and_download_clip(
                 "--merge-output-format", "mp4",
                 "--no-playlist",
                 "-o", output_template,
-                "--print", "%(width)sx%(height)s %(format_id)s",
                 "--no-warnings",
             ]
             try:
                 res = subprocess.run(cmd_dm, capture_output=True, text=True, timeout=120)
-                # Loguear resolución real descargada
-                if res.stdout.strip():
-                    logger.info("Dailymotion formato descargado: %s", res.stdout.strip().split('\n')[0])
                 downloaded = [
                     os.path.join(output_dir, f)
                     for f in os.listdir(output_dir)
                     if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
                 ]
                 if downloaded:
-                    logger.info("✓ Clip HD de Dailymotion descargado: %s", downloaded[0])
+                    logger.info("✓ Clip HD de Dailymotion descargado con éxito: %s (tamaño: %d bytes)", downloaded[0], os.path.getsize(downloaded[0]))
                     return downloaded
                 else:
                     logger.warning("yt-dlp sección falló para %s (rc=%d): %s", dm_url, res.returncode, (res.stderr or "")[:200])
@@ -386,19 +382,16 @@ def search_and_download_clip(
                         "--merge-output-format", "mp4",
                         "--no-playlist",
                         "-o", output_template,
-                        "--print", "%(width)sx%(height)s %(format_id)s",
                         "--no-warnings",
                     ]
                     res_full = subprocess.run(cmd_dm_full, capture_output=True, text=True, timeout=120)
-                    if res_full.stdout.strip():
-                        logger.info("Dailymotion full formato: %s", res_full.stdout.strip().split('\n')[0])
                     downloaded = [
                         os.path.join(output_dir, f)
                         for f in os.listdir(output_dir)
                         if f.startswith(f"raw_{safe_query}_{timestamp}") and f.endswith(".mp4")
                     ]
                     if downloaded:
-                        logger.info("✓ Clip completo HD de Dailymotion descargado: %s", downloaded[0])
+                        logger.info("✓ Clip completo HD de Dailymotion descargado: %s (tamaño: %d bytes)", downloaded[0], os.path.getsize(downloaded[0]))
                         return downloaded
             except Exception as e:
                 logger.warning("Aviso al descargar candidato Dailymotion %s: %s", dm_url, e)
