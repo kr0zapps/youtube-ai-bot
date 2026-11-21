@@ -239,8 +239,7 @@ def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
     clean_q = re.sub(r"-(trailer|cutscene|live|livestream|ending|mission)", "", query, flags=re.IGNORECASE)
     clean_q = re.sub(r"\s+", " ", clean_q).strip()
     encoded = urllib.parse.quote_plus(clean_q)
-    # Pedir max_height para filtrar solo videos HD (>=720p)
-    url = f"https://api.dailymotion.com/videos?search={encoded}&limit=20&fields=id,title,duration,max_height"
+    url = f"https://api.dailymotion.com/videos?search={encoded}&limit=20&fields=id,title,duration"
 
     results = []
     try:
@@ -251,25 +250,21 @@ def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
                 vid_id = item.get("id")
                 title = item.get("title", "")
                 dur = item.get("duration", 0)
-                max_h = item.get("max_height", 0) or 0
-                # Solo aceptar HD: mínimo 720p verificado por la API
-                if vid_id and dur >= 25 and max_h >= 720 and is_valid_gta6_title(title):
-                    logger.info("Dailymotion HD candidato: %s (%dp, %ds)", title[:60], max_h, dur)
+                if vid_id and dur >= 25 and is_valid_gta6_title(title):
                     results.append(f"https://www.dailymotion.com/video/{vid_id}")
     except Exception as e:
         logger.warning("Aviso en búsqueda Dailymotion: %s", e)
 
-    # Si la query específica no devolvió videos HD de GTA 6, usar fallbacks 4K/HD
     if not results:
         fallback_queries = [
-            "GTA 6 PS5 4K HDR Gameplay 1080p",
-            "Grand Theft Auto VI 1080p Gameplay",
-            "GTA 6 Lucia Jason 4k gameplay",
-            "GTA 6 next gen gameplay 4k 60fps",
+            "GTA 6 PS5 4K HDR Gameplay",
+            "Grand Theft Auto VI Gameplay",
+            "GTA 6 Lucia Jason gameplay",
+            "GTA 6 next gen gameplay 4k",
             "GTA VI Vice City HD gameplay"
         ]
         for fq in fallback_queries:
-            f_url = f"https://api.dailymotion.com/videos?search={urllib.parse.quote_plus(fq)}&limit=15&fields=id,title,duration,max_height"
+            f_url = f"https://api.dailymotion.com/videos?search={urllib.parse.quote_plus(fq)}&limit=15&fields=id,title,duration"
             try:
                 req = urllib.request.Request(f_url, headers={"User-Agent": "Mozilla/5.0"})
                 with urllib.request.urlopen(req, timeout=10) as resp:
@@ -278,8 +273,7 @@ def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
                         vid_id = item.get("id")
                         title = item.get("title", "")
                         dur = item.get("duration", 0)
-                        max_h = item.get("max_height", 0) or 0
-                        if vid_id and dur >= 25 and max_h >= 720 and is_valid_gta6_title(title):
+                        if vid_id and dur >= 25 and is_valid_gta6_title(title):
                             results.append(f"https://www.dailymotion.com/video/{vid_id}")
                         if len(results) >= max_results:
                             break
@@ -287,25 +281,6 @@ def find_dailymotion_video_urls(query: str, max_results: int = 5) -> List[str]:
                 pass
             if results:
                 break
-
-    # Último recurso: aceptar cualquier resolución si no hay nada HD
-    if not results:
-        logger.warning("No se encontraron videos HD en Dailymotion, bajando filtro a cualquier resolución")
-        any_q = f"https://api.dailymotion.com/videos?search={encoded}&limit=15&fields=id,title,duration,max_height"
-        try:
-            req = urllib.request.Request(any_q, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-                for item in data.get("list", []):
-                    vid_id = item.get("id")
-                    title = item.get("title", "")
-                    dur = item.get("duration", 0)
-                    max_h = item.get("max_height", 0) or 0
-                    if vid_id and dur >= 25 and is_valid_gta6_title(title):
-                        logger.warning("Aceptando video SD (%dp): %s", max_h, title[:60])
-                        results.append(f"https://www.dailymotion.com/video/{vid_id}")
-        except Exception:
-            pass
 
     return results[:max_results]
 
