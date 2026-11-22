@@ -56,8 +56,8 @@
 - [Google News] Todo el mundo está loco por tu vecina Mandy en GTA 6, pero esconde un oscuro secreto - VidaExtra — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQODhRempkZHE5aHVJV2gtX3dHb2FjaWc4dUswTH
 
 ## Tendencias Virales — 2026-11-22
-- [Fallback] Rockstar bloqueó los trucos clásicos en GTA 6 hasta terminar el juego — La comunidad de GTA 6 está enloquecida: Rockstar bloqueó todos los cheats hasta que termines la hist
-- [Fallback] Los NPCs de GTA 6 están haciendo cosas absurdas y nadie sabe por qué — El nuevo sistema de IA de los NPCs tiene comportamientos completamente impredecibles que se hacen vi
-- [Fallback] GTA 6 confundido con videos reales de Miami en redes sociales — Los gráficos fotorrealistas de GTA 6 están confundiendo a la gente en Twitter y TikTok.
-- [Fallback] Un caimán destruyó la lancha de un jugador en GTA 6 y el clip es viral — Un clip de un caimán atacando una lancha en los pantanos de Leonida se volvió viral en Reddit.
-- [Fallback] Streamer pierde 5 estrellas de forma ridícula en GTA 6 y el clip explota en TikTok — Un momento de un streamer huyendo de la policía de forma completamente caótica se hizo viral.
+- [Google News] El review bombing llega a GTA 6: los usuarios puntúan al juego de Rockstar con un 4 en Metacritic - Diario AS — <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxOekExdTJtZmYzRHJnV3o1LUdVeExTZFNRWURLWF
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] GTA 6: el negocio que es un fenómeno global - Ex-ante — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxOYWdwcEV2NDYzZ09NRVdpSGh4cWxCWXlTRWlZaU
+- [Google News] GTA 6: ¿Dónde están los clubs de striptease? +18 - Vandal — <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxQbUdERkpRV1U2TWZZekRpZTVFaS13UVB4MEVNT2
+- [Google News] El ejecutable para llevar GTA 6 a PC se libera este lunes y es la pieza que esperan los creadores de ports - Tarreo — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQMmhrZUtxUlp4endldTV2dFRPT1NlQkM2ZEJOUn
