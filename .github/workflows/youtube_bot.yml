@@ -260,6 +260,7 @@ jobs:
           file_pattern: |
             gta6/facts.md
             gta6/today_trends.json
+            gta6/media/used_trends.json
 
       - name: Guardar clips del día como artefacto
         uses: actions/upload-artifact@v4

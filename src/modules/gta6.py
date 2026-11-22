@@ -228,32 +228,29 @@ def run(
     logger.info("=== Iniciando pipeline GTA 6 — Pilar: %s ===", pillar.upper())
     os.makedirs(EDITS_DIR, exist_ok=True)
 
-    # 1. Cargar tendencias en vivo de las últimas 24 horas, hechos y borrador base
-    facts_context = load_verified_facts()
-    topic = select_topic_from_bank(pillar)
+    # 1. Cargar tendencias en vivo de las últimas 24 horas y actualizar facts.md
+    all_trends = trend_fetcher.fetch_live_trending_topics(max_topics=8)
+    trend_fetcher.save_facts_update(all_trends)
 
-    # Obtener EL tema más viral del día con su clip relacionado
-    top_trend = trend_fetcher.get_top_trending_topic()
+    # Obtener tema viral fresco para este video (rota y no repite los últimos usados)
+    top_trend = trend_fetcher.get_top_trending_topic(prefer_fresh=True)
     logger.info(
-        "Tendencia #1 del día: '%s' [%s] → clip: %s",
+        "Tendencia seleccionada para este video: '%s' [%s] → clip: %s",
         top_trend.get("title", ""),
         top_trend.get("source", ""),
         top_trend.get("clip_query", ""),
     )
 
-    # Actualizar facts.md con las noticias de hoy automáticamente
-    all_trends = trend_fetcher.fetch_live_trending_topics(max_topics=6)
-    trend_fetcher.save_facts_update(all_trends)
-
-    live_trends = trend_fetcher.get_live_context_for_prompt()
+    live_trends = trend_fetcher.get_live_context_for_prompt(selected_topic=top_trend)
 
     extra_context = (
         f"{live_trends}\n\n"
-        f"NOTICIA PRINCIPAL DE HOY:\n"
-        f"Título: {top_trend.get('title', '')}\n"
-        f"Detalle: {top_trend.get('detail', '')}\n\n"
-        f"HECHOS BASE (FACTS.MD):\n{facts_context[:600]}\n\n"
-        f"INSPIRACIÓN ADICIONAL:\n{topic['context']}"
+        f"HECHOS CONFIRMADOS:\n"
+        f"Grand Theft Auto VI está ambientado en el estado de Leonida (Vice City).\n"
+        f"Protagonistas oficiales: Lucía y Jason. Desarrollado por Rockstar Games.\n"
+        f"Plataformas: PlayStation 5 y Xbox Series X|S.\n"
+        f"ESTRICTAMENTE PROHIBIDO hablar de parches viejos (1.02, etc.), ni inventar datos técnicos aburridos. "
+        f"Comenta la noticia viral de hoy con emoción y en prosa continua."
     )
 
     # Guardar el clip_query y video_url del trending topic para usarlo como fondo

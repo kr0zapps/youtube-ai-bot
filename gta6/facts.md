@@ -48,10 +48,9 @@
 - [Google News] Briefly pausing my GTA 6 marathon to share my Max Weight, Low Muscle Jason. - Reddit — <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxORXFVaWdwTWNNdURyZUI2ZUdIYlVTTWxHLWhsQW
 - [Google News] Bugs found in GTA 6 just 3hrs after it's release :( - Reddit — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxQY1c1TUd2eGE0VW1fUmhVcGJoZG83NXltSEdCLX
 
-
 ## Tendencias Virales — 2026-11-21
-- [Google News] Rockstar actually hired Florida Joker to play his character in GTA 6, and he’s included in the credits. He’s part of the local population in the game and can be seen fighting another NPC in a social media clip, which led to his arrest. - X — <a href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBFOVJsWWdWdk0xNTVfRzhheDNjOTlGYzFXbEpXX0
-- [Google News] This is the most valid GTA crash out I’ve ever seen out of CaseOh 😭 - X — <a href="https://news.google.com/rss/articles/CBMiX0FVX3lxTFBQNExjMUtVbHdTdnRPQTlKaHRlVlpJNHlSWkxUWW
-- [Google News] A viral GTA 6 clip shows a unique animation that kicks in when you park too close to another car and try to get out. It's the little things that make Grand Theft Auto 6 feel so real. 🎥: neoxEFT / Reddit - X — <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE9FM1BOelRmNVZtVHNuQlNPMkFjTVl3M0xKck92UT
-- [Google News] CaseOh been my favorite GTA 6 streamer so far and it might not be close - X — <a href="https://news.google.com/rss/articles/CBMiX0FVX3lxTE5SZWotX0xKcVN3TWUxSlEyWmR3UlM5NEczMWxKTE
-- [Google News] Those viral GTA 6 clips of planes bouncing off skyscrapers aren't a bug. That's Reduced Vehicle Damage, an optional setting that's off by default. It sits next to Accessible Combat so tired, newer, and disabled players can get through the story. So the setting pe - X — <a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE4xaEE0YUIxN0o3QTBFQ3NXS2NpSkhzOGRkbzM5d2
+- [Google News] Guía completa de GTA 6: todos los trucos, secretos, coleccionables, trofeos, consejos y cómo conseguir el 100% - Diario AS — <a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxOOVVGUDVSR2paQ2d5ZEdjdlk3TlpYZWxtMEVvOF
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] GTA 6: Todas las misiones del Capítulo 1 y cómo completarlas - Vandal — <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxPOHJYQ1pFeWZRVVlLSGlWaHc1M3hDVTdaVXlydT
+- [Google News] Neuralink muestra a un paciente jugando GTA 6 con la mente: así lo hizo - La Tercera — <a href="https://news.google.com/rss/articles/CBMijAFBVV95cUxON1NXeVZIc3lxSjY4V0VFVzA0bEV0LU15NS1pNE
+- [Google News] Todo el mundo está loco por tu vecina Mandy en GTA 6, pero esconde un oscuro secreto - VidaExtra — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQODhRempkZHE5aHVJV2gtX3dHb2FjaWc4dUswTH

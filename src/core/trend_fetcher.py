@@ -9,6 +9,7 @@ Devuelve no solo el titular sino también:
  - El tono (gracioso, impactante, polémico, etc.)
 """
 
+import os
 import json
 import logging
 import random
@@ -30,12 +31,14 @@ REDDIT_FEEDS = [
 ]
 
 GOOGLE_NEWS_FEEDS = [
-    # Reddit posts virales de GTA 6 en las últimas 24 horas (vía Google News, sin bloqueos de IP)
-    "https://news.google.com/rss/search?q=GTA+6+site:reddit.com+when:1d&hl=en-US&gl=US&ceid=US:en",
-    # Memes virales, clips y reacciones en Twitter/X y streamers en las últimas 24 horas
-    "https://news.google.com/rss/search?q=GTA+6+(site:twitter.com+OR+site:x.com+OR+viral+OR+meme+OR+clip+OR+streamer)+when:1d&hl=en-US&gl=US&ceid=US:en",
     # Noticias y tendencias en español de las últimas 24 horas
-    "https://news.google.com/rss/search?q=GTA+6+(viral+OR+meme+OR+clip+OR+gameplay)+when:1d&hl=es-419&gl=CL&ceid=CL:es-419",
+    "https://news.google.com/rss/search?q=GTA+6+when:1d&hl=es-419&gl=CL&ceid=CL:es-419",
+    # Noticias globales y descubrimientos en inglés de las últimas 24 horas
+    "https://news.google.com/rss/search?q=GTA+6+when:1d&hl=en-US&gl=US&ceid=US:en",
+    # Secretos, bugs, easter eggs y descubrimientos de jugadores en las últimas 24 horas
+    "https://news.google.com/rss/search?q=GTA+6+(easter+egg+OR+secret+OR+discovery+OR+viral+OR+glitch)+when:1d&hl=en-US&gl=US&ceid=US:en",
+    # Curiosidades y novedades en español
+    "https://news.google.com/rss/search?q=GTA+6+(curiosidad+OR+secreto+OR+descubrimiento+OR+viral)+when:1d&hl=es-419&gl=CL&ceid=CL:es-419",
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -173,7 +176,7 @@ def _make_request(url: str, timeout: int = 10) -> Optional[bytes]:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return resp.read()
     except Exception as exc:
-        logger.warning("Error en request a %s: %s", url[:60], exc)
+        logger.debug("Error en request a %s: %s", url[:60], exc)
         return None
 
 
@@ -305,16 +308,16 @@ def fetch_live_trending_topics(max_topics: int = 8) -> List[Dict]:
     """
     all_topics = []
 
-    logger.info("Consultando Reddit por tendencias GTA 6 de las últimas 24h...")
-    reddit_topics = _fetch_reddit_topics()
-    all_topics.extend(reddit_topics)
-    logger.info("Reddit: %d posts virales encontrados", len(reddit_topics))
+    logger.info("Consultando Google News por tendencias y noticias GTA 6 de las últimas 24h...")
+    news_topics = _fetch_google_news_topics()
+    all_topics.extend(news_topics)
+    logger.info("Google News: %d noticias y tendencias encontradas", len(news_topics))
 
     if len(all_topics) < 4:
-        logger.info("Consultando Google News por tendencias GTA 6...")
-        news_topics = _fetch_google_news_topics()
-        all_topics.extend(news_topics)
-        logger.info("Google News: %d noticias encontradas", len(news_topics))
+        logger.info("Consultando Reddit por tendencias GTA 6 de las últimas 24h...")
+        reddit_topics = _fetch_reddit_topics()
+        all_topics.extend(reddit_topics)
+        logger.info("Reddit: %d posts virales encontrados", len(reddit_topics))
 
     # Deduplicar
     seen = set()
@@ -335,39 +338,89 @@ def fetch_live_trending_topics(max_topics: int = 8) -> List[Dict]:
     return unique
 
 
-def get_top_trending_topic() -> Dict:
-    """Devuelve EL tema más viral del momento con su clip_query asociada.
+USED_TRENDS_FILE = os.path.join("gta6", "media", "used_trends.json")
 
-    Usado por gta6.py para elegir de qué hablar HOY y qué clip poner de fondo.
+
+def load_used_trends() -> List[str]:
+    """Carga los títulos de tendencias ya usados para no repetir el mismo tema."""
+    if os.path.exists(USED_TRENDS_FILE):
+        try:
+            with open(USED_TRENDS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
+
+
+def mark_trend_as_used(title: str) -> None:
+    """Registra una tendencia como usada."""
+    used = load_used_trends()
+    clean_t = title.strip()[:60]
+    if clean_t and clean_t not in used:
+        used.append(clean_t)
+    if len(used) > 40:
+        used = used[-40:]
+    try:
+        os.makedirs(os.path.dirname(USED_TRENDS_FILE), exist_ok=True)
+        with open(USED_TRENDS_FILE, "w", encoding="utf-8") as f:
+            json.dump(used, f, indent=2, ensure_ascii=False)
+    except Exception:
+        pass
+
+
+def get_top_trending_topic(prefer_fresh: bool = True) -> Dict:
+    """Devuelve un tema viral del momento con su clip_query asociada.
+
+    Si prefer_fresh=True, rota entre los temas disponibles evitando repetir
+    los que ya se usaron en las últimas publicaciones.
     """
-    topics = fetch_live_trending_topics(max_topics=8)
-    return topics[0] if topics else random.choice(FALLBACK_TOPICS)
+    topics = fetch_live_trending_topics(max_topics=10)
+    if not topics:
+        return random.choice(FALLBACK_TOPICS)
+
+    if prefer_fresh:
+        used = load_used_trends()
+        unused = [t for t in topics if t.get("title", "")[:60] not in used]
+        if unused:
+            chosen = unused[0]
+            mark_trend_as_used(chosen["title"])
+            return chosen
+
+    chosen = topics[0]
+    mark_trend_as_used(chosen.get("title", ""))
+    return chosen
 
 
-def get_live_context_for_prompt() -> str:
+def get_live_context_for_prompt(selected_topic: Optional[Dict] = None) -> str:
     """Genera el bloque de contexto para inyectar en el prompt de la IA."""
     topics = fetch_live_trending_topics(max_topics=6)
     if not topics:
         return ""
 
+    target_title = selected_topic.get("title", "") if selected_topic else topics[0]["title"]
+    target_detail = selected_topic.get("detail", "") if selected_topic else topics[0].get("detail", "")
+
     lines = [
         "═══════════════════════════════════════════════════",
-        "TENDENCIAS, MEMES Y NOTICIAS VIRALES DE HOY (ÚLTIMAS 24H):",
-        "═══════════════════════════════════════════════════",
+        "NOTICIA O TENDENCIA OBLIGATORIA A COMENTAR HOY:",
+        f"TITULAR: {target_title}",
     ]
-    for i, t in enumerate(topics, 1):
+    if target_detail:
+        lines.append(f"DETALLES CLAVE: {target_detail}")
+    lines.extend([
+        "═══════════════════════════════════════════════════",
+        "OTRAS TENDENCIAS DE HOY (CONTEXTO ADICIONAL):",
+    ])
+    for i, t in enumerate(topics[:5], 1):
         source_label = f"[{t.get('source', 'Web')}]"
         lines.append(f"{i}. {source_label} {t['title']}")
-        if t.get("detail"):
-            lines.append(f"   → Detalle: {t['detail'][:150]}")
 
-    lines += [
+    lines.extend([
         "═══════════════════════════════════════════════════",
-        "INSTRUCCIÓN CRÍTICA: El guión DEBE basarse en la tendencia #1 de arriba.",
-        "Habla de lo que realmente está pasando en internet HOY sobre GTA 6.",
-        "No inventes, no generalices. Comenta la noticia/meme EXACTO del día.",
+        "INSTRUCCIÓN SAGRADA: Tu guión DEBE tratar exclusivamente sobre el TITULAR principal de arriba.",
+        "Cero menciones a parches viejos (1.02, etc.), ni tráilers antiguos. Todo enfocado en la noticia fresca de hoy.",
         "═══════════════════════════════════════════════════",
-    ]
+    ])
 
     return "\n".join(lines)
 
@@ -389,10 +442,6 @@ def save_facts_update(topics: List[Dict], facts_path: str = "gta6/facts.md") -> 
             with open(facts_path, "r", encoding="utf-8-sig") as f:
                 existing = f.read()
 
-        if date_header in existing:
-            logger.info("facts.md ya tiene tendencias de hoy.")
-            return
-
         section = f"\n\n{date_header}\n"
         for t in topics[:5]:
             section += f"- [{t.get('source', 'Web')}] {t['title']}"
@@ -400,8 +449,22 @@ def save_facts_update(topics: List[Dict], facts_path: str = "gta6/facts.md") -> 
                 section += f" — {t['detail'][:100]}"
             section += "\n"
 
+        if date_header in existing:
+            # Reemplazar la sección de hoy con las tendencias más recientes
+            parts = existing.split(date_header)
+            # Conservar lo anterior y reescribir la sección de hoy
+            next_header_idx = parts[1].find("\n## ")
+            after = parts[1][next_header_idx:] if next_header_idx != -1 else ""
+            updated = parts[0].rstrip() + section.rstrip() + after
+            with open(facts_path, "w", encoding="utf-8") as f:
+                f.write(updated)
+            logger.info("✓ facts.md refrescado con las últimas tendencias de hoy.")
+            return
+
         with open(facts_path, "a", encoding="utf-8") as f:
             f.write(section)
         logger.info("✓ facts.md actualizado con %d tendencias de hoy.", len(topics[:5]))
+    except Exception as exc:
+        logger.warning("No se pudo actualizar facts.md: %s", exc)
     except Exception as exc:
         logger.warning("No se pudo actualizar facts.md: %s", exc)
