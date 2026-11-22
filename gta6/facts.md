@@ -54,3 +54,10 @@
 - [Google News] GTA 6: Todas las misiones del Capítulo 1 y cómo completarlas - Vandal — <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxPOHJYQ1pFeWZRVVlLSGlWaHc1M3hDVTdaVXlydT
 - [Google News] Neuralink muestra a un paciente jugando GTA 6 con la mente: así lo hizo - La Tercera — <a href="https://news.google.com/rss/articles/CBMijAFBVV95cUxON1NXeVZIc3lxSjY4V0VFVzA0bEV0LU15NS1pNE
 - [Google News] Todo el mundo está loco por tu vecina Mandy en GTA 6, pero esconde un oscuro secreto - VidaExtra — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQODhRempkZHE5aHVJV2gtX3dHb2FjaWc4dUswTH
+
+## Tendencias Virales — 2026-11-22
+- [Google News] Guía completa de GTA 6: todos los trucos, secretos, coleccionables, trofeos, consejos y cómo conseguir el 100% - Diario AS — <a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxOOVVGUDVSR2paQ2d5ZEdjdlk3TlpYZWxtMEVvOF
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] GTA 6: Todas las misiones del Capítulo 1 y cómo completarlas - Vandal — <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxPOHJYQ1pFeWZRVVlLSGlWaHc1M3hDVTdaVXlydT
+- [Google News] Neuralink muestra a un paciente jugando GTA 6 con la mente: así lo hizo - La Tercera — <a href="https://news.google.com/rss/articles/CBMijAFBVV95cUxON1NXeVZIc3lxSjY4V0VFVzA0bEV0LU15NS1pNE
+- [Google News] Todo el mundo está loco por tu vecina Mandy en GTA 6, pero esconde un oscuro secreto - VidaExtra — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQODhRempkZHE5aHVJV2gtX3dHb2FjaWc4dUswTH
