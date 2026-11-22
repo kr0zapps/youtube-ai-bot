@@ -56,8 +56,8 @@
 - [Google News] Todo el mundo está loco por tu vecina Mandy en GTA 6, pero esconde un oscuro secreto - VidaExtra — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQODhRempkZHE5aHVJV2gtX3dHb2FjaWc4dUswTH
 
 ## Tendencias Virales — 2026-11-22
-- [Google News] Cómo activar el modo en primera persona en GTA 6 mediante un glitch: así puedes cambiar la cámara a la perspec - Diario AS — <a href="https://news.google.com/rss/articles/CBMiggJBVV95cUxOaXNSSjNUSHZPeVBEcUpTRDZtaERFWkktWmpVen
-- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] GTA 6 muestra unas réplicas de Nike que van mucho más allá de las clásicas Air Force 1 - GQ España — <a href="https://news.google.com/rss/articles/CBMibkFVX3lxTE9UVXlwTDdWbXhSTTlLdUhRNFVUWHBPeXhpZWxOUV
 - [Google News] GTA 6: Todas las misiones del Capítulo 1 y cómo completarlas - Vandal — <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxPOHJYQ1pFeWZRVVlLSGlWaHc1M3hDVTdaVXlydT
-- [Google News] Leonida, la recompilación de GTA 6 para PC: 26.503 shaders - El Ecosistema Startup — <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxNTGxqWDhRYzRobFlFV0c1dlhQa18wenlzSXR3OG
+- [Google News] CyberLeek libera 209 GB de GTA 6 para Xbox y promete el ejecutable para el 23 de noviembre, tras una supuesta filtración - Tarreo — <a href="https://news.google.com/rss/articles/CBMihwFBVV95cUxQTlhxdWE5WEg1czNCdlM3djdhNVY2VEtVNTlUb2
+- [Google News] Lista de todas las misiones principales de historia y capítulos de GTA 6 - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxOUGpUTl9DR2R5RTJGMlBfU2xmbFZ4TkhPZzZVam
+- [Google News] El nuevo GTA VI: la historia de los hermanos que construyeron un imperio de US$ 14.000 millones - Forbes Argentina — <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxQQWVJLTBWUzA3aEg5WU9OQmhfSGF2RGRra04xaj
+- [Google News] GTA VI rompe récord: US$3.790 millones en un día - El Ecosistema Startup — <a href="https://news.google.com/rss/articles/CBMigwFBVV95cUxOdTV3M1B0Y2xuTjNpckl5V1ZSbTREUWl0eG1GUz
