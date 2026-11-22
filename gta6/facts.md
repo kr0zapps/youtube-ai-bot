@@ -56,8 +56,8 @@
 - [Google News] Todo el mundo está loco por tu vecina Mandy en GTA 6, pero esconde un oscuro secreto - VidaExtra — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQODhRempkZHE5aHVJV2gtX3dHb2FjaWc4dUswTH
 
 ## Tendencias Virales — 2026-11-22
-- [Google News] El review bombing llega a GTA 6: los usuarios puntúan al juego de Rockstar con un 4 en Metacritic - Diario AS — <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxOekExdTJtZmYzRHJnV3o1LUdVeExTZFNRWURLWF
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] El review bombing llega a GTA 6: los usuarios puntúan al juego de Rockstar con un 4 en Metacritic - Diario AS — <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxOekExdTJtZmYzRHJnV3o1LUdVeExTZFNRWURLWF
 - [Google News] GTA 6: el negocio que es un fenómeno global - Ex-ante — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxOYWdwcEV2NDYzZ09NRVdpSGh4cWxCWXlTRWlZaU
-- [Google News] GTA 6: ¿Dónde están los clubs de striptease? +18 - Vandal — <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxQbUdERkpRV1U2TWZZekRpZTVFaS13UVB4MEVNT2
 - [Google News] El ejecutable para llevar GTA 6 a PC se libera este lunes y es la pieza que esperan los creadores de ports - Tarreo — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQMmhrZUtxUlp4endldTV2dFRPT1NlQkM2ZEJOUn
+- [Google News] GTA 6: ¿Dónde están los clubs de striptease? +18 - Vandal — <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxQbUdERkpRV1U2TWZZekRpZTVFaS13UVB4MEVNT2
