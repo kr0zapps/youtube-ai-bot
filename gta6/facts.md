@@ -58,6 +58,6 @@
 ## Tendencias Virales — 2026-11-22
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 - [Google News] El review bombing llega a GTA 6: los usuarios puntúan al juego de Rockstar con un 4 en Metacritic - Diario AS — <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxOekExdTJtZmYzRHJnV3o1LUdVeExTZFNRWURLWF
-- [Google News] GTA 6: el negocio que es un fenómeno global - Ex-ante — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxOYWdwcEV2NDYzZ09NRVdpSGh4cWxCWXlTRWlZaU
-- [Google News] GTA 6: Todas las misiones del Capítulo 1 y cómo completarlas - Vandal — <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxPOHJYQ1pFeWZRVVlLSGlWaHc1M3hDVTdaVXlydT
+- [Google News] Guía GTA 6: Historia, secretos y coleccionables - (Actualizada) - Vandal - Vandal — <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxPbzRLYW1GbWNZSTluTTA0U0hmYkxCNjhxbjRpcn
+- [Google News] [Valor Agregado] GTA 6: el negocio que convirtió un videojuego en un fenómeno global. Por Ignacia Munita - Ex-ante — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxOYWdwcEV2NDYzZ09NRVdpSGh4cWxCWXlTRWlZaU
 - [Google News] El ejecutable para llevar GTA 6 a PC se libera este lunes y es la pieza que esperan los creadores de ports - Tarreo — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQMmhrZUtxUlp4endldTV2dFRPT1NlQkM2ZEJOUn
