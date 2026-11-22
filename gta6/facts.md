@@ -56,8 +56,8 @@
 - [Google News] Todo el mundo está loco por tu vecina Mandy en GTA 6, pero esconde un oscuro secreto - VidaExtra — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQODhRempkZHE5aHVJV2gtX3dHb2FjaWc4dUswTH
 
 ## Tendencias Virales — 2026-11-22
-- [Google News] GTA 6: Todas las misiones del Capítulo 1 y cómo completarlas - Vandal — <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxPOHJYQ1pFeWZRVVlLSGlWaHc1M3hDVTdaVXlydT
-- [Google News] CyberLeek libera 209 GB de GTA 6 para Xbox y promete el ejecutable para el 23 de noviembre, tras una supuesta filtración - Tarreo — <a href="https://news.google.com/rss/articles/CBMihwFBVV95cUxQTlhxdWE5WEg1czNCdlM3djdhNVY2VEtVNTlUb2
-- [Google News] Lista de todas las misiones principales de historia y capítulos de GTA 6 - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxOUGpUTl9DR2R5RTJGMlBfU2xmbFZ4TkhPZzZVam
-- [Google News] El nuevo GTA VI: la historia de los hermanos que construyeron un imperio de US$ 14.000 millones - Forbes Argentina — <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxQQWVJLTBWUzA3aEg5WU9OQmhfSGF2RGRra04xaj
-- [Google News] GTA VI rompe récord: US$3.790 millones en un día - El Ecosistema Startup — <a href="https://news.google.com/rss/articles/CBMigwFBVV95cUxOdTV3M1B0Y2xuTjNpckl5V1ZSbTREUWl0eG1GUz
+- [Fallback] Rockstar bloqueó los trucos clásicos en GTA 6 hasta terminar el juego — La comunidad de GTA 6 está enloquecida: Rockstar bloqueó todos los cheats hasta que termines la hist
+- [Fallback] Los NPCs de GTA 6 están haciendo cosas absurdas y nadie sabe por qué — El nuevo sistema de IA de los NPCs tiene comportamientos completamente impredecibles que se hacen vi
+- [Fallback] GTA 6 confundido con videos reales de Miami en redes sociales — Los gráficos fotorrealistas de GTA 6 están confundiendo a la gente en Twitter y TikTok.
+- [Fallback] Un caimán destruyó la lancha de un jugador en GTA 6 y el clip es viral — Un clip de un caimán atacando una lancha en los pantanos de Leonida se volvió viral en Reddit.
+- [Fallback] Streamer pierde 5 estrellas de forma ridícula en GTA 6 y el clip explota en TikTok — Un momento de un streamer huyendo de la policía de forma completamente caótica se hizo viral.
