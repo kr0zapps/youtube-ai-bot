@@ -63,8 +63,8 @@
 - [Google News] El ejecutable para llevar GTA 6 a PC se libera este lunes y es la pieza que esperan los creadores de ports - Tarreo — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQMmhrZUtxUlp4endldTV2dFRPT1NlQkM2ZEJOUn
 
 ## Tendencias Virales — 2026-11-23
+- [Google News] Ranking GTA 6: los 10 gameplays más vistos tras su estreno y los streamers que rompieron récords - El Observatodo — <a href="https://news.google.com/rss/articles/CBMiyAFBVV95cUxOQTgyTEpoY01Oa1B3X0l5WnZXaktPU3ZuUlZYOW
+- [Google News] Todos los videojuegos a los que puedes jugar dentro de GTA 6: ubicaciones y en qué consiste cada uno de ellos - Diario AS — <a href="https://news.google.com/rss/articles/CBMi7wFBVV95cUxNX2FSVnRQMWtqWGVtNDNmUmlMUzBKY3c5S2VsUz
+- [Google News] GTA 6 sufre un 'review bombing' masivo: miles de jugadores hunden su nota en Metacritic pese al 99 de la crítica - Vandal — <a href="https://news.google.com/rss/articles/CBMi6wFBVV95cUxQNXVSQVBBSkpZNmRpbXNndkR0TkpPd1BjNEtFLW
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] Bad Bunny tendrá su propia estación de radio en GTA VI: conoce cuáles son las otras emisoras del videojuego - Univision — <a href="https://news.google.com/rss/articles/CBMi2gFBVV95cUxObWE5dS1QY0Jldy1vUjJmQTZ2eFNrUU1LUkxyNU
-- [Google News] El nuevo GTA VI: la historia de los hermanos que construyeron un imperio de US$ 14.000 millones - Forbes Argentina — <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxQQWVJLTBWUzA3aEg5WU9OQmhfSGF2RGRra04xaj
-- [Google News] GTA VI PC: cuándo sale, Steam y requisitos oficiales - DUPLOS.CL — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxNMTZWcm9LTkxVbVR3a2c3bWhUSGg3akp5Sk1JQ2
-- [Google News] GTA VI: el videojuego que tiene el mundo paralizado - Telemundo — <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxNazNZTGJacGhfMWJHUUlFMWlydVJyb2FTUmpYOX
+- [Google News] GTA 6: perfilado psicológico de jugadores sin pruebas - El Ecosistema Startup — <a href="https://news.google.com/rss/articles/CBMiiwFBVV95cUxPWXRsR3R0dmd4RmY4VEhMR0lONDhueThGZEJub1
