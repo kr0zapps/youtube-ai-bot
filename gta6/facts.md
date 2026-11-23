@@ -63,8 +63,8 @@
 - [Google News] El ejecutable para llevar GTA 6 a PC se libera este lunes y es la pieza que esperan los creadores de ports - Tarreo — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQMmhrZUtxUlp4endldTV2dFRPT1NlQkM2ZEJOUn
 
 ## Tendencias Virales — 2026-11-23
-- [Google News] GTA 6 recibe su primer parche tras el lanzamiento - IGN España — <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxPRjB3RkR5VlpKOWdFM2xmcGlkRHBxdUhVbi1jMX
-- [Google News] ¡Nueva actualización para GTA 6! Rockstar lanza hoy un nuevo parche y esto es lo que ocupa en PS5 - Vandal — <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxPbnUxOWozc2doSTQ3UElSNlZwT2Y0SHNfU1JGTl
-- [Google News] GTA VI logra 99 en Metacritic: es el juego mejor evaluado de la historia - La Tercera — <a href="https://news.google.com/rss/articles/CBMiuAFBVV95cUxPckQ5MWxwcVhIR2lTRDdYRUhJTFhycUtPSUFoTX
+- [Google News] Ojo, porque GTA 6 ya tiene su primer parche: todo lo que cambia en la actualización de Vice City en PS5 y Xbox Series - VidaExtra — <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxPYllnb2RzVXJOWlQ3eGxJa0E4Wm55VV9IU0FsOT
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] GTA VI ya tiene su primer parche, pero igual tienes que esperar para poder instalarlo - HardZone — <a href="https://news.google.com/rss/articles/CBMihwFBVV95cUxNWlFCcklOakVUaUkwMTRTVWdvRG1CQm1DX2tJdW
+- [Google News] GTA 6 se actualiza en PS5 y XBOX Series X|S, ¿qué novedades incluye y cuánto pesa la versión 1.002.002 del juego de Rockstar? - LEVELUP — <a href="https://news.google.com/rss/articles/CBMi6AFBVV95cUxNWEE5V0Y1ejI4cXJwQnFNYXd6SkpVTjJIQ0VQY3
+- [Google News] Conseguir GTA 6 al 100%: todos los requisitos y actividades para completar el juego - Diario AS — <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxPZ1dycjFFbVpUbm8tN2JYS0NIUGNOOGV6VldzZW
+- [Google News] Rockstar actualiza GTA 6: ¿Qué cambia exactamente en el nuevo parche 01.002.002? - Vandal — <a href="https://news.google.com/rss/articles/CBMi1AFBVV95cUxNWDBpeUZGN2Z0ak4yUktqMEdQblcwdDYxcTRsME
