@@ -63,8 +63,8 @@
 - [Google News] El ejecutable para llevar GTA 6 a PC se libera este lunes y es la pieza que esperan los creadores de ports - Tarreo — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQMmhrZUtxUlp4endldTV2dFRPT1NlQkM2ZEJOUn
 
 ## Tendencias Virales — 2026-11-23
-- [Google News] Ojo, porque GTA 6 ya tiene su primer parche: todo lo que cambia en la actualización de Vice City en PS5 y Xbox Series - VidaExtra — <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxPYllnb2RzVXJOWlQ3eGxJa0E4Wm55VV9IU0FsOT
+- [Google News] Las 8 mejores cosas que hacer nada más empezar en GTA 6 - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE5TeW8wd1pKQ1FVZFZIQ1pEakhVdEFiNzVpY2tzcW
+- [Google News] Guía completa de GTA 6: todos los trucos, secretos, coleccionables, trofeos, consejos y cómo conseguir el 100% - Diario AS — <a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxOOVVGUDVSR2paQ2d5ZEdjdlk3TlpYZWxtMEVvOF
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] Ojo, porque GTA 6 ya tiene su primer parche: todo lo que cambia en la actualización de Vice City en PS5 y Xbox Series - VidaExtra — <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxPYllnb2RzVXJOWlQ3eGxJa0E4Wm55VV9IU0FsOT
 - [Google News] GTA 6 se actualiza en PS5 y XBOX Series X|S, ¿qué novedades incluye y cuánto pesa la versión 1.002.002 del juego de Rockstar? - LEVELUP — <a href="https://news.google.com/rss/articles/CBMi6AFBVV95cUxNWEE5V0Y1ejI4cXJwQnFNYXd6SkpVTjJIQ0VQY3
-- [Google News] Conseguir GTA 6 al 100%: todos los requisitos y actividades para completar el juego - Diario AS — <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxPZ1dycjFFbVpUbm8tN2JYS0NIUGNOOGV6VldzZW
-- [Google News] Rockstar actualiza GTA 6: ¿Qué cambia exactamente en el nuevo parche 01.002.002? - Vandal — <a href="https://news.google.com/rss/articles/CBMi1AFBVV95cUxNWDBpeUZGN2Z0ak4yUktqMEdQblcwdDYxcTRsME
