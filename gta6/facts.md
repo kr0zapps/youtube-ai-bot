@@ -64,7 +64,7 @@
 
 ## Tendencias Virales — 2026-11-23
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] Bad Bunny tendrá su propia estación de radio en GTA VI: conoce cuáles son las otras emisoras del videojuego - Univision — <a href="https://news.google.com/rss/articles/CBMi2gFBVV95cUxObWE5dS1QY0Jldy1vUjJmQTZ2eFNrUU1LUkxyNU
 - [Google News] GTA VI para PC: qué se sabe del lanzamiento, Steam y requisitos tras su estreno en consolas - DUPLOS.CL — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxNMTZWcm9LTkxVbVR3a2c3bWhUSGg3akp5Sk1JQ2
+- [Google News] El nuevo GTA VI: la historia de los hermanos que construyeron un imperio de US$ 14.000 millones - Forbes Argentina — <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxQQWVJLTBWUzA3aEg5WU9OQmhfSGF2RGRra04xaj
 - [Google News] El review bombing llega a GTA 6: los usuarios puntúan al juego de Rockstar con un 4 en Metacritic - Diario AS — <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxOekExdTJtZmYzRHJnV3o1LUdVeExTZFNRWURLWF
-- [Google News] Guía GTA 6: Historia, secretos y coleccionables - (Actualizada) - Vandal - Vandal — <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxPbzRLYW1GbWNZSTluTTA0U0hmYkxCNjhxbjRpcn
-- [Google News] [Valor Agregado] GTA 6: el negocio que convirtió un videojuego en un fenómeno global. Por Ignacia Munita - Ex-ante — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxOYWdwcEV2NDYzZ09NRVdpSGh4cWxCWXlTRWlZaU
