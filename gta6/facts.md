@@ -63,8 +63,8 @@
 - [Google News] El ejecutable para llevar GTA 6 a PC se libera este lunes y es la pieza que esperan los creadores de ports - Tarreo — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQMmhrZUtxUlp4endldTV2dFRPT1NlQkM2ZEJOUn
 
 ## Tendencias Virales — 2026-11-23
-- [Google News] Ranking GTA 6: los 10 gameplays más vistos tras su estreno y los streamers que rompieron récords - El Observatodo — <a href="https://news.google.com/rss/articles/CBMiyAFBVV95cUxOQTgyTEpoY01Oa1B3X0l5WnZXaktPU3ZuUlZYOW
-- [Google News] Todos los videojuegos a los que puedes jugar dentro de GTA 6: ubicaciones y en qué consiste cada uno de ellos - Diario AS — <a href="https://news.google.com/rss/articles/CBMi7wFBVV95cUxNX2FSVnRQMWtqWGVtNDNmUmlMUzBKY3c5S2VsUz
-- [Google News] GTA 6 sufre un 'review bombing' masivo: miles de jugadores hunden su nota en Metacritic pese al 99 de la crítica - Vandal — <a href="https://news.google.com/rss/articles/CBMi6wFBVV95cUxQNXVSQVBBSkpZNmRpbXNndkR0TkpPd1BjNEtFLW
+- [Google News] GTA 6 recibe su primer parche tras el lanzamiento - IGN España — <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxPRjB3RkR5VlpKOWdFM2xmcGlkRHBxdUhVbi1jMX
+- [Google News] ¡Nueva actualización para GTA 6! Rockstar lanza hoy un nuevo parche y esto es lo que ocupa en PS5 - Vandal — <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxPbnUxOWozc2doSTQ3UElSNlZwT2Y0SHNfU1JGTl
+- [Google News] GTA VI logra 99 en Metacritic: es el juego mejor evaluado de la historia - La Tercera — <a href="https://news.google.com/rss/articles/CBMiuAFBVV95cUxPckQ5MWxwcVhIR2lTRDdYRUhJTFhycUtPSUFoTX
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] GTA 6: perfilado psicológico de jugadores sin pruebas - El Ecosistema Startup — <a href="https://news.google.com/rss/articles/CBMiiwFBVV95cUxPWXRsR3R0dmd4RmY4VEhMR0lONDhueThGZEJub1
+- [Google News] GTA VI ya tiene su primer parche, pero igual tienes que esperar para poder instalarlo - HardZone — <a href="https://news.google.com/rss/articles/CBMihwFBVV95cUxNWlFCcklOakVUaUkwMTRTVWdvRG1CQm1DX2tJdW
