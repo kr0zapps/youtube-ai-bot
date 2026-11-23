@@ -64,7 +64,7 @@
 
 ## Tendencias Virales — 2026-11-23
 - [Google News] Las 8 mejores cosas que hacer nada más empezar en GTA 6 - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE5TeW8wd1pKQ1FVZFZIQ1pEakhVdEFiNzVpY2tzcW
-- [Google News] Guía completa de GTA 6: todos los trucos, secretos, coleccionables, trofeos, consejos y cómo conseguir el 100% - Diario AS — <a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxOOVVGUDVSR2paQ2d5ZEdjdlk3TlpYZWxtMEVvOF
-- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 - [Google News] Ojo, porque GTA 6 ya tiene su primer parche: todo lo que cambia en la actualización de Vice City en PS5 y Xbox Series - VidaExtra — <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxPYllnb2RzVXJOWlQ3eGxJa0E4Wm55VV9IU0FsOT
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 - [Google News] GTA 6 se actualiza en PS5 y XBOX Series X|S, ¿qué novedades incluye y cuánto pesa la versión 1.002.002 del juego de Rockstar? - LEVELUP — <a href="https://news.google.com/rss/articles/CBMi6AFBVV95cUxNWEE5V0Y1ejI4cXJwQnFNYXd6SkpVTjJIQ0VQY3
+- [Google News] ‘GTA 6’: ¿quién es Mandy y por qué los jugadores están obsesionados con el personaje no jugable? - Independent en Español — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPZGhaOEMtOVJsZk9IMldFR1YwbDRDWEtLSmpRR0
