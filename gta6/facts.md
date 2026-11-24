@@ -70,8 +70,8 @@
 - [Google News] Sylvia Villagrán y el talento latino detrás de GTA 6: así fue poner la voz en el videojuego más esperado del mundo - CNN en Español — <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxPOTZ4X3FJMDJFSzR3aXpkV3JwRExuSFdPWkpqdV
 
 ## Tendencias Virales — 2026-11-24
+- [Google News] Guía completa de GTA 6: todos los trucos, secretos, coleccionables, trofeos, consejos y cómo conseguir el 100% - Diario AS — <a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxOOVVGUDVSR2paQ2d5ZEdjdlk3TlpYZWxtMEVvOF
 - [Google News] Cómo encontrar al asesino en serie en GTA 6 - dónde están los turistas desaparecidos en Gellhorn - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMikgFBVV95cUxPcUt3RDI4ZUVkSjRvaE5YVDZWN09SamMycG1FdD
 - [Google News] GTA 6: ¿Cuándo la pasión por los videojuegos se vuelve adicción? - www.diarioeldia.cl — <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxObFh5RXF0TnBiR0c1Zk1hQ0pwNHFLXzh1LThfdU
 - [Google News] Rockstar va contra la versión no oficial de GTA 6 para PC y acaba de dar un duro golpe a su desarrollo - LEVELUP — <a href="https://news.google.com/rss/articles/CBMi0gFBVV95cUxOTkpwcFk2aXY2S3U3ZmR2YjFLSDVjQld0ajZqc1
 - [Google News] En qué quedamos, ¿GTA 6 es un éxito o un fracaso? Hablemos de la opinión de los fans - IGN España — <a href="https://news.google.com/rss/articles/CBMixgFBVV95cUxPLUxBaGxWV3o3TllsWnJYa2ZleHJ6QThZalZhT2
-- [Google News] La comunidad trabaja para llevar GTA 6 a PC desde la versión para Xbox antes de su lanzamiento oficial - Geeknetic — <a href="https://news.google.com/rss/articles/CBMi3wFBVV95cUxNM0tHLVZpQVdfLUpfUTNaQkhnMWdxczRqQm8wWU
