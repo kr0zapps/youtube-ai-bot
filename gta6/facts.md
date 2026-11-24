@@ -71,7 +71,7 @@
 
 ## Tendencias Virales — 2026-11-24
 - [Google News] Ajustes para GTA 6: las opciones que deberías cambiar primero en PS5 y Xbox - Red Bull — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE10enhMUVhwdVJOVVNZZkhlSXdlWHgtZmlVeUNSTG
-- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] GTA 6 arranca en PC por primera vez hasta sus pantallas de carga, y quien publicó el video asegura que entrar al juego es cuestión de horas - Tarreo — <a href="https://news.google.com/rss/articles/CBMie0FVX3lxTE02dFk5d2ZaUEt1Yy1wTnZlM3lwbzlsNWdtUktTUE
+- [Google News] Leonida, el port para PC de GTA 6, desaparece de GitHub y Discord, y su creador se retira asegurando que Rockstar bajó su servidor - Tarreo — <a href="https://news.google.com/rss/articles/CBMiiwFBVV95cUxQRkMzN0NmMUc0eGtVVGp1am4wUXNkbzRoOEpyWX
 - [Google News] Guía completa de la historia de GTA 6: todas las misiones del capítulo 1 - En el paraíso - Diario AS — <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxOQThRTGF2V09CMzU5NmhPamYtQ3NEQWVNU1QtSG
+- [Google News] Lista de todas las misiones principales de historia y capítulos de GTA 6 - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxOUGpUTl9DR2R5RTJGMlBfU2xmbFZ4TkhPZzZVam
 - [Google News] GTA 6 para PC da sus primeras señales de vida y ya muestra las Pantallas de Carga y Configuración - PC Master Race Latinoamérica — <a href="https://news.google.com/rss/articles/CBMif0FVX3lxTFBwOWFYWlJuTDl5eElFS1ZpY1ZqMGJxTmJISXg5ZG
