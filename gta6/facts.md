@@ -72,6 +72,6 @@
 ## Tendencias Virales — 2026-11-24
 - [Google News] Las 8 mejores cosas que hacer nada más empezar en GTA 6 - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE5TeW8wd1pKQ1FVZFZIQ1pEakhVdEFiNzVpY2tzcW
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] Ojo, porque GTA 6 ya tiene su primer parche: todo lo que cambia en la actualización de Vice City en PS5 y Xbox Series - VidaExtra — <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxPYllnb2RzVXJOWlQ3eGxJa0E4Wm55VV9IU0FsOT
-- [Google News] Estafas con el lanzamiento del videojuego GTA 6: en qué consisten y cómo evitarlas - Mala Espina — <a href="https://news.google.com/rss/articles/CBMizwFBVV95cUxNeUFYUkE0LUdvYzBFdFo3aW85ek0zdE5DNDd0ZW
-- [Google News] "Les hizo un bien increíble": Residencia de adultos mayores cambió las cartas por el GTA VI - Teletrece — <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxNd1JyWUZ4V3JxVG5JaE5ZV2I0M1E4cXl5UUNMMH
+- [Google News] GTA 6 arranca en PC por primera vez hasta sus pantallas de carga, y quien publicó el video asegura que entrar al juego es cuestión de horas - Tarreo — <a href="https://news.google.com/rss/articles/CBMie0FVX3lxTE02dFk5d2ZaUEt1Yy1wTnZlM3lwbzlsNWdtUktTUE
+- [Google News] Estafas con el lanzamiento del videojuego GTA 6: en qué consisten y cómo evitarlas - Mala Espina — <a href="https://news.google.com/rss/articles/CBMiygFBVV95cUxOVG5KNFFTUzlkcFN4QWJkcmM0c3Z2ZmJEVGdpbW
+- [Google News] Guía completa de GTA 6: todos los trucos, secretos, coleccionables, trofeos, consejos y cómo conseguir el 100% - Diario AS — <a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxOOVVGUDVSR2paQ2d5ZEdjdlk3TlpYZWxtMEVvOF
