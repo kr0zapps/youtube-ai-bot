@@ -68,3 +68,10 @@
 - [Google News] Ojo, porque GTA 6 ya tiene su primer parche: todo lo que cambia en la actualización de Vice City en PS5 y Xbox Series - VidaExtra — <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxPYllnb2RzVXJOWlQ3eGxJa0E4Wm55VV9IU0FsOT
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 - [Google News] Sylvia Villagrán y el talento latino detrás de GTA 6: así fue poner la voz en el videojuego más esperado del mundo - CNN en Español — <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxPOTZ4X3FJMDJFSzR3aXpkV3JwRExuSFdPWkpqdV
+
+## Tendencias Virales — 2026-11-24
+- [Google News] Las 8 mejores cosas que hacer nada más empezar en GTA 6 - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE5TeW8wd1pKQ1FVZFZIQ1pEakhVdEFiNzVpY2tzcW
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] Ojo, porque GTA 6 ya tiene su primer parche: todo lo que cambia en la actualización de Vice City en PS5 y Xbox Series - VidaExtra — <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxPYllnb2RzVXJOWlQ3eGxJa0E4Wm55VV9IU0FsOT
+- [Google News] Estafas con el lanzamiento del videojuego GTA 6: en qué consisten y cómo evitarlas - Mala Espina — <a href="https://news.google.com/rss/articles/CBMizwFBVV95cUxNeUFYUkE0LUdvYzBFdFo3aW85ek0zdE5DNDd0ZW
+- [Google News] "Les hizo un bien increíble": Residencia de adultos mayores cambió las cartas por el GTA VI - Teletrece — <a href="https://news.google.com/rss/articles/CBMixwFBVV95cUxNd1JyWUZ4V3JxVG5JaE5ZV2I0M1E4cXl5UUNMMH
