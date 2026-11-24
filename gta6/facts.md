@@ -70,8 +70,8 @@
 - [Google News] Sylvia Villagrán y el talento latino detrás de GTA 6: así fue poner la voz en el videojuego más esperado del mundo - CNN en Español — <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxPOTZ4X3FJMDJFSzR3aXpkV3JwRExuSFdPWkpqdV
 
 ## Tendencias Virales — 2026-11-24
-- [Google News] Guía completa de GTA 6: todos los trucos, secretos, coleccionables, trofeos, consejos y cómo conseguir el 100% - Diario AS — <a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxOOVVGUDVSR2paQ2d5ZEdjdlk3TlpYZWxtMEVvOF
+- [Google News] Ya puedes jugar GTA 6 sin un PlayStation 5 de forma oficial, pero debes cumplir estos requisitos para disfrutar la nueva entrega sin la consola - LEVELUP — <a href="https://news.google.com/rss/articles/CBMihwJBVV95cUxOYmhad0U0d1JWQ2ZvMXAyWXNXT2FDWnViaWFYQk
 - [Google News] GTA 6: cómo conseguir el baile especial de Vicki y evitar perderlo - VidaExtra — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxOckxpcXBYZURyMDFNbFJJUnllYW9BbnNoNi1fbW
-- [Google News] GTA 6: ¿Cuándo la pasión por los videojuegos se vuelve adicción? - www.diarioeldia.cl — <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxObFh5RXF0TnBiR0c1Zk1hQ0pwNHFLXzh1LThfdU
-- [Google News] Rockstar va contra la versión no oficial de GTA 6 para PC y acaba de dar un duro golpe a su desarrollo - LEVELUP — <a href="https://news.google.com/rss/articles/CBMi0gFBVV95cUxOTkpwcFk2aXY2S3U3ZmR2YjFLSDVjQld0ajZqc1
+- [Google News] Leonida, el port para PC de GTA 6, desaparece de GitHub y Discord, y su creador se retira asegurando que Rockstar bajó su servidor - Tarreo — <a href="https://news.google.com/rss/articles/CBMiiwFBVV95cUxQRkMzN0NmMUc0eGtVVGp1am4wUXNkbzRoOEpyWX
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] GTA 6: ¿Cuándo la pasión por los videojuegos se vuelve adicción? - www.diarioeldia.cl — <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxObFh5RXF0TnBiR0c1Zk1hQ0pwNHFLXzh1LThfdU
