@@ -70,8 +70,8 @@
 - [Google News] Sylvia Villagrán y el talento latino detrás de GTA 6: así fue poner la voz en el videojuego más esperado del mundo - CNN en Español — <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxPOTZ4X3FJMDJFSzR3aXpkV3JwRExuSFdPWkpqdV
 
 ## Tendencias Virales — 2026-11-24
-- [Google News] Las 8 mejores cosas que hacer nada más empezar en GTA 6 - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE5TeW8wd1pKQ1FVZFZIQ1pEakhVdEFiNzVpY2tzcW
+- [Google News] Ajustes para GTA 6: las opciones que deberías cambiar primero en PS5 y Xbox - Red Bull — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE10enhMUVhwdVJOVVNZZkhlSXdlWHgtZmlVeUNSTG
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 - [Google News] GTA 6 arranca en PC por primera vez hasta sus pantallas de carga, y quien publicó el video asegura que entrar al juego es cuestión de horas - Tarreo — <a href="https://news.google.com/rss/articles/CBMie0FVX3lxTE02dFk5d2ZaUEt1Yy1wTnZlM3lwbzlsNWdtUktTUE
-- [Google News] Estafas con el lanzamiento del videojuego GTA 6: en qué consisten y cómo evitarlas - Mala Espina — <a href="https://news.google.com/rss/articles/CBMiygFBVV95cUxOVG5KNFFTUzlkcFN4QWJkcmM0c3Z2ZmJEVGdpbW
-- [Google News] Guía completa de GTA 6: todos los trucos, secretos, coleccionables, trofeos, consejos y cómo conseguir el 100% - Diario AS — <a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxOOVVGUDVSR2paQ2d5ZEdjdlk3TlpYZWxtMEVvOF
+- [Google News] GTA 6 para PC da sus primeras señales de vida y ya muestra las Pantallas de Carga y Configuración - PC Master Race Latinoamérica — <a href="https://news.google.com/rss/articles/CBMif0FVX3lxTFBwOWFYWlJuTDl5eElFS1ZpY1ZqMGJxTmJISXg5ZG
+- [Google News] GTA VI tiene sello chileno: de Tom Araya a un vuelo a Santiago - La Tercera — <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxPbVVXQXNkQmhWOVV4RmVzV1FXT2E3WEdCdWdVdW
