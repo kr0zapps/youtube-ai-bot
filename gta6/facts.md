@@ -70,8 +70,8 @@
 - [Google News] Sylvia Villagrán y el talento latino detrás de GTA 6: así fue poner la voz en el videojuego más esperado del mundo - CNN en Español — <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxPOTZ4X3FJMDJFSzR3aXpkV3JwRExuSFdPWkpqdV
 
 ## Tendencias Virales — 2026-11-24
-- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] Las 8 mejores cosas que hacer nada más empezar en GTA 6 - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE5TeW8wd1pKQ1FVZFZIQ1pEakhVdEFiNzVpY2tzcW
+- [Google News] Cómo encontrar al asesino en serie en GTA 6 - dónde están los turistas desaparecidos en Gellhorn - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMikgFBVV95cUxPcUt3RDI4ZUVkSjRvaE5YVDZWN09SamMycG1FdD
+- [Google News] GTA 6: ¿Cuándo la pasión por los videojuegos se vuelve adicción? - www.diarioeldia.cl — <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxObFh5RXF0TnBiR0c1Zk1hQ0pwNHFLXzh1LThfdU
+- [Google News] Rockstar va contra la versión no oficial de GTA 6 para PC y acaba de dar un duro golpe a su desarrollo - LEVELUP — <a href="https://news.google.com/rss/articles/CBMi0gFBVV95cUxOTkpwcFk2aXY2S3U3ZmR2YjFLSDVjQld0ajZqc1
+- [Google News] En qué quedamos, ¿GTA 6 es un éxito o un fracaso? Hablemos de la opinión de los fans - IGN España — <a href="https://news.google.com/rss/articles/CBMixgFBVV95cUxPLUxBaGxWV3o3TllsWnJYa2ZleHJ6QThZalZhT2
 - [Google News] La comunidad trabaja para llevar GTA 6 a PC desde la versión para Xbox antes de su lanzamiento oficial - Geeknetic — <a href="https://news.google.com/rss/articles/CBMi3wFBVV95cUxNM0tHLVZpQVdfLUpfUTNaQkhnMWdxczRqQm8wWU
-- [Google News] Encuentran una forma de poner GTA 6 a 60 FPS y el resultado es impactante - Diario AS — <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxQSVlYNmI1WjJtQTlZbzZQSWp0Qm5UdUJKRUNZYk
-- [Google News] GTA 6: el presupuesto de US$1.500M que Take-Two no revela - El Ecosistema Startup — <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxQQ2tfQWpkSXFXcEZzODdTY3NLVkVXaWhCc1h3Yj
