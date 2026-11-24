@@ -71,7 +71,7 @@
 
 ## Tendencias Virales — 2026-11-24
 - [Google News] Ajustes para GTA 6: las opciones que deberías cambiar primero en PS5 y Xbox - Red Bull — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE10enhMUVhwdVJOVVNZZkhlSXdlWHgtZmlVeUNSTG
+- [Google News] Olvídate de jugar a GTA VI en PC: Leonida y Vice City se quedan, por ahora, en PS5 y Xbox Series - HardZone — <a href="https://news.google.com/rss/articles/CBMieEFVX3lxTE9IeUFkQ2hPNkQyY3BrQ1ZNeE9qeWl1WFdqSmZUcj
+- [Google News] GTA 6: el presupuesto de US$1.500M que Take-Two no revela - El Ecosistema Startup — <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxQQ2tfQWpkSXFXcEZzODdTY3NLVkVXaWhCc1h3Yj
+- [Google News] Prepárate para Vice City en GTA 6 - Walkthrough de Hora de salida en el Capítulo 2 - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxNc01WZUd3d0FIdmJzQ1Ntdm9fMUt2U1F1ZHdhMk
 - [Google News] Leonida, el port para PC de GTA 6, desaparece de GitHub y Discord, y su creador se retira asegurando que Rockstar bajó su servidor - Tarreo — <a href="https://news.google.com/rss/articles/CBMiiwFBVV95cUxQRkMzN0NmMUc0eGtVVGp1am4wUXNkbzRoOEpyWX
-- [Google News] Guía completa de la historia de GTA 6: todas las misiones del capítulo 1 - En el paraíso - Diario AS — <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxOQThRTGF2V09CMzU5NmhPamYtQ3NEQWVNU1QtSG
-- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] ¿Es mejor vender la mercancía cortada o la pura en el Capítulo 3 de GTA 6? - VidaExtra — <a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxORUNEVkllTnkzS1ZubVhyTVlwbklYbDFtWXVlUz
