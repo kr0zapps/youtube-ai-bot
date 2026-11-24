@@ -70,8 +70,8 @@
 - [Google News] Sylvia Villagrán y el talento latino detrás de GTA 6: así fue poner la voz en el videojuego más esperado del mundo - CNN en Español — <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxPOTZ4X3FJMDJFSzR3aXpkV3JwRExuSFdPWkpqdV
 
 ## Tendencias Virales — 2026-11-24
-- [Google News] Ajustes para GTA 6: las opciones que deberías cambiar primero en PS5 y Xbox - Red Bull — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE10enhMUVhwdVJOVVNZZkhlSXdlWHgtZmlVeUNSTG
-- [Google News] Olvídate de jugar a GTA VI en PC: Leonida y Vice City se quedan, por ahora, en PS5 y Xbox Series - HardZone — <a href="https://news.google.com/rss/articles/CBMieEFVX3lxTE9IeUFkQ2hPNkQyY3BrQ1ZNeE9qeWl1WFdqSmZUcj
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] Las 8 mejores cosas que hacer nada más empezar en GTA 6 - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE5TeW8wd1pKQ1FVZFZIQ1pEakhVdEFiNzVpY2tzcW
+- [Google News] La comunidad trabaja para llevar GTA 6 a PC desde la versión para Xbox antes de su lanzamiento oficial - Geeknetic — <a href="https://news.google.com/rss/articles/CBMi3wFBVV95cUxNM0tHLVZpQVdfLUpfUTNaQkhnMWdxczRqQm8wWU
+- [Google News] Encuentran una forma de poner GTA 6 a 60 FPS y el resultado es impactante - Diario AS — <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxQSVlYNmI1WjJtQTlZbzZQSWp0Qm5UdUJKRUNZYk
 - [Google News] GTA 6: el presupuesto de US$1.500M que Take-Two no revela - El Ecosistema Startup — <a href="https://news.google.com/rss/articles/CBMijwFBVV95cUxQQ2tfQWpkSXFXcEZzODdTY3NLVkVXaWhCc1h3Yj
-- [Google News] Prepárate para Vice City en GTA 6 - Walkthrough de Hora de salida en el Capítulo 2 - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxNc01WZUd3d0FIdmJzQ1Ntdm9fMUt2U1F1ZHdhMk
-- [Google News] Leonida, el port para PC de GTA 6, desaparece de GitHub y Discord, y su creador se retira asegurando que Rockstar bajó su servidor - Tarreo — <a href="https://news.google.com/rss/articles/CBMiiwFBVV95cUxQRkMzN0NmMUc0eGtVVGp1am4wUXNkbzRoOEpyWX
