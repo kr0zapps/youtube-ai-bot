@@ -77,8 +77,8 @@
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 
 ## Tendencias Virales — 2026-11-25
-- [Google News] GTA 6 arranca en PC por primera vez hasta sus pantallas de carga, y quien publicó el video asegura que entrar al juego es cuestión de horas - Tarreo — <a href="https://news.google.com/rss/articles/CBMie0FVX3lxTE02dFk5d2ZaUEt1Yy1wTnZlM3lwbzlsNWdtUktTUE
-- [Google News] Ya puedes jugar GTA 6 sin un PlayStation 5 de forma oficial, pero debes cumplir estos requisitos para disfrutar la nueva entrega sin la consola - LEVELUP — <a href="https://news.google.com/rss/articles/CBMihwJBVV95cUxOYmhad0U0d1JWQ2ZvMXAyWXNXT2FDWnViaWFYQk
-- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] Golpe contra GTA 6 para PC: borran el port ‘Leonida’ y sus más de 3.000 copias en GitHub - Infobae — <a href="https://news.google.com/rss/articles/CBMixAFBVV95cUxOWFhFMnd4aUdtajlaaEpvdlBic3NWRldEQ2JTUD
-- [Google News] GTA 6 y la adicción a los videojuegos: ¿cuándo jugar deja de ser entretención y se convierte en un problema? - La Voz del Norte — <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxQOVdTUV9OUmNlbmVQR2dabml4QzJKazZPY0l5RW
+- [Google News] 'GTA 6' chapter 1 is so good that I'm afraid to move on to chapter 2 - Mashable — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQUERUaGJBUEpZWGpoa244OTJMTU1wdGRpUkFUYk
+- [Google News] Essential GTA 6 Chapter 1 advice before starting ‘point of no return’ Tourist Trap mission - GAMINGbible — <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxQQzRleDZ3dXA4U2FEcG85all1Z05fUW1FQlk3dV
+- [Google News] GTA 6 PC port takedown confirmed: Take-Two cites Rockstar's ban on reverse engineering - TweakTown — <a href="https://news.google.com/rss/articles/CBMizgFBVV95cUxOa0hZMUZrS2Zqc3RHNzE2WWNTVTU5YUN4QlY1OU
+- [Google News] Yes, One Minor Function Was Censored from GTA 6 in Australia, NZ, but It Would've Been Banned if It Wasn't - IGN — <a href="https://news.google.com/rss/articles/CBMijAFBVV95cUxQUkFiZzNZLUpKekh2akRpOFZvYklJLURZbUtNYi
+- [Google News] Is There A Point Of No Return Before The 18 ‘GTA 6’ Endings? - Forbes — <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOZmNYQTNBTmZzU1Y2TmZ1bjFZS0FvNE8xU2pMS3
