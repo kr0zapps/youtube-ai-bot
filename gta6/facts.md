@@ -80,5 +80,5 @@
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 - [Google News] GTA 6: Cómo subir y bajar rápido tus niveles de «Wanted» y «Heat» - Red Bull — <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE5IMGo1UjA2ckxoSjR1MnRjWW9aVlJJbU5NRUpjXy
 - [Google News] GTA 6 arrasa tras su lanzamiento: todos los récords que ha roto el videojuego de Rockstar Games hasta la fecha - ADN Radio — <a href="https://news.google.com/rss/articles/CBMi3gFBVV95cUxPTWV6R3hsSzAyOURvX1NKSmkzVTB0NnBOeXN0V2
-- [Google News] GTA 6 es el lanzamiento más grande en la historia de PlayStation con más de 39 millones de jugadores - Bloomberg Línea — <a href="https://news.google.com/rss/articles/CBMi4AFBVV95cUxQNmFJb0djSHNiTEZEQkx6TE9Xa25zTjNJYjdkNl
+- [Google News] GTA 6: Todas las misiones de Kirk - Vandal — <a href="https://news.google.com/rss/articles/CBMilgFBVV95cUxOVzhNN0llWVU5Ymx3ZXZjT3RjT0N3cDRzX0l0NT
 - [Google News] Rockstar cierra una iniciativa para crear una versión no oficial de GTA 6 para PC - VidaExtra — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPQ3N5TzlrWFF4YkxfWXItWTR0c3BKQVVvVEMwZG
