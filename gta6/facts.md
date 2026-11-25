@@ -77,8 +77,8 @@
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 
 ## Tendencias Virales — 2026-11-25
-- [Google News] Unauthorized 'GTA 6' PC port shut down by Rockstar Games' parent company - Mashable — <a href="https://news.google.com/rss/articles/CBMieEFVX3lxTE12VTc3ZHQtR2xucW9IU0RZNmRsYVVMWUViamJ5Xz
-- [Google News] How To Unlock Hurricane Weather In ‘GTA 6’ - Forbes — <a href="https://news.google.com/rss/articles/CBMilgFBVV95cUxQSmZaSUtNRGJjd1RwRndEV2NPdzA0SXNWTGRVZ1
-- [Google News] GTA 6 Is Overrated, and the User Reviews Prove It - PCMag — <a href="https://news.google.com/rss/articles/CBMihgFBVV95cUxNbzY1c2NDV3NTOHNkOFJ3ejlOU3dPeHlRNEhPUn
-- [Google News] GTA 6 Thrax Location – Where to Find the Blue Bugatti - VICE — <a href="https://news.google.com/rss/articles/CBMiY0FVX3lxTFB4TTZEdTQ4Y3pOMks5QXJoR0dfY0dLR0cxZ3NFb3
-- [Google News] GTA 6 seems to be making some PS5 consoles catch fire, with multiple streamers experiencing smoking and failed GPUs — ‘PS5 started just smoking out its a**, and now I need to get a replacement’ - TechRadar — <a href="https://news.google.com/rss/articles/CBMi7gFBVV95cUxQYTVNdjVJNk12QUEya2xNYkJWTndpRTAwNHFsT3
+- [Google News] GTA 6: Cómo subir y bajar rápido tus niveles de «Wanted» y «Heat» - Red Bull — <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE5IMGo1UjA2ckxoSjR1MnRjWW9aVlJJbU5NRUpjXy
+- [Google News] GTA 6 arrasa tras su lanzamiento: todos los récords que ha roto el videojuego de Rockstar Games hasta la fecha - ADN Radio — <a href="https://news.google.com/rss/articles/CBMi3gFBVV95cUxPTWV6R3hsSzAyOURvX1NKSmkzVTB0NnBOeXN0V2
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] GTA 6 y la adicción a los videojuegos: ¿cuándo jugar deja de ser entretención y se convierte en un problema? - Ciencia en Chile — <a href="https://news.google.com/rss/articles/CBMi0gFBVV95cUxOLTR1SEl3aFBvZ3pBLWFnT2R5Z2hHdkxRcXJabk
+- [Google News] Todos los vehículos de GTA 6: lista completa de coches, motos, barcos, aviones y ubicaciones con mapa interact - Diario AS — <a href="https://news.google.com/rss/articles/CBMi8AFBVV95cUxPVmpaNUQ1aHFCdG9ub0dQWkRnTzRNTEFFSGlHWD
