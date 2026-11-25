@@ -77,8 +77,8 @@
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 
 ## Tendencias Virales — 2026-11-25
+- [Google News] Conseguir GTA 6 al 100%: todos los requisitos y actividades para completar el juego - Diario AS — <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxPZ1dycjFFbVpUbm8tN2JYS0NIUGNOOGV6VldzZW
 - [Google News] GTA 6 arranca en PC por primera vez hasta sus pantallas de carga, y quien publicó el video asegura que entrar al juego es cuestión de horas - Tarreo — <a href="https://news.google.com/rss/articles/CBMie0FVX3lxTE02dFk5d2ZaUEt1Yy1wTnZlM3lwbzlsNWdtUktTUE
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 - [Google News] Ya puedes jugar GTA 6 sin un PlayStation 5 de forma oficial, pero debes cumplir estos requisitos para disfrutar la nueva entrega sin la consola - LEVELUP — <a href="https://news.google.com/rss/articles/CBMihwJBVV95cUxOYmhad0U0d1JWQ2ZvMXAyWXNXT2FDWnViaWFYQk
 - [Google News] GTA 6 y la adicción a los videojuegos: ¿cuándo jugar deja de ser entretención y se convierte en un problema? - La Voz del Norte — <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxQOVdTUV9OUmNlbmVQR2dabml4QzJKazZPY0l5RW
-- [Google News] GTA 6: cómo conseguir el baile especial de Vicki y evitar perderlo - VidaExtra — <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxOckxpcXBYZURyMDFNbFJJUnllYW9BbnNoNi1fbW
