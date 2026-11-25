@@ -77,8 +77,8 @@
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 
 ## Tendencias Virales — 2026-11-25
-- [Google News] 'GTA 6' chapter 1 is so good that I'm afraid to move on to chapter 2 - Mashable — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQUERUaGJBUEpZWGpoa244OTJMTU1wdGRpUkFUYk
-- [Google News] Essential GTA 6 Chapter 1 advice before starting ‘point of no return’ Tourist Trap mission - GAMINGbible — <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxQQzRleDZ3dXA4U2FEcG85all1Z05fUW1FQlk3dV
-- [Google News] GTA 6 PC port takedown confirmed: Take-Two cites Rockstar's ban on reverse engineering - TweakTown — <a href="https://news.google.com/rss/articles/CBMizgFBVV95cUxOa0hZMUZrS2Zqc3RHNzE2WWNTVTU5YUN4QlY1OU
-- [Google News] Yes, One Minor Function Was Censored from GTA 6 in Australia, NZ, but It Would've Been Banned if It Wasn't - IGN — <a href="https://news.google.com/rss/articles/CBMijAFBVV95cUxQUkFiZzNZLUpKekh2akRpOFZvYklJLURZbUtNYi
-- [Google News] Is There A Point Of No Return Before The 18 ‘GTA 6’ Endings? - Forbes — <a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOZmNYQTNBTmZzU1Y2TmZ1bjFZS0FvNE8xU2pMS3
+- [Google News] Unauthorized 'GTA 6' PC port shut down by Rockstar Games' parent company - Mashable — <a href="https://news.google.com/rss/articles/CBMieEFVX3lxTE12VTc3ZHQtR2xucW9IU0RZNmRsYVVMWUViamJ5Xz
+- [Google News] How To Unlock Hurricane Weather In ‘GTA 6’ - Forbes — <a href="https://news.google.com/rss/articles/CBMilgFBVV95cUxQSmZaSUtNRGJjd1RwRndEV2NPdzA0SXNWTGRVZ1
+- [Google News] GTA 6 Is Overrated, and the User Reviews Prove It - PCMag — <a href="https://news.google.com/rss/articles/CBMihgFBVV95cUxNbzY1c2NDV3NTOHNkOFJ3ejlOU3dPeHlRNEhPUn
+- [Google News] GTA 6 Thrax Location – Where to Find the Blue Bugatti - VICE — <a href="https://news.google.com/rss/articles/CBMiY0FVX3lxTFB4TTZEdTQ4Y3pOMks5QXJoR0dfY0dLR0cxZ3NFb3
+- [Google News] GTA 6 seems to be making some PS5 consoles catch fire, with multiple streamers experiencing smoking and failed GPUs — ‘PS5 started just smoking out its a**, and now I need to get a replacement’ - TechRadar — <a href="https://news.google.com/rss/articles/CBMi7gFBVV95cUxQYTVNdjVJNk12QUEya2xNYkJWTndpRTAwNHFsT3
