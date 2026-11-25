@@ -77,8 +77,8 @@
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 
 ## Tendencias Virales — 2026-11-25
-- [Google News] Cómo completar GTA 6 al 100%: todos los requisitos, actividades, tareas y coleccionables - Diario AS — <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxPZ1dycjFFbVpUbm8tN2JYS0NIUGNOOGV6VldzZW
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] Guía completa de la historia de GTA 6: todas las misiones del capítulo 1 - En el paraíso - Diario AS — <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxOQThRTGF2V09CMzU5NmhPamYtQ3NEQWVNU1QtSG
 - [Google News] GTA 6: Cómo subir y bajar rápido tus niveles de «Wanted» y «Heat» - Red Bull — <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE5IMGo1UjA2ckxoSjR1MnRjWW9aVlJJbU5NRUpjXy
-- [Google News] Cómo conseguir dinero rápido en GTA 6 - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxNT3lGSzBhNDJpUFVVN2R1Q2V0bG9lLVNOdXo4cV
 - [Google News] GTA 6 arrasa tras su lanzamiento: todos los récords que ha roto el videojuego de Rockstar Games hasta la fecha - ADN Radio — <a href="https://news.google.com/rss/articles/CBMi3gFBVV95cUxPTWV6R3hsSzAyOURvX1NKSmkzVTB0NnBOeXN0V2
-- [Google News] GTA 6 y la adicción a los videojuegos: ¿cuándo jugar deja de ser entretención y se convierte en un problema? - Ciencia en Chile — <a href="https://news.google.com/rss/articles/CBMi0gFBVV95cUxOLTR1SEl3aFBvZ3pBLWFnT2R5Z2hHdkxRcXJabk
+- [Google News] GTA 6 es el lanzamiento más grande en la historia de PlayStation con más de 39 millones de jugadores - Bloomberg Línea — <a href="https://news.google.com/rss/articles/CBMi4AFBVV95cUxQNmFJb0djSHNiTEZEQkx6TE9Xa25zTjNJYjdkNl
