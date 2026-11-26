@@ -84,8 +84,8 @@
 - [Google News] Rockstar cierra una iniciativa para crear una versión no oficial de GTA 6 para PC - VidaExtra — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPQ3N5TzlrWFF4YkxfWXItWTR0c3BKQVVvVEMwZG
 
 ## Tendencias Virales — 2026-11-26
-- [Google News] Cómo completar GTA 6 al 100%: todos los requisitos, actividades, tareas y coleccionables - Diario AS — <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxPZ1dycjFFbVpUbm8tN2JYS0NIUGNOOGV6VldzZW
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] GTA 6: Todas las misiones del Capítulo 2 y cómo completarlas - Vandal — <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxOMHJfS2o4QV95VWR1VEtrc0lESHI0Z3k5LVpIRm
-- [Google News] GTA 6: Cómo subir y bajar rápido tus niveles de «Wanted» y «Heat» - Red Bull — <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE5IMGo1UjA2ckxoSjR1MnRjWW9aVlJJbU5NRUpjXy
 - [Google News] Sitio web permite jugar gratis GTA 6 en PC, y jugadores hacen fila durante horas para tomar el control y disfrutar el título de Rockstar Games - LEVELUP — <a href="https://news.google.com/rss/articles/CBMihgJBVV95cUxONUtwcFBfSFhhb3hJcFk2endwVFBJNWlwR1lXWE
+- [Google News] GTA 6: Cómo subir y bajar rápido tus niveles de «Wanted» y «Heat» - Red Bull — <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE5IMGo1UjA2ckxoSjR1MnRjWW9aVlJJbU5NRUpjXy
+- [Google News] Cómo desbloquear los huracanes en GTA 6 - VidaExtra — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE9waUd1N1dJdVpKMy1IRTRVZVFWWnpmdXEwUWFPMF
+- [Google News] GTA 6 arrasa tras su lanzamiento: todos los récords que ha roto el videojuego de Rockstar Games hasta la fecha - ADN Radio — <a href="https://news.google.com/rss/articles/CBMi3gFBVV95cUxPTWV6R3hsSzAyOURvX1NKSmkzVTB0NnBOeXN0V2
