@@ -84,8 +84,8 @@
 - [Google News] Rockstar cierra una iniciativa para crear una versión no oficial de GTA 6 para PC - VidaExtra — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPQ3N5TzlrWFF4YkxfWXItWTR0c3BKQVVvVEMwZG
 
 ## Tendencias Virales — 2026-11-26
-- [Google News] 'GTA 6' chapter 1 is so good that I'm afraid to move on to chapter 2 - Mashable — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQUERUaGJBUEpZWGpoa244OTJMTU1wdGRpUkFUYk
-- [Google News] 9 subtle details in GTA 6 that make the game feel more realistic - Red Bull — <a href="https://news.google.com/rss/articles/CBMiggFBVV95cUxOMjEtWTNBRjhJcW8xVjJwa3M0V2hodkxOa0Y5V3
-- [Google News] ‘GTA 6’ Rejected Hollywood. ‘Red Dead Redemption’ Is in Play — for $100M+ - The Ankler — <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxNMkh6Wjl1OWJnNVlES24wSjVKS2Q2cEtJSm03RG
-- [Google News] Hobbyists and AI vibe coders have GTA 6 running on Windows PC days after launch — How is it possible, and what comes next? - Windows Central — <a href="https://news.google.com/rss/articles/CBMikgFBVV95cUxPY0k5VmlWd1JSUFVnUHZaUkxpSEx0ek9YLWZFVG
-- [Google News] Buckingham Windsor Drop GTA 6 Location – Where to Find the Rolls-Royce Convertible - VICE — <a href="https://news.google.com/rss/articles/CBMie0FVX3lxTFBnZGoyOC1IbS1UVVlnd3VMTk11NVRMc002NkdiSz
+- [Google News] Port pirata de GTA 6 para PC sigue vivo, y su creador confirma que el proyecto no oficial aún está en desarrollo y prometió novedades - LEVELUP — <a href="https://news.google.com/rss/articles/CBMi-gFBVV95cUxQRktUa3MtNlZ6My1VVWI1T1o1QzdOYnJHeXNTcF
+- [Google News] ¿Cuántas misiones tiene la historia principal de GTA 6? Todas las principales y secundarias hasta completar el - Diario AS — <a href="https://news.google.com/rss/articles/CBMi9wFBVV95cUxQMG9qc2I5RE43UUFHQ0pzTmRIQzZaVUhJRlNYcF
+- [Google News] Los jugadores de GTA 6 encuentran una solución al 'bug' del tiempo en PS5: con este método aparecerían más tormentas - Vandal — <a href="https://news.google.com/rss/articles/CBMi1wFBVV95cUxPd0haa0tRdE9YWGZlYnp1NHBUUXowUjRpRjZjNn
+- [Google News] Guía completa de GTA 6, todas las misiones, coleccionables, armas, vehículos, trucos, secretos y consejos para completar el juego al 100% - 3DJuegos — <a href="https://news.google.com/rss/articles/CBMikwJBVV95cUxPaUZNeWlpV0VTWUpuUU9UOVZXODhIRElmd2wxdE
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
