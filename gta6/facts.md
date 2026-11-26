@@ -84,8 +84,8 @@
 - [Google News] Rockstar cierra una iniciativa para crear una versión no oficial de GTA 6 para PC - VidaExtra — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPQ3N5TzlrWFF4YkxfWXItWTR0c3BKQVVvVEMwZG
 
 ## Tendencias Virales — 2026-11-26
+- [Google News] Los jugadores de GTA 6 encuentran una solución al 'bug' del tiempo en PS5: con este método aparecerían más tormentas - Vandal — <a href="https://news.google.com/rss/articles/CBMi1wFBVV95cUxPd0haa0tRdE9YWGZlYnp1NHBUUXowUjRpRjZjNn
 - [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] GTA 6: dónde encontrar a las personas desaparecidas en Port Gellhorn - VidaExtra — <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxQV0NiQXpXRjMxOTFucHRmYU1xUjVCTTlHWUFKS1
-- [Google News] Una guionista de GTA 6 abandona las redes sociales tras sufrir una campaña de acoso online - Diario AS — <a href="https://news.google.com/rss/articles/CBMi0wFBVV95cUxQbjZxZ29Xa0pBQm5zZjFqRkZ4cG5uTjFlVmtNaD
-- [Google News] Vergonzoso: una guionista de GTA 6 sufre una campaña de odio y acoso que le obliga a cerrar sus redes sociales - Vandal — <a href="https://news.google.com/rss/articles/CBMi6wFBVV95cUxPWWhiTUdaQTFjM3FVOTBsd3ZhRGs0TGRiaFI2cj
-- [Google News] ‘GTA 6’: ¿cuántos autos puedes tener y qué otras propiedades puedes comprar? - Independent en Español — <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxQeGlabUpYeFVuLUItX0dnZC1NSThJSE8zTXhuOV
+- [Google News] Port pirata de GTA 6 para PC sigue vivo, y su creador confirma que el proyecto no oficial aún está en desarrollo y prometió novedades - LEVELUP — <a href="https://news.google.com/rss/articles/CBMi-gFBVV95cUxQRktUa3MtNlZ6My1VVWI1T1o1QzdOYnJHeXNTcF
+- [Google News] GTA 6: ubicación de los 18 coches de lujo de Randy - VidaExtra — <a href="https://news.google.com/rss/articles/CBMigwFBVV95cUxQdmNsd2ZSd3kxM25DWUxRWFRNd3pNQjRLdWEtVn
+- [Google News] Ports de GTA 6 en PC cambian de rumbo, y la versión de PS5 toma la delantera para correr sin emulador - Tarreo — <a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxNdWJELXg2T1paRVBSdmROUGFDRXN5emk3ekdsaG
