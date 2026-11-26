@@ -84,8 +84,8 @@
 - [Google News] Rockstar cierra una iniciativa para crear una versión no oficial de GTA 6 para PC - VidaExtra — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPQ3N5TzlrWFF4YkxfWXItWTR0c3BKQVVvVEMwZG
 
 ## Tendencias Virales — 2026-11-26
-- [Google News] Port pirata de GTA 6 para PC sigue vivo, y su creador confirma que el proyecto no oficial aún está en desarrollo y prometió novedades - LEVELUP — <a href="https://news.google.com/rss/articles/CBMi-gFBVV95cUxQRktUa3MtNlZ6My1VVWI1T1o1QzdOYnJHeXNTcF
 - [Google News] GTA 6 se ejecuta en PC a hasta 44 FPS - mobidevices.com — <a href="https://news.google.com/rss/articles/CBMiUEFVX3lxTE1UbF9nNmFoNElhRG9kTmQwM3h0aVJ1cmlRLVBUbj
 - [Google News] GTA 6 ya es jugable en PC a 25-30 FPS y el Jailbreak de PS5 permite desbloquear los 30 FPS - Requisitos Mínimos y Recomendados - PC Master Race Latinoamérica — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTFA0Wk9TdXRHZjRVTHNxd2NtTGJibmZBdHVCWURCeD
 - [Google News] Los jugadores de GTA 6 encuentran una solución al 'bug' del tiempo en PS5: con este método aparecerían más tormentas - Vandal — <a href="https://news.google.com/rss/articles/CBMi1wFBVV95cUxPd0haa0tRdE9YWGZlYnp1NHBUUXowUjRpRjZjNn
-- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] ¿Cuántas misiones tiene la historia principal de GTA 6? Todas las principales y secundarias hasta completar el - Diario AS — <a href="https://news.google.com/rss/articles/CBMi9wFBVV95cUxQMG9qc2I5RE43UUFHQ0pzTmRIQzZaVUhJRlNYcF
+- [Google News] filtración GTA 6 - La Tercera — <a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE5YQlpSd1g4X0hGWk9YLWpLdk9pLVZUN2xVZDRPcl
