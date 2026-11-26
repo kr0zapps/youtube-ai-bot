@@ -84,8 +84,8 @@
 - [Google News] Rockstar cierra una iniciativa para crear una versión no oficial de GTA 6 para PC - VidaExtra — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPQ3N5TzlrWFF4YkxfWXItWTR0c3BKQVVvVEMwZG
 
 ## Tendencias Virales — 2026-11-26
-- [Google News] Cómo completar GTA 6 al 100%: todos los requisitos, actividades, tareas y coleccionables - Diario AS — <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxPZ1dycjFFbVpUbm8tN2JYS0NIUGNOOGV6VldzZW
-- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
-- [Google News] Cómo desbloquear los huracanes en GTA 6 - VidaExtra — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE9waUd1N1dJdVpKMy1IRTRVZVFWWnpmdXEwUWFPMF
-- [Google News] GTA 6: Cómo subir y bajar rápido tus niveles de «Wanted» y «Heat» - Red Bull — <a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE5IMGo1UjA2ckxoSjR1MnRjWW9aVlJJbU5NRUpjXy
-- [Google News] Sitio web permite jugar gratis GTA 6 en PC, y jugadores hacen fila durante horas para tomar el control y disfrutar el título de Rockstar Games - LEVELUP — <a href="https://news.google.com/rss/articles/CBMihgJBVV95cUxONUtwcFBfSFhhb3hJcFk2endwVFBJNWlwR1lXWE
+- [Google News] The first 'GTA 6' patch is live: 7 fixes address fan complaints - Mashable — <a href="https://news.google.com/rss/articles/CBMiigFBVV95cUxOeTJtYkYtczdkLUlZRXBpUjNobEJHTUVKek9yQ3
+- [Google News] Welcome to Vice City: 15 GTA 6 Tips to Rule the Underworld Fast - PCMag — <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxNUjRFNTVVM0lwZkN6RXZjclFtVGM1cjJpdVFhem
+- [Google News] 'South Park' Season 29 Finale: 'GTA 6,' Data Centers and Billionares - Variety — <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOWGc5YXJKeFR2ZXgxbWlXaVV6NHB2azN1aU4td3
+- [Google News] ‘GTA 6’ Rejected Hollywood. ‘Red Dead Redemption’ Is in Play — for $100M+ - The Ankler — <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxNMkh6Wjl1OWJnNVlES24wSjVKS2Q2cEtJSm03RG
+- [Google News] GTA 6 recomp hits 90% progress – and here's what that means - Notebookcheck — <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxQWDc2d0ROQmRNLXloZFR6QWE5TFNsRktCV1pOR2
