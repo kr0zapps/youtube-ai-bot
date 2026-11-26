@@ -84,8 +84,8 @@
 - [Google News] Rockstar cierra una iniciativa para crear una versión no oficial de GTA 6 para PC - VidaExtra — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPQ3N5TzlrWFF4YkxfWXItWTR0c3BKQVVvVEMwZG
 
 ## Tendencias Virales — 2026-11-26
-- [Google News] The first 'GTA 6' patch is live: 7 fixes address fan complaints - Mashable — <a href="https://news.google.com/rss/articles/CBMiigFBVV95cUxOeTJtYkYtczdkLUlZRXBpUjNobEJHTUVKek9yQ3
-- [Google News] Welcome to Vice City: 15 GTA 6 Tips to Rule the Underworld Fast - PCMag — <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxNUjRFNTVVM0lwZkN6RXZjclFtVGM1cjJpdVFhem
-- [Google News] 'South Park' Season 29 Finale: 'GTA 6,' Data Centers and Billionares - Variety — <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOWGc5YXJKeFR2ZXgxbWlXaVV6NHB2azN1aU4td3
-- [Google News] ‘GTA 6’ Rejected Hollywood. ‘Red Dead Redemption’ Is in Play — for $100M+ - The Ankler — <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxNMkh6Wjl1OWJnNVlES24wSjVKS2Q2cEtJSm03RG
-- [Google News] GTA 6 recomp hits 90% progress – and here's what that means - Notebookcheck — <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxQWDc2d0ROQmRNLXloZFR6QWE5TFNsRktCV1pOR2
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] GTA 6: dónde encontrar a las personas desaparecidas en Port Gellhorn - VidaExtra — <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxQV0NiQXpXRjMxOTFucHRmYU1xUjVCTTlHWUFKS1
+- [Google News] Una guionista de GTA 6 abandona las redes sociales tras sufrir una campaña de acoso online - Diario AS — <a href="https://news.google.com/rss/articles/CBMi0wFBVV95cUxQbjZxZ29Xa0pBQm5zZjFqRkZ4cG5uTjFlVmtNaD
+- [Google News] Vergonzoso: una guionista de GTA 6 sufre una campaña de odio y acoso que le obliga a cerrar sus redes sociales - Vandal — <a href="https://news.google.com/rss/articles/CBMi6wFBVV95cUxPWWhiTUdaQTFjM3FVOTBsd3ZhRGs0TGRiaFI2cj
+- [Google News] ‘GTA 6’: ¿cuántos autos puedes tener y qué otras propiedades puedes comprar? - Independent en Español — <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxQeGlabUpYeFVuLUItX0dnZC1NSThJSE8zTXhuOV
