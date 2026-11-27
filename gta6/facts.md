@@ -91,8 +91,8 @@
 - [Google News] filtración GTA 6 - La Tercera — <a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE5YQlpSd1g4X0hGWk9YLWpLdk9pLVZUN2xVZDRPcl
 
 ## Tendencias Virales — 2026-11-27
-- [Google News] Trucos de GTA 6: todos los códigos y cómo desbloquearlos - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE9ENTR0cWlvSnFEeFRZbl9KOUdnWmdMSDcyUWVuQm
-- [Google News] Manni L. Perez, actriz de Lucía en GTA 6: “He dedicado casi una década a darle vida” - Diario AS — <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxNOEFrVkp3Rlc4Z0hFQW05c0xQNmRITy1UN25EUk
-- [Google News] Rockstar lo confirma: 'GTA 6' no habría existido sin estas películas que inspiraron la relación de Jason y Lucía - 20 Minutos — <a href="https://news.google.com/rss/articles/CBMitwFBVV95cUxNclFveFJuZXc1NldxV0l6aVhHVjNfMGJjX0pzY1
-- [Google News] La actriz que interpreta a Lucia en GTA 6 revela que ha trabajado casi diez años en el juego de Rockstar - Vandal — <a href="https://news.google.com/rss/articles/CBMi6AFBVV95cUxOQWRVUzgzbWwzakowQVRpalpxbWNzNl9Fd2NkZX
-- [Google News] El impacto de GTA 6 a una semana de su lanzamiento - CNN en Español — <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxONlQ5bzJCcmJPclRmRGp5bnB1RGcxLThkS01SVH
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
+- [Google News] Guía completa de GTA 6, todas las misiones, coleccionables, armas, vehículos, trucos, secretos y consejos para completar el juego al 100% - 3DJuegos — <a href="https://news.google.com/rss/articles/CBMikwJBVV95cUxPaUZNeWlpV0VTWUpuUU9UOVZXODhIRElmd2wxdE
+- [Google News] GTA 6 y la adicción a los videojuegos: 5 señales de alerta que no debes ignorar - El Observatodo — <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxPXy1vcHNuSUNCUEFiTGx0ZGgtdHlwa3p3YmxiV0
+- [Google News] GTA 6: Todas las armas, estadísticas y cómo conseguirlas - Vandal — <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxOMG5RZUJJNDFjZDdTLThQWTBQYnJVUHBQcHFTT1
+- [Google News] GTA 6 ya cuenta con su Primer Port no oficial para PC con Launcher y Soporte para Teclado y Mouse – Descarga, Benchmarks y Video - PC Master Race Latinoamérica — <a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE90aGZ0eVhwU3NQemdxVlJydlpjaVNZbHBwb3pFdz
