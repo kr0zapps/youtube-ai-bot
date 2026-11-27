@@ -91,8 +91,8 @@
 - [Google News] filtración GTA 6 - La Tercera — <a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE5YQlpSd1g4X0hGWk9YLWpLdk9pLVZUN2xVZDRPcl
 
 ## Tendencias Virales — 2026-11-27
+- [Google News] Trucos de GTA 6: todos los códigos y cómo desbloquearlos - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE9ENTR0cWlvSnFEeFRZbl9KOUdnWmdMSDcyUWVuQm
+- [Google News] Manni L. Perez, actriz de Lucía en GTA 6: “He dedicado casi una década a darle vida” - Diario AS — <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxNOEFrVkp3Rlc4Z0hFQW05c0xQNmRITy1UN25EUk
+- [Google News] Rockstar lo confirma: 'GTA 6' no habría existido sin estas películas que inspiraron la relación de Jason y Lucía - 20 Minutos — <a href="https://news.google.com/rss/articles/CBMitwFBVV95cUxNclFveFJuZXc1NldxV0l6aVhHVjNfMGJjX0pzY1
+- [Google News] La actriz que interpreta a Lucia en GTA 6 revela que ha trabajado casi diez años en el juego de Rockstar - Vandal — <a href="https://news.google.com/rss/articles/CBMi6AFBVV95cUxOQWRVUzgzbWwzakowQVRpalpxbWNzNl9Fd2NkZX
 - [Google News] El impacto de GTA 6 a una semana de su lanzamiento - CNN en Español — <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxONlQ5bzJCcmJPclRmRGp5bnB1RGcxLThkS01SVH
-- [Google News] GTA 6 se ejecuta en PC a hasta 44 FPS - mobidevices.com — <a href="https://news.google.com/rss/articles/CBMiUEFVX3lxTE1UbF9nNmFoNElhRG9kTmQwM3h0aVJ1cmlRLVBUbj
-- [Google News] GTA6: Todas las misiones de Kyle - Vandal — <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxQWU1zNHdsUUcyeGhaTG1YY0xKUFBobUxnVEhrTz
-- [Google News] GTA 6 ya es jugable en PC a 25-30 FPS y el Jailbreak de PS5 permite desbloquear los 30 FPS - Requisitos Mínimos y Recomendados - PC Master Race Latinoamérica — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTFA0Wk9TdXRHZjRVTHNxd2NtTGJibmZBdHVCWURCeD
-- [Google News] Guía completa de la historia de GTA 6: todas las misiones del capítulo 1 - En el paraíso - Diario AS — <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxOQThRTGF2V09CMzU5NmhPamYtQ3NEQWVNU1QtSG
