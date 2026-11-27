@@ -93,6 +93,6 @@
 ## Tendencias Virales — 2026-11-27
 - [Google News] GTA 6 Online: cuándo sale el multijugador y qué ha dicho Rockstar - Fantasymundo — <a href="https://news.google.com/rss/articles/CBMiVEFVX3lxTFBMTlZjWGZtRFFJeG80bmFHZEVlWkNfLUNwWThLX3
 - [Google News] Guía boomer para entender el fenómeno del GTA 6 - El Dínamo — <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOU0JfVEhFS2NXTEg1LUU0a1Jsc2pLWWZYdW1VSW
+- [Google News] Guía de GTA 6: todas nuestras guías y walkthroughs de Grand Theft Auto VI - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTE56YkMxTmZkcWxUSnhFelFRWUl6Q0pGTC1UYjE2Rm
 - [Google News] Simplemente espectacular: GTA 6 ya habría vendido 53 millones de copias en una semana y generado 4700 millones de dólares - Vandal — <a href="https://news.google.com/rss/articles/CBMi3AFBVV95cUxQUmwxaDM0VFZlMWFxOC1acU9XaGgzdGZjTjRQRz
 - [Google News] Trucos de GTA 6: todos los códigos y cómo desbloquearlos - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE9ENTR0cWlvSnFEeFRZbl9KOUdnWmdMSDcyUWVuQm
-- [Google News] Lista de todas las misiones principales de historia y capítulos de GTA 6 - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMipAFBVV95cUxOUGpUTl9DR2R5RTJGMlBfU2xmbFZ4TkhPZzZVam
