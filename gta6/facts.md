@@ -93,6 +93,6 @@
 ## Tendencias Virales — 2026-11-27
 - [Google News] El impacto de GTA 6 a una semana de su lanzamiento - CNN en Español — <a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxONlQ5bzJCcmJPclRmRGp5bnB1RGcxLThkS01SVH
 - [Google News] GTA 6 se ejecuta en PC a hasta 44 FPS - mobidevices.com — <a href="https://news.google.com/rss/articles/CBMiUEFVX3lxTE1UbF9nNmFoNElhRG9kTmQwM3h0aVJ1cmlRLVBUbj
-- [Google News] Port pirata de GTA 6 para PC sigue vivo, y su creador confirma que el proyecto no oficial aún está en desarrollo y prometió novedades - LEVELUP — <a href="https://news.google.com/rss/articles/CBMi-gFBVV95cUxQRktUa3MtNlZ6My1VVWI1T1o1QzdOYnJHeXNTcF
 - [Google News] GTA 6 ya es jugable en PC a 25-30 FPS y el Jailbreak de PS5 permite desbloquear los 30 FPS - Requisitos Mínimos y Recomendados - PC Master Race Latinoamérica — <a href="https://news.google.com/rss/articles/CBMifkFVX3lxTFA0Wk9TdXRHZjRVTHNxd2NtTGJibmZBdHVCWURCeD
 - [Google News] Los jugadores de GTA 6 encuentran una solución al 'bug' del tiempo en PS5: con este método aparecerían más tormentas - Vandal — <a href="https://news.google.com/rss/articles/CBMi1wFBVV95cUxPd0haa0tRdE9YWGZlYnp1NHBUUXowUjRpRjZjNn
+- [Google News] Guía completa de la historia de GTA 6: todas las misiones del capítulo 1 - En el paraíso - Diario AS — <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxOQThRTGF2V09CMzU5NmhPamYtQ3NEQWVNU1QtSG
