@@ -98,8 +98,8 @@
 - [Google News] Trucos de GTA 6: todos los códigos y cómo desbloquearlos - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE9ENTR0cWlvSnFEeFRZbl9KOUdnWmdMSDcyUWVuQm
 
 ## Tendencias Virales — 2026-11-28
+- [Google News] Descarga gratis el port de GTA 6 para PC que supera los 170 FPS con DLSS y Frame Generation en tarjetas gráficas NVIDIA - Tarreo — <a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxQTmpVa1VQTTRZRWw2aVBBNlRiMzJqcVZXVm9ybl
 - [Google News] Las ventas de GTA 6 llegan a los 53 millones de copias en su primera semana, según estima un análisis de mercado - Hobbyconsolas — <a href="https://news.google.com/rss/articles/CBMijwJBVV95cUxPU1AwMHFvVWdadlBJc0dCRE91NXdxTzQ1WVZQbH
 - [Google News] Ventas España: GTA 6 es el mejor lanzamiento de la historia del país, sumando 1,1 millones entre físico y digital - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxQMUlXQzRMZVU3SFVJeXpVcGFDaDRIeW5sdGZuWW
+- [Google News] Rockstar confirma por qué no incluyó una parodia de Disney World en GTA 6. Había un buen motivo para ello - 3DJuegos — <a href="https://news.google.com/rss/articles/CBMi4gFBVV95cUxQWTFzdTd4My1IcHplOTljcGJzT0Y2U2VrYVJoM3
 - [Google News] GTA VI en PC: qué es un port y la recompilación - DUPLOS.CL — <a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxNeGI4TVcwNWd4V1RhRi0xQTB5aGJUUmhabnNxSD
-- [Google News] Al terminar el primer capítulo de GTA 6 pon esto en tu lista de tareas: valdrá la pena - IGN España — <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxQUmNabDJKN21ZVS1Lb25oUUp5YmpxMFF2V09OWm
-- [Google News] Un desarrollador de GTA 6 homenajea a su madre fallecida dentro del juego: 'Estoy muy agradecido' - Vandal — <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxNdFEwS3ZpWGR4TTYwYnNFc1hBLTRGNDBvcFdvMD
