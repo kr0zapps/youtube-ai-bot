@@ -98,8 +98,8 @@
 - [Google News] Trucos de GTA 6: todos los códigos y cómo desbloquearlos - Red Bull — <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE9ENTR0cWlvSnFEeFRZbl9KOUdnWmdMSDcyUWVuQm
 
 ## Tendencias Virales — 2026-11-28
+- [Google News] GTA VI: el videojuego que tiene el mundo paralizado - Telemundo — <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxNazNZTGJacGhfMWJHUUlFMWlydVJyb2FTUmpYOX
+- [Google News] GTA VI en PC: qué es un port y la recompilación - DUPLOS.CL — <a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxNeGI4TVcwNWd4V1RhRi0xQTB5aGJUUmhabnNxSD
+- [Google News] Un desarrollador de GTA 6 homenajea a su madre fallecida dentro del juego: 'Estoy muy agradecido' - Vandal — <a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxNdFEwS3ZpWGR4TTYwYnNFc1hBLTRGNDBvcFdvMD
 - [Google News] Guía boomer para entender el fenómeno del GTA 6 - El Dínamo — <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOU0JfVEhFS2NXTEg1LUU0a1Jsc2pLWWZYdW1VSW
-- [Google News] GTA 6 Online: cuándo sale el multijugador y qué ha dicho Rockstar - Fantasymundo — <a href="https://news.google.com/rss/articles/CBMiVEFVX3lxTFBMTlZjWGZtRFFJeG80bmFHZEVlWkNfLUNwWThLX3
-- [Google News] Crean web para encontrar la ropa de los personajes de GTA 6 en tiendas del juego - Infobae — <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxOTkhxX2wzVHd2NklMOGFJbG5nOFRpOWFqNzRRZU
 - [Google News] GTA 6 en PC ahora tiene un Port Nativo con Soporte Ultrawide 32:9, HDR y 180 FPS con Frame Generation — DLSS 5 y RR pronto - PC Master Race Latinoamérica — <a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxOaXlhWWdXQ2lTTVNlcUd4TkJ5TWZuWGtoQnAybE
-- [Google News] Ventas España: GTA 6 es el mejor lanzamiento de la historia del país, sumando 1,1 millones entre físico y digital - Eurogamer.es — <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxQMUlXQzRMZVU3SFVJeXpVcGFDaDRIeW5sdGZuWW
